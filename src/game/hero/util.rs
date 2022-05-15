@@ -1,4 +1,4 @@
 pub enum Facing {
     Left,
-    Right
+    Right,
 }
