@@ -79,6 +79,8 @@ pub fn hero_input(
 ) {
     let mut camera_transform = camera_query.single_mut();
 
+    let move_speed = 12.0;
+
     let (mut hero, mut hero_transform) = query.single_mut();
 
     if keyboard_input.just_pressed(KeyCode::A) {
@@ -88,7 +90,7 @@ pub fn hero_input(
     if keyboard_input.pressed(KeyCode::A) {
         hero.facing = Facing::Left;
         hero.walking = true;
-        hero_transform.translation.x -= 16.0;
+        hero_transform.translation.x -= move_speed;
     }
 
     if keyboard_input.just_released(KeyCode::A) {
@@ -104,7 +106,7 @@ pub fn hero_input(
     if keyboard_input.pressed(KeyCode::D) {
         hero.facing = Facing::Right;
         hero.walking = true;
-        hero_transform.translation.x += 16.0;
+        hero_transform.translation.x += move_speed;
     }
 
     if keyboard_input.just_released(KeyCode::D) {
@@ -115,7 +117,7 @@ pub fn hero_input(
     // Up
     if keyboard_input.pressed(KeyCode::W) {
         hero.walking = true;
-        hero_transform.translation.y += 16.0;
+        hero_transform.translation.y += move_speed;
     }
 
     if keyboard_input.just_released(KeyCode::W) {
@@ -125,7 +127,7 @@ pub fn hero_input(
     // Down
     if keyboard_input.pressed(KeyCode::S) {
         hero.walking = true;
-        hero_transform.translation.y -= 16.0;
+        hero_transform.translation.y -= move_speed;
     }
 
     if keyboard_input.just_released(KeyCode::S) {

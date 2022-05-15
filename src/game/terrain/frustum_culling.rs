@@ -29,11 +29,11 @@ impl WorldFrustum {
 
         let horizontal_tile_count = (self.window_size.x / divisor).ceil() as i32;
         let horizontal_start = (self.rect.left / divisor).ceil() as i32 - 1; // -4
-        let horizontal_end = horizontal_start + horizontal_tile_count + 1; // 3
+        let horizontal_end = horizontal_start + horizontal_tile_count + 2; // 3
 
         let vertical_tile_count = (self.window_size.y / divisor).ceil() as i32;
         let vertical_start = (self.rect.bottom / divisor).ceil() as i32 - 1;
-        let vertical_end = vertical_start + vertical_tile_count + 1;
+        let vertical_end = vertical_start + vertical_tile_count + 2;
 
         let mut visible_tile_array: Vec<TilePosition> = Vec::new();
 
