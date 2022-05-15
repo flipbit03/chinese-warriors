@@ -1,4 +1,4 @@
-use bevy::{prelude::*, window::WindowResized};
+use bevy::prelude::*;
 
 use crate::game::{hero::Hero, types::TilePosition};
 
@@ -7,8 +7,8 @@ pub struct WorldFrustum {
     pub window_size: Vec2,
     pub rect: Rect<f32>,
     pub hero: Vec3,
-    pub terrain_tile_size: f32,
-    pub terrain_scale_factor: f32,
+    pub terrain_tile_size: u32,
+    pub terrain_scale_factor: u32,
 }
 
 impl Default for WorldFrustum {
@@ -17,15 +17,15 @@ impl Default for WorldFrustum {
             window_size: Default::default(),
             rect: Default::default(),
             hero: Default::default(),
-            terrain_tile_size: 32.0,
-            terrain_scale_factor: 4.0,
+            terrain_tile_size: 32,
+            terrain_scale_factor: 4,
         }
     }
 }
 
 impl WorldFrustum {
     pub fn get_visible_tiles(&self) -> Vec<TilePosition> {
-        let divisor = self.terrain_tile_size * self.terrain_scale_factor;
+        let divisor = (self.terrain_tile_size * self.terrain_scale_factor) as f32;
 
         let horizontal_tile_count = (self.window_size.x / divisor).ceil() as i32;
         let horizontal_start = (self.rect.left / divisor).ceil() as i32 - 1; // -4
@@ -48,14 +48,13 @@ impl WorldFrustum {
 }
 
 pub fn update_world_frustum(
-    mut window_resized_events: EventReader<WindowResized>,
+    windows: Res<Windows>,
     mut world_frustum: ResMut<WorldFrustum>,
     hero_query: Query<&Transform, With<Hero>>,
 ) {
-    if let Some(s) = window_resized_events.iter().last() {
-        world_frustum.window_size.x = s.width;
-        world_frustum.window_size.y = s.height;
-    }
+    let w = windows.get_primary().unwrap();
+    world_frustum.window_size.x = w.physical_width() as f32;
+    world_frustum.window_size.y = w.physical_height() as f32;
 
     let hero_transform = hero_query.single();
 

@@ -32,31 +32,32 @@ pub fn spawn_terrain(
 ) {
     let terrain_atlas_handle = texture_atlases.get_handle(terrain_texture_handle.terrain.clone());
 
-    let visible_tiles = world_frustum.get_visible_tiles();
+    let visible_tiles: Vec<TilePosition> = world_frustum.get_visible_tiles();
+
+    let mult = world_frustum.terrain_tile_size * world_frustum.terrain_scale_factor;
 
     for tile in visible_tiles {
         if !terrain_counter.storage.contains(&tile) {
-            let mult = world_frustum.terrain_tile_size * world_frustum.terrain_scale_factor;
-
             let new_tile_transform = Transform {
-                translation: Vec3::new(tile.0 as f32 * mult, tile.1 as f32 * mult, 0.0),
-                scale: Vec3::splat(world_frustum.terrain_scale_factor),
+                translation: Vec3::new(
+                    (tile.0 * mult as i32) as f32,
+                    (tile.1 * mult as i32) as f32,
+                    0.0,
+                ),
+                scale: Vec3::splat(world_frustum.terrain_scale_factor as f32),
                 ..Default::default()
             };
 
             commands.spawn_bundle(SpriteSheetBundle {
                 sprite: TextureAtlasSprite {
-                    index: 25,
+                    index: 24,
                     ..default()
                 },
                 texture_atlas: terrain_atlas_handle.clone(),
-                transform: new_tile_transform,
+                transform: new_tile_transform.clone(),
                 ..default()
             });
-
             terrain_counter.storage.insert(tile);
         }
     }
 }
-
-// fn spawn_tile(mut commands: Commands, position: TilePosition, tile_size: f32)

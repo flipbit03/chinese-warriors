@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use noise::Perlin;
 
 use super::terrain::{frustum_culling::WorldFrustum, TerrainCreation};
 
@@ -14,6 +15,12 @@ pub struct TerrainTextureHandle {
 
 pub struct GlobalScaleFactor {
     pub factor: f32,
+}
+
+
+pub struct WorldGenerationProperties {
+    seed: u32,
+    perlin: Perlin
 }
 
 pub struct FpsTimer(pub Timer);
@@ -43,13 +50,15 @@ pub fn setup(
 
     commands.insert_resource(guridata);
 
-    commands.insert_resource(FpsTimer(Timer::from_seconds(2.0, true)));
+    commands.insert_resource(FpsTimer(Timer::from_seconds(4.0, true)));
 
     commands.insert_resource(GlobalScaleFactor { factor: 4.0 });
 
     commands.insert_resource(TerrainCreation::default());
 
     commands.insert_resource(WorldFrustum::default());
+
+    // commands.insert_resource(WorldGenerationProperties::default());
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 }

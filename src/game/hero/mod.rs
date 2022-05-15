@@ -24,10 +24,8 @@ impl Default for Hero {
 
 pub fn spawn_hero(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
     guri_data: Res<GuriData>,
     global_scale: Res<GlobalScaleFactor>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let hero_transform = Transform {
         translation: Vec3::new(-0.0, 0.0, 1.0),
@@ -79,7 +77,7 @@ pub fn hero_input(
 ) {
     let mut camera_transform = camera_query.single_mut();
 
-    let move_speed = 12.0;
+    let move_speed = 8.0;
 
     let (mut hero, mut hero_transform) = query.single_mut();
 
