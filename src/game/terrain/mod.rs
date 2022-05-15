@@ -36,15 +36,10 @@ pub fn spawn_terrain(
 
     for tile in visible_tiles {
         if !terrain_counter.storage.contains(&tile) {
-
             let mult = world_frustum.terrain_tile_size * world_frustum.terrain_scale_factor;
 
             let new_tile_transform = Transform {
-                translation: Vec3::new(
-                    tile.0 as f32 * mult,
-                    tile.1 as f32 * mult,
-                    0.0
-                ),
+                translation: Vec3::new(tile.0 as f32 * mult, tile.1 as f32 * mult, 0.0),
                 scale: Vec3::splat(world_frustum.terrain_scale_factor),
                 ..Default::default()
             };
@@ -60,11 +55,8 @@ pub fn spawn_terrain(
             });
 
             terrain_counter.storage.insert(tile);
-
         }
     }
-
 }
-
 
 // fn spawn_tile(mut commands: Commands, position: TilePosition, tile_size: f32)

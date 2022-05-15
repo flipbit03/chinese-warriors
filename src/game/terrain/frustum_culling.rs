@@ -25,7 +25,6 @@ impl Default for WorldFrustum {
 
 impl WorldFrustum {
     pub fn get_visible_tiles(&self) -> Vec<TilePosition> {
-
         let divisor = self.terrain_tile_size * self.terrain_scale_factor;
 
         let horizontal_tile_count = (self.window_size.x / divisor).ceil() as i32;
