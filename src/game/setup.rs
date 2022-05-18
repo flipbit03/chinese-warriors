@@ -44,7 +44,7 @@ pub fn setup(
 
     commands.insert_resource(terrain_handle);
 
-    let texture_handle = asset_server.load("guri2.png");
+    let texture_handle = asset_server.load("guri-red.png");
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 7, 1);
     let guri_atlas_handle = texture_atlases.add(texture_atlas);
 
