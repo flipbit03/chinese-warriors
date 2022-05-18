@@ -14,6 +14,7 @@ use game::{
 };
 
 mod game;
+mod systems;
 
 fn main() {
     App::new()

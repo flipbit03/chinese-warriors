@@ -29,8 +29,13 @@ pub fn setup(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let terrain_handle: Handle<Image> = asset_server.load("terrain-tileset.png");
-    let terrain_atlas = TextureAtlas::from_grid(terrain_handle, Vec2::new(32.0, 32.0), 15, 7);
+    //let terrain_handle: Handle<Image> = asset_server.load("terrain-kawe1");
+    let terrain_handle: Handle<Image> = asset_server.load("terrain.png");
+    let terrain_atlas = TextureAtlas::from_grid(
+        terrain_handle, 
+        Vec2::new(16.0, 16.0), 
+        11, 
+        1);
     let terrain_atlas_handle = texture_atlases.add(terrain_atlas);
 
     let terrain_handle = TerrainTextureHandle {
@@ -39,7 +44,7 @@ pub fn setup(
 
     commands.insert_resource(terrain_handle);
 
-    let texture_handle = asset_server.load("guri.png");
+    let texture_handle = asset_server.load("guri2.png");
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 7, 1);
     let guri_atlas_handle = texture_atlases.add(texture_atlas);
 
@@ -51,7 +56,7 @@ pub fn setup(
 
     commands.insert_resource(FpsTimer(Timer::from_seconds(4.0, true)));
 
-    commands.insert_resource(GlobalScaleFactor { factor: 4.0 });
+    commands.insert_resource(GlobalScaleFactor { factor: 2.0 });
 
     commands.insert_resource(TerrainCreation::default());
 

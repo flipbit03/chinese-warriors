@@ -1,9 +1,11 @@
 use std::collections::HashSet;
 
+use bevy::math::XY;
 use bevy::prelude::Transform;
 
 use bevy::prelude::*;
 use bevy::utils::tracing::Id;
+use noise::{NoiseFn, Perlin, Seedable, Fbm};
 
 use self::frustum_culling::WorldViewFrustum;
 
@@ -17,13 +19,35 @@ pub struct Tile;
 
 pub struct TerrainCreation {
     pub storage: HashSet<TilePosition>,
+    pub perlin: Perlin,
+    pub fbm: Fbm,
+    pub perlin_scale_factor: XY<f64>
 }
 
 impl Default for TerrainCreation {
     fn default() -> Self {
+        let seed = 7 + 18 + 9;
+
+        let p = Perlin::new().set_seed(seed);
+
+        let fbm = Fbm::new().set_seed(seed);
+
         Self {
             storage: Default::default(),
+            perlin: p,
+            fbm: fbm,
+            perlin_scale_factor: XY {
+                x: 96.0,
+                y: 96.0
+            }
         }
+    }
+}
+
+impl TerrainCreation {
+    pub fn get_tile_for_position(&self, tp: &TilePosition) -> f64 {
+        let point = [tp.0 as f64 / self.perlin_scale_factor.x, tp.1 as f64 / self.perlin_scale_factor.y];
+        (self.fbm.get(point) + self.perlin.get(point)) / 2.0
     }
 }
 
@@ -31,7 +55,7 @@ pub fn spawn_terrain(
     mut commands: Commands,
     terrain_texture_handle: Res<TerrainTextureHandle>,
     world_frustum: Res<WorldViewFrustum>,
-    mut terrain_counter: ResMut<TerrainCreation>,
+    mut terrain_creation: ResMut<TerrainCreation>,
     texture_atlases: Res<Assets<TextureAtlas>>,
 ) {
     let terrain_atlas_handle = texture_atlases.get_handle(terrain_texture_handle.terrain.clone());
@@ -41,7 +65,7 @@ pub fn spawn_terrain(
     let mult = world_frustum.terrain_tile_size * world_frustum.terrain_scale_factor;
 
     for tile in visible_tiles {
-        if !terrain_counter.storage.contains(&tile) {
+        if !terrain_creation.storage.contains(&tile) {
             let new_tile_transform = Transform {
                 translation: Vec3::new(
                     (tile.0 * mult as i32) as f32,
@@ -52,10 +76,21 @@ pub fn spawn_terrain(
                 ..Default::default()
             };
 
+            let perlin_output = terrain_creation.get_tile_for_position(&tile);
+
+            let terrain_sprite_number = (((perlin_output + 1.0) / 2.0) * 11.0) as usize;
+
+            println!("perlin({:?}) = {}f64", tile, perlin_output);
+
             commands
                 .spawn_bundle(SpriteSheetBundle {
                     sprite: TextureAtlasSprite {
-                        index: 24,
+                        index: terrain_sprite_number,
+                        // color: Color::rgb(
+                        //     (perlin_output + 1.0) as f32,
+                        //     (perlin_output + 1.0) as f32,
+                        //     (perlin_output + 1.0) as f32,
+                        // ),
                         ..default()
                     },
                     texture_atlas: terrain_atlas_handle.clone(),
@@ -63,7 +98,7 @@ pub fn spawn_terrain(
                     ..default()
                 })
                 .insert(Tile);
-            terrain_counter.storage.insert(tile);
+            terrain_creation.storage.insert(tile);
         }
     }
 }
