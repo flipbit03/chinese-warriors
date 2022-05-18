@@ -1,13 +1,13 @@
-use bevy::{prelude::*};
+use bevy::prelude::*;
 
 use super::{
     setup::FpsTimer,
-    terrain::{frustum_culling::WorldFrustum, TerrainCreation},
+    terrain::{frustum_culling::WorldViewFrustum, TerrainCreation},
 };
 
 pub fn console_stats(
     time: Res<Time>,
-    world_frustum: Res<WorldFrustum>,
+    world_frustum: Res<WorldViewFrustum>,
     mut fpstimer: ResMut<FpsTimer>,
     terrain_counter: Res<TerrainCreation>,
 ) {

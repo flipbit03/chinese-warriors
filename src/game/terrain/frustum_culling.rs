@@ -3,7 +3,28 @@ use bevy::prelude::*;
 use crate::game::{hero::Hero, types::TilePosition};
 
 #[derive(Debug)]
-pub struct WorldFrustum {
+pub struct Rect<T> {
+    pub left: T,
+    pub right: T,
+    pub top: T,
+    pub bottom: T,
+}
+
+impl<T: Default> Default for Rect<T> {
+    fn default() -> Self {
+        Self {
+            left: Default::default(),
+            right: Default::default(),
+            top: Default::default(),
+            bottom: Default::default(),
+        }
+    }
+}
+
+#[derive(Debug)]
+/// Structure that defines the visible World rectangle
+/// using World coordinates
+pub struct WorldViewFrustum {
     pub window_size: Vec2,
     pub rect: Rect<f32>,
     pub hero: Vec3,
@@ -11,29 +32,36 @@ pub struct WorldFrustum {
     pub terrain_scale_factor: u32,
 }
 
-impl Default for WorldFrustum {
+impl Default for WorldViewFrustum {
     fn default() -> Self {
         Self {
             window_size: Default::default(),
             rect: Default::default(),
             hero: Default::default(),
             terrain_tile_size: 32,
-            terrain_scale_factor: 4,
+            terrain_scale_factor: 2,
         }
     }
 }
 
-impl WorldFrustum {
+impl WorldViewFrustum {
+    pub fn is_viewing(&self, pos: &Vec3) -> bool {
+        self.rect.left < pos.x
+            && self.rect.right > pos.x
+            && self.rect.bottom < pos.y
+            && self.rect.top > pos.y
+    }
+
     pub fn get_visible_tiles(&self) -> Vec<TilePosition> {
         let divisor = (self.terrain_tile_size * self.terrain_scale_factor) as f32;
 
         let horizontal_tile_count = (self.window_size.x / divisor).ceil() as i32;
-        let horizontal_start = (self.rect.left / divisor).ceil() as i32 - 1; // -4
-        let horizontal_end = horizontal_start + horizontal_tile_count + 2; // 3
+        let horizontal_start = (self.rect.left / divisor).ceil() as i32; // -4
+        let horizontal_end = horizontal_start + horizontal_tile_count; // 3
 
         let vertical_tile_count = (self.window_size.y / divisor).ceil() as i32;
-        let vertical_start = (self.rect.bottom / divisor).ceil() as i32 - 1;
-        let vertical_end = vertical_start + vertical_tile_count + 2;
+        let vertical_start = (self.rect.bottom / divisor).ceil() as i32;
+        let vertical_end = vertical_start + vertical_tile_count;
 
         let mut visible_tile_array: Vec<TilePosition> = Vec::new();
 
@@ -49,12 +77,12 @@ impl WorldFrustum {
 
 pub fn update_world_frustum(
     windows: Res<Windows>,
-    mut world_frustum: ResMut<WorldFrustum>,
+    mut world_frustum: ResMut<WorldViewFrustum>,
     hero_query: Query<&Transform, With<Hero>>,
 ) {
     let w = windows.get_primary().unwrap();
-    world_frustum.window_size.x = w.physical_width() as f32;
-    world_frustum.window_size.y = w.physical_height() as f32;
+    world_frustum.window_size.x = w.physical_width() as f32 * 1.2;
+    world_frustum.window_size.y = w.physical_height() as f32 * 1.2;
 
     let hero_transform = hero_query.single();
 

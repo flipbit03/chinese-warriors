@@ -6,10 +6,10 @@
 
 use bevy::{prelude::*, window::PresentMode};
 use game::{
-    timed_console_stats::console_stats,
     hero::{animate_hero, hero_input, spawn_hero},
     setup::setup,
-    terrain::{frustum_culling::update_world_frustum, spawn_terrain},
+    terrain::{despawn_terrain, frustum_culling::update_world_frustum, spawn_terrain},
+    timed_console_stats::console_stats,
     window_title::window_title_resolution,
 };
 
@@ -28,6 +28,7 @@ fn main() {
         .add_startup_system(spawn_hero)
         .add_system(animate_hero)
         .add_system(spawn_terrain)
+        .add_system(despawn_terrain)
         .add_system(hero_input)
         .add_system(console_stats)
         .add_system(update_world_frustum)

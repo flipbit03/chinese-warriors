@@ -3,13 +3,17 @@ use std::collections::HashSet;
 use bevy::prelude::Transform;
 
 use bevy::prelude::*;
+use bevy::utils::tracing::Id;
 
-use self::frustum_culling::WorldFrustum;
+use self::frustum_culling::WorldViewFrustum;
 
 use super::setup::TerrainTextureHandle;
 use super::types::TilePosition;
 
 pub mod frustum_culling;
+
+#[derive(Component)]
+pub struct Tile;
 
 pub struct TerrainCreation {
     pub storage: HashSet<TilePosition>,
@@ -26,7 +30,7 @@ impl Default for TerrainCreation {
 pub fn spawn_terrain(
     mut commands: Commands,
     terrain_texture_handle: Res<TerrainTextureHandle>,
-    world_frustum: Res<WorldFrustum>,
+    world_frustum: Res<WorldViewFrustum>,
     mut terrain_counter: ResMut<TerrainCreation>,
     texture_atlases: Res<Assets<TextureAtlas>>,
 ) {
@@ -48,16 +52,40 @@ pub fn spawn_terrain(
                 ..Default::default()
             };
 
-            commands.spawn_bundle(SpriteSheetBundle {
-                sprite: TextureAtlasSprite {
-                    index: 24,
+            commands
+                .spawn_bundle(SpriteSheetBundle {
+                    sprite: TextureAtlasSprite {
+                        index: 24,
+                        ..default()
+                    },
+                    texture_atlas: terrain_atlas_handle.clone(),
+                    transform: new_tile_transform.clone(),
                     ..default()
-                },
-                texture_atlas: terrain_atlas_handle.clone(),
-                transform: new_tile_transform.clone(),
-                ..default()
-            });
+                })
+                .insert(Tile);
             terrain_counter.storage.insert(tile);
+        }
+    }
+}
+
+pub fn despawn_terrain(
+    mut commands: Commands,
+    world_frustum: Res<WorldViewFrustum>,
+    mut terrain_counter: ResMut<TerrainCreation>,
+    mut tile_query: Query<(Entity, &Transform), With<Tile>>,
+) {
+    let tile_mult = (world_frustum.terrain_tile_size * world_frustum.terrain_scale_factor) as f32;
+
+    for (entity, entity_transform) in tile_query.iter() {
+        if !world_frustum.is_viewing(&entity_transform.translation) {
+            let entity_tile_pos = (
+                (entity_transform.translation.x / tile_mult) as i32,
+                (entity_transform.translation.y / tile_mult) as i32,
+            );
+            if terrain_counter.storage.remove(&entity_tile_pos) {
+                //println!("Limpei entidade {:?}", &entity);
+                commands.entity(entity).despawn();
+            }
         }
     }
 }
