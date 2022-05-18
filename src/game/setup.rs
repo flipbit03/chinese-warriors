@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use noise::Perlin;
 
-use super::terrain::{frustum_culling::WorldFrustum, TerrainCreation};
+use super::terrain::{frustum_culling::WorldViewFrustum, TerrainCreation};
 
 #[derive(Deref)]
 pub struct GuriData {
@@ -17,10 +17,9 @@ pub struct GlobalScaleFactor {
     pub factor: f32,
 }
 
-
 pub struct WorldGenerationProperties {
     seed: u32,
-    perlin: Perlin
+    perlin: Perlin,
 }
 
 pub struct FpsTimer(pub Timer);
@@ -56,7 +55,7 @@ pub fn setup(
 
     commands.insert_resource(TerrainCreation::default());
 
-    commands.insert_resource(WorldFrustum::default());
+    commands.insert_resource(WorldViewFrustum::default());
 
     // commands.insert_resource(WorldGenerationProperties::default());
 
