@@ -77,7 +77,7 @@ pub fn hero_input(
 ) {
     let mut camera_transform = camera_query.single_mut();
 
-    let move_speed = 8.0;
+    let move_speed = 3.0;
 
     let (mut hero, mut hero_transform) = query.single_mut();
 

@@ -38,7 +38,7 @@ impl Default for WorldViewFrustum {
             window_size: Default::default(),
             rect: Default::default(),
             hero: Default::default(),
-            terrain_tile_size: 32,
+            terrain_tile_size: 16,
             terrain_scale_factor: 2,
         }
     }
