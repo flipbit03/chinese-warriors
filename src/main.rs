@@ -10,7 +10,7 @@ use game::{
     setup::setup,
     terrain::{despawn_terrain, frustum_culling::update_world_frustum, spawn_terrain},
     timed_console_stats::console_stats,
-    window_title::window_title_resolution,
+    window_title::window_title_resolution, asset_reloader::activate_live_asset_reloading,
 };
 
 mod game;
@@ -25,6 +25,7 @@ fn main() {
             ..default()
         })
         .add_plugins(DefaultPlugins)
+        .add_startup_system(activate_live_asset_reloading)
         .add_startup_system_to_stage(StartupStage::PreStartup, setup)
         .add_startup_system(spawn_hero)
         .add_system(animate_hero)
