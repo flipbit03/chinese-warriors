@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 bevy = { version = "0.7.0" }
 noise = "0.7.0"
+variant_count = "1.1.0"
+itertools = "0.10.3"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 bevy = { version = "0.7.0", features = ["dynamic"] }

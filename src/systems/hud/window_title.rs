@@ -1,4 +1,7 @@
-use bevy::{prelude::*, window::WindowResized};
+use bevy::{
+    prelude::{EventReader, ResMut},
+    window::{WindowResized, Windows},
+};
 
 pub fn window_title_resolution(
     mut windows: ResMut<Windows>,
@@ -6,9 +9,6 @@ pub fn window_title_resolution(
 ) {
     for ev in resize_events.iter() {
         let window = windows.get_primary_mut().unwrap();
-        window.set_title(format!(
-            "CW: Window Resolution({:?})",
-            (ev.width, ev.height)
-        ));
+        window.set_title(format!("CW: Window Resolution {:?}", (ev.width, ev.height)));
     }
 }

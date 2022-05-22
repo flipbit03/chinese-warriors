@@ -2,5 +2,5 @@
 **/*.rs.bk
 
 # Ignore dist /dist/target/ folder
-/target
+/target*
 /dist

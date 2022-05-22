@@ -1,59 +1,23 @@
-use bevy::prelude::*;
-mod util;
-use self::util::Facing;
+use bevy::{prelude::*, render::camera::Camera2d};
 
-use super::setup::{GlobalScaleFactor, GuriData};
+use self::types::{Facing, Hero, HeroWalkCycleTimer};
 
-#[derive(Component, Deref, DerefMut)]
-pub struct AnimationTimer(Timer);
-
-#[derive(Component)]
-pub struct Hero {
-    pub facing: Facing,
-    pub walking: bool,
-}
-
-impl Default for Hero {
-    fn default() -> Self {
-        Self {
-            facing: Facing::Left,
-            walking: false,
-        }
-    }
-}
-
-pub fn spawn_hero(
-    mut commands: Commands,
-    guri_data: Res<GuriData>,
-    global_scale: Res<GlobalScaleFactor>,
-) {
-    let hero_transform = Transform {
-        translation: Vec3::new(-0.0, 0.0, 1.0),
-        ..Transform::from_scale(Vec3::splat(global_scale.factor))
-    };
-
-    commands
-        .spawn_bundle(SpriteSheetBundle {
-            texture_atlas: guri_data.texture_handle.clone(),
-            transform: hero_transform,
-            ..default()
-        })
-        .insert(Hero::default())
-        .insert(AnimationTimer(Timer::from_seconds(0.07, true)));
-}
+use super::resources::textures::GuriTextureAtlas;
+pub mod spawner;
+pub mod types;
 
 pub fn animate_hero(
     time: Res<Time>,
-    guri_data: Res<GuriData>,
+    guri_atlas: Res<GuriTextureAtlas>,
     texture_atlases: Res<Assets<TextureAtlas>>,
-    mut query: Query<(&mut AnimationTimer, &mut TextureAtlasSprite, &Hero), With<Hero>>,
+    mut query: Query<(&mut HeroWalkCycleTimer, &mut TextureAtlasSprite, &Hero), With<Hero>>,
 ) {
     let (mut timer, mut sprite, hero) = query.single_mut();
 
     timer.tick(time.delta());
     if timer.just_finished() {
         let texture_atlas = texture_atlases
-            .get(guri_data.texture_handle.clone())
+            .get(guri_atlas.texture_handle.clone())
             .unwrap();
         match hero.facing {
             Facing::Right => {
@@ -72,12 +36,12 @@ pub fn animate_hero(
 
 pub fn hero_input(
     keyboard_input: Res<Input<KeyCode>>,
-    mut camera_query: Query<&mut Transform, With<Camera>>,
-    mut query: Query<(&mut Hero, &mut Transform), Without<Camera>>,
+    mut camera_query: Query<&mut Transform, With<Camera2d>>,
+    mut query: Query<(&mut Hero, &mut Transform), Without<Camera2d>>,
 ) {
     let mut camera_transform = camera_query.single_mut();
 
-    let move_speed = 3.0;
+    let move_speed = 2.0;
 
     let (mut hero, mut hero_transform) = query.single_mut();
 

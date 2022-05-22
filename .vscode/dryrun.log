@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/cadu/w/cadu/git/chinese-warriors'
+rustup target add wasm32-unknown-unknown
+cargo install basic-http-server cargo-watch
+make: Leaving directory '/home/cadu/w/cadu/git/chinese-warriors'
+ 
