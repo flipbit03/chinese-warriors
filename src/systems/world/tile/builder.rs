@@ -4,7 +4,8 @@ use bevy::{
 };
 
 use super::{
-    terrain::generator::TerrainGenerator, Tile, TileBuilder, TileDrawInstrucion, TilePosition,
+    border::TileBorder, position::TilePositionNeighbors, terrain::generator::TerrainGenerator,
+    Tile, TileBuilder, TileDrawInstrucion, TilePosition,
 };
 
 impl TileBuilder {
@@ -17,26 +18,25 @@ impl TileBuilder {
         }
     }
 
-    fn get(&self, pos: &TilePosition) -> Tile {
-        let terrain = self.generator.get_tile_for_position(&pos);
-
-        // TODO: Neighbors
-        // let matrix = TileNeighbors::new(pos);
-
-        Tile { terrain }
+    fn get(&self, pos: TilePosition) -> Tile {
+        let matrix = TilePositionNeighbors::new(&self.generator, pos);
+        Tile {
+            terrain: matrix.center.0.clone(),
+            borders: TileBorder::from(matrix),
+        }
     }
 
     pub fn create(&mut self, tile_position: TilePosition) -> TileDrawInstrucion {
-        let tile = self.get(&tile_position);
+        let tile = self.get(tile_position.clone());
         self.storage.insert(tile_position.clone(), tile.clone());
-
+        let tile_z_order: f32 = tile.terrain.clone().into();
         TileDrawInstrucion {
             tile,
             transform: Transform {
                 translation: Vec3::new(
                     tile_position.x as f32 * self.tile_size.x * self.tile_scale,
                     tile_position.y as f32 * self.tile_size.y * self.tile_scale,
-                    0.0,
+                    tile_z_order/ 100.0,
                 ),
                 scale: Vec3::splat(self.tile_scale),
                 ..Default::default()

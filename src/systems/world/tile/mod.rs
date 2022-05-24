@@ -3,21 +3,35 @@ use std::collections::HashMap;
 use bevy::{math::Vec2, prelude::Transform};
 
 use self::{
+    border::TileBorder,
     position::TilePosition,
     terrain::{generator::TerrainGenerator, Terrain},
 };
 
+pub mod border;
 pub mod builder;
 pub mod position;
 pub mod terrain;
 pub mod traits;
 pub mod visibility;
 
-#[derive(Clone)]
+// enum TileBorder {
+//     OuterTop = 0 ,
+//     OuterRight = 1,
+//     OuterBottom = 2,
+//     OuterLeft = 3,
+//     OuterCornerBottomLeft = 4,
+//     OuterCornerBottomRight = 5,
+//     OuterCornerBottomRight = 5
+// }
+
+#[derive(Clone, Debug)]
 pub struct Tile {
     pub terrain: Terrain,
+    pub borders: Vec<TileBorder>,
 }
 
+#[derive(Debug)]
 pub struct TileDrawInstrucion {
     pub tile: Tile,
     pub transform: Transform,

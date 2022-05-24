@@ -22,7 +22,7 @@ impl TerrainGenerator {
         }
     }
 
-    pub fn get_tile_for_position(&self, tp: &TilePosition) -> Terrain {
+    pub fn get_terrain(&self, tp: &TilePosition) -> Terrain {
         let point = [
             tp.x as f64 / self.perlin_scale_factor.x,
             tp.y as f64 / self.perlin_scale_factor.y,
@@ -33,10 +33,10 @@ impl TerrainGenerator {
         let perlin_value = self.perlin.get(point) / 2.0;
 
         // Sum both, get a value "somewhere" in the [-1.0, 1.0] range
-        let summed = fbm_value + perlin_value; // -1 a 1
+        let combined = fbm_value + perlin_value; // -1 a 1
 
         // Add 1.0 (range becomes [0.0, 2.0], divide by 2, final normalized range becomes [0.0, 1.0]
-        let normalized = ((summed + 1.0) / 2.0).clamp(0.0, 1.0); // [0,1]
+        let normalized = ((combined + 1.0) / 2.0).clamp(0.0, 1.0); // [0,1]
 
         // Get final tile number
         let base_terrain_number = (normalized * Terrain::VARIANT_COUNT as f64) as usize;

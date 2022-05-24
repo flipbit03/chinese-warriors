@@ -14,7 +14,7 @@ pub fn spawn_hero(mut commands: Commands, guri_atlas: Res<GuriTextureAtlas>) {
         .spawn_bundle(SpriteSheetBundle {
             texture_atlas: guri_atlas.texture_handle.clone(),
             transform: Transform {
-                translation: Vec3::new(0.0, 0.0, 1.0),
+                translation: Vec3::new(10450.0, 12442.0, 1.0),
                 ..Transform::from_scale(Vec3::splat(1.0))
             },
             ..Default::default()

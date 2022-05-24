@@ -1,8 +1,8 @@
 use bevy::prelude::{App, Plugin, StartupStage};
 
 use crate::systems::resources::{
-    asset_reloader::activate_live_asset_reloading, fonts::load_fonts, game::load_game_assets,
-    textures::load_textures, timers::load_timers,
+    fonts::load_fonts, game::load_game_assets,
+    textures::load_textures, timers::load_timers, asset_reloader::activate_live_asset_reloading,
 };
 
 pub struct StartupPlugin;

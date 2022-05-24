@@ -10,7 +10,7 @@ pub fn camera_scale_input(
 
     if keyboard_input.pressed(KeyCode::Q) {
         scale = (scale * 100.0).round();
-        scale += 2.0;
+        scale += 3.0;
         scale /= 100.0;
         camera.scale = scale;
         println!("camera.scale = {}", &camera.scale);
@@ -18,7 +18,7 @@ pub fn camera_scale_input(
 
     if keyboard_input.pressed(KeyCode::E) {
         scale = (scale * 100.0).round();
-        scale -= 2.0;
+        scale -= 3.0;
         scale /= 100.0;
         camera.scale = scale;
         println!("camera.scale = {}", &camera.scale);
