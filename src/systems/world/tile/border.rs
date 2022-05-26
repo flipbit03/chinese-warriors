@@ -1,4 +1,4 @@
-use super::{position::TilePositionNeighbors, terrain::Terrain};
+use super::{position::TilePositionNeighbors, terrain::BaseTerrain};
 
 #[derive(Clone, Debug)]
 pub enum TileBorderType {
@@ -10,7 +10,7 @@ pub enum TileBorderType {
 
 #[derive(Clone, Debug)]
 pub struct TileBorder {
-    pub terrain: Terrain,
+    pub terrain: BaseTerrain,
     pub upper_left: Option<TileBorderType>,
     pub upper_right: Option<TileBorderType>,
     pub bottom_left: Option<TileBorderType>,
@@ -33,25 +33,25 @@ fn get_border_from_neighbor_effects(
 
 impl TileBorder {
     pub fn from(matrix: TilePositionNeighbors) -> Vec<Self> {
-        let center = matrix.center.0 as usize;
+        let center = matrix.center.0.base as usize;
 
         let stronger_than_me = center + 1;
 
-        if stronger_than_me == Terrain::VARIANT_COUNT {
+        if stronger_than_me == BaseTerrain::VARIANT_COUNT {
             return Vec::new();
         }
 
-        let left = matrix.left.0 as usize;
-        let top = matrix.top.0 as usize;
-        let right = matrix.right.0 as usize;
-        let bottom = matrix.bottom.0 as usize;
+        let left = matrix.left.0.base as usize;
+        let top = matrix.top.0.base as usize;
+        let right = matrix.right.0.base as usize;
+        let bottom = matrix.bottom.0.base as usize;
 
-        let top_left = matrix.top_left.0 as usize;
-        let top_right = matrix.top_right.0 as usize;
-        let bottom_left = matrix.bottom_left.0 as usize;
-        let bottom_right = matrix.bottom_right.0 as usize;
+        let top_left = matrix.top_left.0.base as usize;
+        let top_right = matrix.top_right.0.base as usize;
+        let bottom_left = matrix.bottom_left.0.base as usize;
+        let bottom_right = matrix.bottom_right.0.base as usize;
 
-        (stronger_than_me..Terrain::VARIANT_COUNT)
+        (stronger_than_me..BaseTerrain::VARIANT_COUNT)
             .map(|terrain| {
                 let upper_left = get_border_from_neighbor_effects(
                     left == terrain,

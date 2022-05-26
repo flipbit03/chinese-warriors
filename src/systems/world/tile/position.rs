@@ -1,6 +1,6 @@
-use super::terrain::{generator::TerrainGenerator, Terrain};
+use super::terrain::{generator::{TerrainGenerator, Terrain}, BaseTerrain};
 
-#[derive(Hash, PartialEq, Eq, Clone)]
+#[derive(Hash, PartialEq, Eq, Debug, Clone, Default)]
 pub struct TilePosition {
     pub x: i32,
     pub y: i32,

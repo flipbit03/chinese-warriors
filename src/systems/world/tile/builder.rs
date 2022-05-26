@@ -21,6 +21,7 @@ impl TileBuilder {
     fn get(&self, pos: TilePosition) -> Tile {
         let matrix = TilePositionNeighbors::new(&self.generator, pos);
         Tile {
+            position: matrix.center.1.clone(),
             terrain: matrix.center.0.clone(),
             borders: TileBorder::from(matrix),
         }
@@ -29,7 +30,7 @@ impl TileBuilder {
     pub fn create(&mut self, tile_position: TilePosition) -> TileDrawInstrucion {
         let tile = self.get(tile_position.clone());
         self.storage.insert(tile_position.clone(), tile.clone());
-        let tile_z_order: f32 = tile.terrain.clone().into();
+        let tile_z_order: f32 = tile.terrain.base.clone().into();
         TileDrawInstrucion {
             tile,
             transform: Transform {

@@ -20,9 +20,11 @@ pub fn camera_scale_input(
         scale = (scale * 100.0).round();
         scale -= 3.0;
         scale /= 100.0;
-        camera.scale = scale;
+        
         println!("camera.scale = {}", &camera.scale);
     }
+    
+    camera.scale = scale.max(0.5);
 }
 
 pub struct InputPlugin;

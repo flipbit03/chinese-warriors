@@ -15,8 +15,8 @@ pub fn load_game_assets(mut commands: Commands, base_terrain_texture_atlas: Res<
         1.0,
     ));
 
-    // TODO: Implement Terrain Visibility Frustum
-    //commands.insert_resource(WorldViewFrustum::default());
+    let mut camera = OrthographicCameraBundle::new_2d();
+    camera.orthographic_projection.scale = 0.5;
 
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    commands.spawn_bundle(camera);
 }

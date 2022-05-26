@@ -41,7 +41,8 @@ pub fn hero_input(
 ) {
     let mut camera_transform = camera_query.single_mut();
 
-    let move_speed = 10.3;
+    // TODO: Fix Diagonal Move Speed
+    let move_speed = 2.1;
 
     let (mut hero, mut hero_transform) = query.single_mut();
 

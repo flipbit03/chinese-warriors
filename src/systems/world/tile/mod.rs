@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 
-use bevy::{math::Vec2, prelude::Transform};
+use bevy::{math::Vec2, prelude::{Transform, Component}};
 
 use self::{
     border::TileBorder,
     position::TilePosition,
-    terrain::{generator::TerrainGenerator, Terrain},
+    terrain::{generator::{TerrainGenerator, Terrain}, BaseTerrain},
 };
 
 pub mod border;
@@ -25,8 +25,9 @@ pub mod visibility;
 //     OuterCornerBottomRight = 5
 // }
 
-#[derive(Clone, Debug)]
+#[derive(Component, Clone, Debug, Default)]
 pub struct Tile {
+    pub position: TilePosition,
     pub terrain: Terrain,
     pub borders: Vec<TileBorder>,
 }

@@ -4,32 +4,41 @@ pub mod generator;
 use variant_count::VariantCount;
 
 #[derive(VariantCount, Clone, Debug)]
-pub enum Terrain {
+pub enum BaseTerrain {
     Sand = 0,
     Grass = 1,
 }
 
-impl Into<f32> for Terrain {
+impl Default for BaseTerrain {
+    fn default() -> Self {
+        Self::Sand
+    }
+}
+
+impl Into<f32> for BaseTerrain {
     fn into(self) -> f32 {
         (self as u16).try_into().unwrap()
     }
 }
 
-impl From<usize> for Terrain {
+impl From<usize> for BaseTerrain {
     fn from(n: usize) -> Self {
         match n {
-            0 => Terrain::Sand,
-            1 => Terrain::Grass,
+            0 => BaseTerrain::Sand,
+            1 => BaseTerrain::Grass,
             _ => panic!(),
         }
     }
 }
 
-pub static BASE_TERRAINS: [Terrain; Terrain::VARIANT_COUNT] = [Terrain::Sand, Terrain::Grass];
+pub static BASE_TERRAINS: [BaseTerrain; BaseTerrain::VARIANT_COUNT] = [BaseTerrain::Sand, BaseTerrain::Grass];
 
-pub const TERRAIN_COUNT: usize = Terrain::VARIANT_COUNT;
-pub const TERRAINS_WITH_BORDERS_COUNT: usize = Terrain::VARIANT_COUNT - 1;
-pub const OUTER_BORDERS_COUNT: usize = 16;
+pub const TERRAIN_COUNT: usize = BaseTerrain::VARIANT_COUNT;
+pub const TERRAINS_WITH_BORDERS_COUNT: usize = BaseTerrain::VARIANT_COUNT - 1;
+pub const BORDER_ASSET_COUNT: usize = 16;
 
 pub type TerrainArray<T> = [T; TERRAIN_COUNT];
-pub type TerrainOuterBorderArray<T> = [[T; OUTER_BORDERS_COUNT]; TERRAINS_WITH_BORDERS_COUNT];
+pub type TerrainBorderArray<T> = [[T; BORDER_ASSET_COUNT]; TERRAINS_WITH_BORDERS_COUNT];
+
+pub const TERRAIN_DECORATION_COUNT: usize = 20;
+pub type TerrainDecorationArray<T> = [[T; TERRAIN_DECORATION_COUNT]; TERRAIN_COUNT];
