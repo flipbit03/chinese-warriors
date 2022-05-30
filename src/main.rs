@@ -1,13 +1,10 @@
-use bevy::{prelude::*, window::PresentMode};
+use bevy::{
+    prelude::App,
+    window::{PresentMode, WindowDescriptor},
+    DefaultPlugins,
+};
 
-use plugins::{console::ConsolePlugin, hero::HeroPlugin, hud::HudPlugin, startup::StartupPlugin};
-use systems::{helpers::set_texture_filters_to_nearest, input::InputPlugin, world::WorldPlugin};
-
-//mod game;
-mod plugins;
-mod systems;
-
-fn main() {
+pub fn main() {
     App::new()
         .insert_resource(WindowDescriptor {
             title: "Chinese Warriors".to_string(),
@@ -18,12 +15,13 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-        .add_plugin(StartupPlugin)
-        .add_plugin(HeroPlugin)
-        .add_plugin(HudPlugin)
-        .add_plugin(ConsolePlugin)
-        .add_plugin(WorldPlugin)
-        .add_plugin(InputPlugin)
-        .add_system(set_texture_filters_to_nearest)
+        .add_plugin(chinese_warriors::camera::CameraPlugin)
+        .add_plugin(chinese_warriors::assets::AssetsPlugin)
+        .add_plugin(chinese_warriors::hero::HeroPlugin)
+        .add_plugin(chinese_warriors::hud::HudPlugin)
+        .add_plugin(chinese_warriors::console::ConsolePlugin)
+        .add_plugin(chinese_warriors::world::WorldPlugin)
+        .add_plugin(chinese_warriors::input::InputPlugin)
+        .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
         .run();
 }

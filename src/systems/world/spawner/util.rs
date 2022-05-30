@@ -1,4 +1,0 @@
-// enum BorderTextureNumber {
-//     // Top
-//     HorizontalWall =
-// }
