@@ -27,7 +27,7 @@ impl TerrainGenerator {
         Self {
             perlin: p,
             fbm: fbm,
-            terrain_noise_scale_factor: XY { x: 16., y: 16. },
+            terrain_noise_scale_factor: XY { x: 2., y: 2. },
             decoration_noise_scale_factor: XY { x: 5., y: 5. },
         }
     }

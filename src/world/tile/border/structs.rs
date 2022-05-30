@@ -12,7 +12,7 @@ pub enum TileBorderType {
 #[derive(Clone, Debug)]
 pub struct TileBorder {
     pub terrain: BaseTerrain,
-    pub spec: BorderSpec
+    pub spec: BorderSpec,
 }
 
 #[derive(Clone, Debug)]
@@ -27,14 +27,14 @@ pub enum OpenEnd {
     Top,
     Right,
     Bottom,
-    Left
+    Left,
 }
 
 pub enum DiagonalLocation {
     TopLeft,
     TopRight,
     BottomRight,
-    BottomLeft
+    BottomLeft,
 }
 
 pub enum TunnelOrientation {
@@ -42,10 +42,14 @@ pub enum TunnelOrientation {
     Vertical,
 }
 
-
 impl From<[Option<TileBorderType>; 4]> for BorderSpec {
     fn from(t: [Option<TileBorderType>; 4]) -> Self {
-        Self { upper_left: t[0].clone(), upper_right: t[1].clone(), bottom_right: t[2].clone(), bottom_left: t[3].clone() }
+        Self {
+            upper_left: t[0].clone(),
+            upper_right: t[1].clone(),
+            bottom_right: t[2].clone(),
+            bottom_left: t[3].clone(),
+        }
     }
 }
 
@@ -56,18 +60,33 @@ impl BorderSpec {
             OpenEnd::Right | OpenEnd::Left => Some(TileBorderType::HorizontalWall),
         };
 
-        let mut c = [wall.clone(), wall, Some(TileBorderType::InnerCorner), Some(TileBorderType::InnerCorner)];
+        let mut c = [
+            wall.clone(),
+            wall,
+            Some(TileBorderType::InnerCorner),
+            Some(TileBorderType::InnerCorner),
+        ];
 
         match open_end {
             OpenEnd::Top => c.into(),
-            OpenEnd::Right => { c.rotate_right(1); c.into() },
-            OpenEnd::Bottom => { c.rotate_right(2); c.into() },
-            OpenEnd::Left => { c.rotate_left(1); c.into() },
+            OpenEnd::Right => {
+                c.rotate_right(1);
+                c.into()
+            }
+            OpenEnd::Bottom => {
+                c.rotate_right(2);
+                c.into()
+            }
+            OpenEnd::Left => {
+                c.rotate_left(1);
+                c.into()
+            }
         }
     }
 
     pub fn all_inner_corners() -> Self {
-        Self { upper_left: Some(TileBorderType::InnerCorner),
+        Self {
+            upper_left: Some(TileBorderType::InnerCorner),
             upper_right: Some(TileBorderType::InnerCorner),
             bottom_left: Some(TileBorderType::InnerCorner),
             bottom_right: Some(TileBorderType::InnerCorner),
@@ -80,13 +99,27 @@ impl BorderSpec {
             false => None,
         };
 
-        let mut c = [Some(TileBorderType::Diagonal), None, outer_corner_border, None];
-        
+        let mut c = [
+            Some(TileBorderType::Diagonal),
+            None,
+            outer_corner_border,
+            None,
+        ];
+
         match location {
             DiagonalLocation::TopLeft => c.into(),
-            DiagonalLocation::TopRight => { c.rotate_right(1); c.into()},
-            DiagonalLocation::BottomRight => { c.rotate_right(2); c.into()},
-            DiagonalLocation::BottomLeft => { c.rotate_left(1); c.into()},
+            DiagonalLocation::TopRight => {
+                c.rotate_right(1);
+                c.into()
+            }
+            DiagonalLocation::BottomRight => {
+                c.rotate_right(2);
+                c.into()
+            }
+            DiagonalLocation::BottomLeft => {
+                c.rotate_left(1);
+                c.into()
+            }
         }
     }
 
@@ -98,5 +131,4 @@ impl BorderSpec {
 
         [wall.clone(), wall.clone(), wall.clone(), wall].into()
     }
-
 }

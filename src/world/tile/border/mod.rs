@@ -1,4 +1,9 @@
-use self::{structs::{TileBorder, TileBorderType, BorderSpec, OpenEnd, DiagonalLocation, TunnelOrientation}, neighbor::get_border_from_neighbor_effects};
+use self::{
+    neighbor::get_border_from_neighbor_effects,
+    structs::{
+        BorderSpec, DiagonalLocation, OpenEnd, TileBorder, TileBorderType, TunnelOrientation,
+    },
+};
 
 use super::{position::TilePositionNeighbors, terrain::BaseTerrain};
 
@@ -8,7 +13,7 @@ pub mod structs;
 impl TileBorder {
     pub fn from(matrix: TilePositionNeighbors) -> Vec<Self> {
         let cloned = matrix.clone();
-        
+
         let center = cloned.center.0.base as usize;
         let stronger_than_me = center + 1;
 
@@ -28,13 +33,11 @@ impl TileBorder {
 
         (stronger_than_me..BaseTerrain::VARIANT_COUNT)
             .map(|terrain| {
-                let tileborder_from_4: Option<TileBorder> = get_tileborder_from_terrain(
-                    terrain,
-                    matrix.clone(),
-                );
+                let tileborder_from_4: Option<TileBorder> =
+                    get_tileborder_from_terrain(terrain, matrix.clone());
 
                 if let Some(border) = tileborder_from_4 {
-                    return border
+                    return border;
                 };
 
                 let upper_left = get_border_from_neighbor_effects(
@@ -65,7 +68,7 @@ impl TileBorder {
 
                 TileBorder {
                     terrain: terrain.into(),
-                    spec: borders.into()
+                    spec: borders.into(),
                 }
             })
             .collect()
@@ -118,8 +121,10 @@ impl TileBorder {
     }
 }
 
-fn get_tileborder_from_terrain(terrain: usize, matrix: TilePositionNeighbors) -> Option<TileBorder> {
-    
+fn get_tileborder_from_terrain(
+    terrain: usize,
+    matrix: TilePositionNeighbors,
+) -> Option<TileBorder> {
     let left = matrix.left.0.base as usize;
     let top = matrix.top.0.base as usize;
     let right = matrix.right.0.base as usize;
@@ -129,7 +134,7 @@ fn get_tileborder_from_terrain(terrain: usize, matrix: TilePositionNeighbors) ->
     let top_right = matrix.top_right.0.base as usize;
     let bottom_left = matrix.bottom_left.0.base as usize;
     let bottom_right = matrix.bottom_right.0.base as usize;
-    
+
     match (top == terrain, right == terrain, bottom == terrain, left == terrain) {
 
         // All Inner Corners

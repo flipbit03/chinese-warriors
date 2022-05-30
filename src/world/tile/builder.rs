@@ -3,8 +3,9 @@ use bevy::{
     prelude::Transform,
 };
 
-use super::{position::TilePositionNeighbors, terrain::generator::TerrainGenerator,
-    Tile, TileBuilder, TileDrawInstrucion, TilePosition, border::structs::TileBorder,
+use super::{
+    border::structs::TileBorder, position::TilePositionNeighbors,
+    terrain::generator::TerrainGenerator, Tile, TileBuilder, TileDrawInstrucion, TilePosition,
 };
 
 impl TileBuilder {

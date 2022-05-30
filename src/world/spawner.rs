@@ -86,13 +86,15 @@ pub fn spawn_terrain_from_instruction(
             .borders
             .clone()
             .into_iter()
-            .for_each(|border_instruction| {
+            .enumerate()
+            .for_each(|(terrain_order, border_instruction)| {
+                let border_layer_base_z = terrain_order as f32 / 1000.0;
                 for border_texture_index in border_instruction.get_texture_indexes() {
                     let border_terrain_transform = Transform {
                         translation: Vec3::new(
                             tile_to_spawn.transform.translation.x,
                             tile_to_spawn.transform.translation.y,
-                            tile_to_spawn.transform.translation.z + 0.001,
+                            tile_to_spawn.transform.translation.z + border_layer_base_z + 0.001,
                         ),
                         ..Default::default()
                     };

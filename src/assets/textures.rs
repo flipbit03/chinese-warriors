@@ -25,8 +25,30 @@ pub fn load_textures(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
+    //
+    // Stone
+    //
+
+    // Base Tile
+    let bt_stone_handle: Handle<Image> = asset_server.load("Terrain/Stone/Stone.png");
+
+    // Decorations
+    let stone_decorations: Vec<Handle<Image>> = (0..(TERRAIN_DECORATION_COUNT))
+        .map(|n| {
+            let border_fn = format!("Terrain/Stone/Decoration/TerrainDecoration{n}.png");
+            let loaded_image: Handle<Image> = asset_server.load(&border_fn);
+            loaded_image
+        })
+        .collect();
+
+    //
+    // Sand
+    //
+
+    // Base Tile
     let bt_sand_handle: Handle<Image> = asset_server.load("Terrain/Sand/Sand.png");
 
+    // Decorations
     let sand_decorations: Vec<Handle<Image>> = (0..(TERRAIN_DECORATION_COUNT))
         .map(|n| {
             let border_fn = format!("Terrain/Sand/Decoration/TerrainDecoration{n}.png");
@@ -35,17 +57,22 @@ pub fn load_textures(
         })
         .collect();
 
-    let bt_grass_handle: Handle<Image> = asset_server.load("Terrain/Grass/Grass.png");
-
-    // format!("BaseTerrain/Grass/Border/OuterBorder/GrassOuterBorder{}.png",n)
-    let grass_borders: Vec<Handle<Image>> = (0..(BORDER_ASSET_COUNT))
+    let sand_borders: Vec<Handle<Image>> = (0..(BORDER_ASSET_COUNT))
         .map(|n| {
-            let border_fn = format!("Terrain/Grass/Border/GrassBorder{n}.png");
+            let border_fn = format!("Terrain/Sand/Border/SandBorder{n}.png");
             let loaded_image: Handle<Image> = asset_server.load(&border_fn);
             loaded_image
         })
         .collect();
 
+    //
+    // Sand
+    //
+
+    // Base Tile
+    let bt_grass_handle: Handle<Image> = asset_server.load("Terrain/Grass/Grass.png");
+
+    // Decorations
     let grass_decorations: Vec<Handle<Image>> = (0..(TERRAIN_DECORATION_COUNT))
         .map(|n| {
             let border_fn = format!("Terrain/Grass/Decoration/TerrainDecoration{n}.png");
@@ -54,11 +81,24 @@ pub fn load_textures(
         })
         .collect();
 
+    // Borders
+    let grass_borders: Vec<Handle<Image>> = (0..(BORDER_ASSET_COUNT))
+        .map(|n| {
+            let border_fn = format!("Terrain/Grass/Border/GrassBorder{n}.png");
+            let loaded_image: Handle<Image> = asset_server.load(&border_fn);
+            loaded_image
+        })
+        .collect();
+
     let bt_textures = TerrainTextures {
         tile_size: Vec2::new(64.0, 64.0),
-        base_terrain: [bt_sand_handle, bt_grass_handle],
-        borders: [grass_borders.try_into().unwrap()],
+        base_terrain: [bt_stone_handle, bt_sand_handle, bt_grass_handle],
+        borders: [
+            sand_borders.try_into().unwrap(),
+            grass_borders.try_into().unwrap(),
+        ],
         decorations: [
+            stone_decorations.try_into().unwrap(),
             sand_decorations.try_into().unwrap(),
             grass_decorations.try_into().unwrap(),
         ],

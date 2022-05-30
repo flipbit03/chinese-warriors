@@ -4,8 +4,9 @@ use bevy::{
 };
 
 use self::{
+    border::structs::TileBorder,
     position::TilePosition,
-    terrain::generator::{Terrain, TerrainGenerator}, border::structs::TileBorder,
+    terrain::generator::{Terrain, TerrainGenerator},
 };
 
 pub mod border;

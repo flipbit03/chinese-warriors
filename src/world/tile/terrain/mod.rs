@@ -4,8 +4,9 @@ use variant_count::VariantCount;
 
 #[derive(VariantCount, Clone, Debug)]
 pub enum BaseTerrain {
-    Sand = 0,
-    Grass = 1,
+    Stone = 0,
+    Sand = 1,
+    Grass = 2,
 }
 
 impl Default for BaseTerrain {
@@ -23,15 +24,16 @@ impl Into<f32> for BaseTerrain {
 impl From<usize> for BaseTerrain {
     fn from(n: usize) -> Self {
         match n {
-            0 => BaseTerrain::Sand,
-            1 => BaseTerrain::Grass,
+            0 => BaseTerrain::Stone,
+            1 => BaseTerrain::Sand,
+            2 => BaseTerrain::Grass,
             _ => panic!(),
         }
     }
 }
 
 pub static BASE_TERRAINS: [BaseTerrain; BaseTerrain::VARIANT_COUNT] =
-    [BaseTerrain::Sand, BaseTerrain::Grass];
+    [BaseTerrain::Stone, BaseTerrain::Sand, BaseTerrain::Grass];
 
 pub const TERRAIN_COUNT: usize = BaseTerrain::VARIANT_COUNT;
 pub const TERRAINS_WITH_BORDERS_COUNT: usize = BaseTerrain::VARIANT_COUNT - 1;
