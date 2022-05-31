@@ -1,7 +1,7 @@
 use bevy::{
     math::Rect,
     prelude::{
-        Color, Commands, Component, Query, Res, TextBundle, Transform, UiCameraBundle, With,
+        Color, Commands, Component, Query, Res, TextBundle, Transform, With,
         Without,
     },
     text::{HorizontalAlign, Text, TextAlignment, TextStyle},
@@ -16,10 +16,6 @@ use crate::{
 
 #[derive(Component)]
 pub struct HudText(u32);
-
-pub fn generate_ui_camera(mut commands: Commands) {
-    commands.spawn_bundle(UiCameraBundle::default());
-}
 
 pub fn spawn_hud_text(mut commands: Commands, main_font: Res<MainFont>) {
     commands

@@ -1,4 +1,7 @@
 use bevy::prelude::*;
+use iyes_loopless::prelude::ConditionSet;
+
+use crate::app::GameState;
 
 use super::assets::timers::ConsoleStatusTimer;
 
@@ -13,6 +16,11 @@ pub struct ConsolePlugin;
 
 impl Plugin for ConsolePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(console_stats);
+        app.add_system_set(
+            ConditionSet::new()
+                .run_in_state(GameState::InGame)
+                .with_system(console_stats)
+                .into(),
+        );
     }
 }

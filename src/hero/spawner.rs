@@ -10,6 +10,7 @@ use crate::assets::textures::GuriTextureAtlas;
 use super::structs::{Hero, HeroWalkCycleTimer};
 
 pub fn spawn_hero(mut commands: Commands, guri_atlas: Res<GuriTextureAtlas>) {
+    println!("Spawning hero...");
     commands
         .spawn_bundle(SpriteSheetBundle {
             texture_atlas: guri_atlas.texture_handle.clone(),

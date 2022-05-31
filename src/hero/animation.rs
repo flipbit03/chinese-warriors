@@ -15,7 +15,6 @@ pub fn animate_hero(
     mut query: Query<(&mut HeroWalkCycleTimer, &mut TextureAtlasSprite, &Hero), With<Hero>>,
 ) {
     let (mut timer, mut sprite, hero) = query.single_mut();
-
     timer.tick(time.delta());
     if timer.just_finished() {
         let texture_atlas = texture_atlases

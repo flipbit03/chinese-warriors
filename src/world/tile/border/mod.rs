@@ -196,8 +196,8 @@ fn get_tileborder_from_terrain(
                 DiagonalLocation::BottomLeft, 
                 top_right == terrain)
         }),
-        
-        _ => None        
+
+        _ => None
         // (false, true, false, false) => todo!(),
         // (false, false, false, false) => todo!(),
         // (true, false, false, false) => todo!(),

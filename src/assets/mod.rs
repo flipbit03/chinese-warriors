@@ -1,11 +1,14 @@
-use bevy::prelude::{App, Plugin, StartupStage};
+use bevy::prelude::{App, Commands, Plugin};
 use bevy_asset_ron::RonAssetPlugin;
+use iyes_loopless::{prelude::{AppLooplessStateExt, ConditionSet}, state::NextState};
+
+use crate::{app::GameState, world::tile::TileBuilder};
 
 use self::{
     asset_reloader::activate_live_asset_reloading,
-    config::{live_updater::live_update_config, load_initial_config, structs::CwConfig},
+    config::{live_updater::live_update_main_config, load_config_save_handle, structs::CwConfig},
     fonts::load_fonts,
-    game::load_game_assets,
+    game::create_initial_tilebuilder,
     textures::load_textures,
     timers::load_timers,
 };
@@ -21,12 +24,31 @@ pub struct AssetsPlugin;
 impl Plugin for AssetsPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugin(RonAssetPlugin::<CwConfig>::new(&["config"]))
-            .add_startup_system_to_stage(StartupStage::PreStartup, activate_live_asset_reloading)
-            .add_startup_system_to_stage(StartupStage::PreStartup, load_initial_config)
-            .add_startup_system_to_stage(StartupStage::PreStartup, load_fonts)
-            .add_startup_system_to_stage(StartupStage::PreStartup, load_textures)
-            .add_startup_system_to_stage(StartupStage::PreStartup, load_timers)
-            .add_startup_system_to_stage(StartupStage::Startup, load_game_assets)
-            .add_system(live_update_config);
+            .add_enter_system(GameState::Loading, activate_live_asset_reloading)
+            .add_enter_system(GameState::Loading, load_config_save_handle)
+            .add_enter_system(GameState::Loading, load_fonts)
+            .add_enter_system(GameState::Loading, load_textures)
+            .add_enter_system(GameState::Loading, load_timers)
+            .add_system_set(
+                ConditionSet::new()
+                    .run_in_state(GameState::Loading)
+                    .run_if_resource_exists::<CwConfig>()
+                    .run_unless_resource_exists::<TileBuilder>()
+                    .with_system(create_initial_tilebuilder)
+                    .into(),
+            )
+            .add_system_set(
+                ConditionSet::new()
+                    .run_in_state(GameState::Loading)
+                    .run_if_resource_exists::<TileBuilder>()
+                    .with_system(change_mode_to_ingame)
+                    .into(),
+            )
+            .add_system(live_update_main_config);
     }
+}
+
+pub fn change_mode_to_ingame(mut commands: Commands) {
+    println!("Changing to InGame");
+    commands.insert_resource(NextState(GameState::InGame))
 }

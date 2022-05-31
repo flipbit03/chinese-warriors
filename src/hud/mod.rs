@@ -1,7 +1,10 @@
 use bevy::prelude::*;
+use iyes_loopless::prelude::{AppLooplessStateExt, ConditionSet};
+
+use crate::app::GameState;
 
 use self::{
-    spawner::{generate_ui_camera, spawn_hud_text, update_hud_text},
+    spawner::{spawn_hud_text, update_hud_text},
     window_title::update_window_title,
 };
 pub mod spawner;
@@ -11,9 +14,13 @@ pub struct HudPlugin;
 
 impl Plugin for HudPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system_to_stage(StartupStage::PreStartup, generate_ui_camera)
-            .add_startup_system(spawn_hud_text)
-            .add_system(update_hud_text)
-            .add_system(update_window_title);
+        app.add_enter_system(GameState::InGame, spawn_hud_text)
+            .add_system_set(
+                ConditionSet::new()
+                    .run_in_state(GameState::InGame)
+                    .with_system(update_hud_text)
+                    .with_system(update_window_title)
+                    .into(),
+            );
     }
 }

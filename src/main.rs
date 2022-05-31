@@ -3,6 +3,8 @@ use bevy::{
     window::{PresentMode, WindowDescriptor},
     DefaultPlugins,
 };
+use chinese_warriors::app::GameState;
+use iyes_loopless::prelude::AppLooplessStateExt;
 
 pub fn main() {
     App::new()
@@ -15,8 +17,9 @@ pub fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-        .add_plugin(chinese_warriors::camera::CameraPlugin)
+        .add_loopless_state(GameState::Loading)
         .add_plugin(chinese_warriors::assets::AssetsPlugin)
+        .add_plugin(chinese_warriors::camera::CameraPlugin)
         .add_plugin(chinese_warriors::hero::HeroPlugin)
         .add_plugin(chinese_warriors::hud::HudPlugin)
         .add_plugin(chinese_warriors::console::ConsolePlugin)
