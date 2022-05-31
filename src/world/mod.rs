@@ -8,7 +8,7 @@ use iyes_loopless::prelude::ConditionSet;
 use crate::app::GameState;
 
 use self::{
-    despawner::despawn_terrain,
+    despawner::{despawn_terrain, DespawnAllTerrain, despawn_all_terrain},
     spawner::{spawn_terrain_from_instruction, spawn_terrain_instruction},
 };
 
@@ -22,6 +22,13 @@ impl Plugin for WorldPlugin {
                 .with_system(spawn_terrain_instruction)
                 .with_system(spawn_terrain_from_instruction)
                 .with_system(despawn_terrain)
+                .into(),
+        )
+        .add_system_set(
+            ConditionSet::new()
+                .run_in_state(GameState::InGame)
+                .run_if_resource_exists::<DespawnAllTerrain>()
+                .with_system(despawn_all_terrain)
                 .into(),
         );
     }

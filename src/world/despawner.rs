@@ -1,5 +1,7 @@
 use crate::assets::config::structs::CwConfig;
 
+pub struct DespawnAllTerrain;
+
 use super::{
     spawner::DrawableTerrainMaterial,
     tile::{
@@ -39,4 +41,17 @@ pub fn despawn_terrain(
             commands.entity(tile_entity).despawn_recursive()
         }
     }
+}
+
+
+
+pub fn despawn_all_terrain(
+    mut commands: Commands,
+    tile_query: Query<Entity, With<DrawableTerrainMaterial>>,
+) {
+    for tile_entity in tile_query.iter() {
+        commands.entity(tile_entity).despawn_recursive()
+    }
+
+    commands.remove_resource::<DespawnAllTerrain>();
 }

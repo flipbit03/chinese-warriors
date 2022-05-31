@@ -1,6 +1,6 @@
 use bevy::prelude::{AssetEvent, Assets, Commands, EventReader, Res};
 
-use crate::assets::game::generate_tile_builder_resource_from_config;
+use crate::{assets::game::generate_tile_builder_resource_from_config, world::despawner::DespawnAllTerrain};
 
 use super::structs::CwConfig;
 
@@ -25,6 +25,7 @@ pub fn live_update_main_config(
         Some(c) => {
             println!("Updated Config => {:?}", &c);
             generate_tile_builder_resource_from_config(&mut commands, &c);
+            commands.insert_resource(DespawnAllTerrain);
             commands.insert_resource(c.clone());
         }
         None => (),
