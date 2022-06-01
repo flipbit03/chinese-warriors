@@ -28,5 +28,5 @@ pub fn input_camera_scale(
         println!("camera.scale = {}", &camera.scale);
     }
 
-    camera.scale = scale.max(0.5);
+    camera.scale = scale.max(0.5).min(2.0);
 }

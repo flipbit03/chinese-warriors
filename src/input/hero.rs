@@ -4,7 +4,10 @@ use bevy::{
     render::camera::Camera2d,
 };
 
-use crate::{hero::structs::{Hero, HeroFacing}, assets::config::structs::CwConfig};
+use crate::{
+    assets::config::structs::CwConfig,
+    hero::structs::{Hero, HeroFacing},
+};
 
 pub fn hero_input(
     keyboard_input: Res<Input<KeyCode>>,
@@ -15,7 +18,7 @@ pub fn hero_input(
     let mut camera_transform = camera_query.single_mut();
 
     // TODO: Fix Diagonal Move Speed
-    let move_speed = config.hero.move_speed;
+    let move_speed = config.hero.move_speed * camera_transform.scale.x;
 
     let (mut hero, mut hero_transform) = query.single_mut();
 

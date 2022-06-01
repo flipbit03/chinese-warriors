@@ -8,7 +8,7 @@ use iyes_loopless::prelude::ConditionSet;
 use crate::app::GameState;
 
 use self::{
-    despawner::{despawn_terrain, DespawnAllTerrain, despawn_all_terrain},
+    despawner::{despawn_all_terrain, despawn_terrain, DespawnAllTerrain},
     spawner::{spawn_terrain_from_instruction, spawn_terrain_instruction},
 };
 

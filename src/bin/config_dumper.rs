@@ -4,7 +4,7 @@ use chinese_warriors::assets::config::structs::CwConfig;
 use ron::{extensions::Extensions, ser::PrettyConfig};
 
 fn main() -> std::io::Result<()> {
-    let dump_path = "assets/default.config";
+    let dump_path = "assets/default.config.ron";
 
     println!("Dumping Default CwConfig to {}", &dump_path);
 
@@ -13,6 +13,8 @@ fn main() -> std::io::Result<()> {
         PrettyConfig::new()
             .decimal_floats(true)
             .extensions(Extensions::UNWRAP_NEWTYPES)
+            .depth_limit(4)
+            .indentor("  ".to_ascii_lowercase())
             .separate_tuple_members(true),
     )
     .unwrap();

@@ -1,9 +1,6 @@
 use bevy::{
     math::Rect,
-    prelude::{
-        Color, Commands, Component, Query, Res, TextBundle, Transform, With,
-        Without,
-    },
+    prelude::{Color, Commands, Component, Query, Res, TextBundle, Transform, With, Without},
     text::{HorizontalAlign, Text, TextAlignment, TextStyle},
     ui::{AlignSelf, PositionType, Style, Val},
 };
@@ -65,6 +62,6 @@ pub fn update_hud_text(
         hero_transform.translation.x,
         hero_transform.translation.y,
         tile_query.iter().count(),
-        config
+        config.hero
     );
 }

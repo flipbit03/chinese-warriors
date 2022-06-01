@@ -175,25 +175,25 @@ fn get_tileborder_from_terrain(
         (true, false, false, true) => Some(TileBorder {
             terrain: terrain.into(),
             spec: BorderSpec::diagonal(
-                DiagonalLocation::TopLeft, 
+                DiagonalLocation::TopLeft,
                 bottom_right == terrain)
         }),
         (true, true, false, false) => Some(TileBorder {
             terrain: terrain.into(),
             spec: BorderSpec::diagonal(
-                DiagonalLocation::TopRight, 
+                DiagonalLocation::TopRight,
                 bottom_left == terrain)
         }),
         (false, true, true, false) => Some(TileBorder {
             terrain: terrain.into(),
             spec: BorderSpec::diagonal(
-                DiagonalLocation::BottomRight, 
+                DiagonalLocation::BottomRight,
                 top_left == terrain)
         }),
         (false, false, true, true) =>  Some(TileBorder {
             terrain: terrain.into(),
             spec: BorderSpec::diagonal(
-                DiagonalLocation::BottomLeft, 
+                DiagonalLocation::BottomLeft,
                 top_right == terrain)
         }),
 

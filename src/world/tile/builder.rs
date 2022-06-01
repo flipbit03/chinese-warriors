@@ -2,34 +2,50 @@ use bevy::{
     math::{Vec2, Vec3},
     prelude::Transform,
 };
+use serde::{Deserialize, Serialize};
 
 use super::{
-    border::structs::TileBorder, position::TilePositionNeighbors,
-    terrain::generator::TerrainGenerator, Tile, TileBuilder, TileDrawInstrucion, TilePosition,
+    border::structs::TileBorder,
+    position::TilePositionNeighbors,
+    terrain::generator::{TerrainGenerator, TerrainGeneratorConfig},
+    TilePosition, WorldTile, WorldTileDrawInstrucion,
 };
 
-impl TileBuilder {
-    pub fn new_with_seed(seed: u32, tile_size: Vec2, tile_scale: f32) -> Self {
-        TileBuilder {
-            generator: TerrainGenerator::new_with_seed(seed),
-            tile_size,
-            tile_scale,
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct WorldBuilderConfig {
+    pub terrain_generation: TerrainGeneratorConfig,
+    pub tile_size: Vec2,
+    pub tile_scale: f32,
+}
+
+pub struct WorldBuilder {
+    pub tile_size: Vec2,
+    pub tile_scale: f32,
+    generator: TerrainGenerator,
+}
+
+impl WorldBuilder {
+    pub fn new_from_config(config: &WorldBuilderConfig) -> Self {
+        WorldBuilder {
+            generator: TerrainGenerator::new_from_config(&config.terrain_generation),
+            tile_size: config.tile_size,
+            tile_scale: config.tile_scale,
         }
     }
 
-    fn get(&self, pos: TilePosition) -> Tile {
+    fn get(&self, pos: TilePosition) -> WorldTile {
         let matrix = TilePositionNeighbors::new(&self.generator, pos);
-        Tile {
+        WorldTile {
             position: matrix.center.1.clone(),
             terrain: matrix.center.0.clone(),
             borders: TileBorder::from(matrix),
         }
     }
 
-    pub fn create(&mut self, tile_position: TilePosition) -> TileDrawInstrucion {
+    pub fn create(&mut self, tile_position: TilePosition) -> WorldTileDrawInstrucion {
         let tile = self.get(tile_position.clone());
         let tile_z_order: f32 = tile.terrain.base.clone().into();
-        TileDrawInstrucion {
+        WorldTileDrawInstrucion {
             tile,
             transform: Transform {
                 translation: Vec3::new(

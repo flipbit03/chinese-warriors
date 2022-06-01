@@ -1,15 +1,28 @@
-use bevy::math::XY;
-use noise::{Fbm, NoiseFn, Perlin, Seedable};
+use std::{collections::HashMap, ops::Range};
+
+use serde::{Deserialize, Serialize};
 
 use crate::world::tile::position::TilePosition;
 
-use super::{BaseTerrain, BASE_TERRAINS};
+use super::{
+    biomes::Biome,
+    noise::{NoiseGenerator, NoiseGeneratorConfig},
+    BaseTerrain,
+};
+
+pub type BiomeDict = HashMap<Biome, Vec<(BaseTerrain, Range<f64>)>>;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TerrainGeneratorConfig {
+    pub biomes: BiomeDict,
+    pub base_terrain: NoiseGeneratorConfig,
+    pub decoration: NoiseGeneratorConfig,
+}
 
 pub struct TerrainGenerator {
-    pub perlin: Perlin,
-    pub fbm: Fbm,
-    pub terrain_noise_scale_factor: XY<f64>,
-    pub decoration_noise_scale_factor: XY<f64>,
+    pub biomes: BiomeDict,
+    pub terrain_component: NoiseGenerator,
+    pub decoration_component: NoiseGenerator,
 }
 
 #[derive(Debug, Default, Clone)]
@@ -21,57 +34,37 @@ pub struct Terrain {
 pub const DECORATION_COUNT: usize = 21;
 
 impl TerrainGenerator {
-    pub fn new_with_seed(seed: u32) -> Self {
-        let p = Perlin::new().set_seed(seed);
-        let fbm = Fbm::new().set_seed(seed);
+    pub fn new_from_config(config: &TerrainGeneratorConfig) -> Self {
         Self {
-            perlin: p,
-            fbm: fbm,
-            terrain_noise_scale_factor: XY { x: 2., y: 2. },
-            decoration_noise_scale_factor: XY { x: 5., y: 5. },
+            biomes: config.biomes.clone(),
+            decoration_component: NoiseGenerator::new_from_config(&config.decoration),
+            terrain_component: NoiseGenerator::new_from_config(&config.base_terrain),
         }
     }
 
+    fn get_biome(&self) -> Biome {
+        Biome::SandyForest
+    }
+
     fn get_base_terrain(&self, tp: &TilePosition) -> BaseTerrain {
-        let terrain_point = [
-            tp.x as f64 / self.terrain_noise_scale_factor.x,
-            tp.y as f64 / self.terrain_noise_scale_factor.y,
-        ];
+        let noise_value = self.terrain_component.get_noise(tp);
 
-        // 2 noise components in the [-0.5, 0.5] range
-        let fbm_value = self.fbm.get(terrain_point) / 2.0;
-        let perlin_value = self.perlin.get(terrain_point) / 2.0;
+        let biome_terrain_proportions = self.biomes.get(&self.get_biome()).unwrap();
 
-        // Sum both, get a value "somewhere" in the [-1.0, 1.0] range
-        let combined = fbm_value + perlin_value; // -1 a 1
+        for (terrain, range) in biome_terrain_proportions {
+            if range.contains(&noise_value) {
+                return terrain.clone();
+            }
+        }
 
-        // Add 1.0 (range becomes [0.0, 2.0], divide by 2, final normalized range becomes [0.0, 0.9999999999999999]
-        let normalized = ((combined + 1.0) / 2.0).clamp(0.0, 1.0 - 1e-16);
-
-        // from the normalized number, get the tile number
-        let base_terrain_number = (normalized * (BaseTerrain::VARIANT_COUNT) as f64) as usize;
-
-        // Get final tile number
-        BASE_TERRAINS[base_terrain_number].clone()
+        // Range was not found, default terrain is the lowest priority one.
+        BaseTerrain::Stone
     }
 
     fn get_decoration(&self, tp: &TilePosition) -> Option<usize> {
-        let decoration_point = [
-            tp.x as f64 / self.decoration_noise_scale_factor.x,
-            tp.y as f64 / self.decoration_noise_scale_factor.y,
-        ];
+        let noise_value = self.decoration_component.get_noise(tp);
 
-        // 2 noise components in the [-0.5, 0.5] range
-        let fbm_value = self.fbm.get(decoration_point) / 2.0;
-        let perlin_value = self.perlin.get(decoration_point) / 2.0;
-
-        // Sum both, get a value "somewhere" in the [-1.0, 1.0] range
-        let combined = fbm_value + perlin_value; // -1 a 1
-
-        // Add 1.0 (range becomes [0.0, 2.0], divide by 2, final normalized range becomes [0.0, 1.0]
-        let normalized = ((combined + 1.0) / 2.0).clamp(0.0, 1.0); // [0,1]
-
-        let decoration = (normalized * (DECORATION_COUNT as f64)) as usize;
+        let decoration = (noise_value * ((DECORATION_COUNT - 1) as f64)) as usize;
 
         match decoration {
             0 => None,

@@ -1,6 +1,8 @@
 use bevy::prelude::{AssetEvent, Assets, Commands, EventReader, Res};
 
-use crate::{assets::game::generate_tile_builder_resource_from_config, world::despawner::DespawnAllTerrain};
+use crate::{
+    assets::game::generate_tile_builder_resource_from_config, world::despawner::DespawnAllTerrain,
+};
 
 use super::structs::CwConfig;
 

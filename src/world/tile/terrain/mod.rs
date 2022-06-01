@@ -1,8 +1,10 @@
+pub mod biomes;
 pub mod generator;
-
+pub mod noise;
+use serde::{Deserialize, Serialize};
 use variant_count::VariantCount;
 
-#[derive(VariantCount, Clone, Debug)]
+#[derive(VariantCount, Clone, Debug, Serialize, Deserialize)]
 pub enum BaseTerrain {
     Stone = 0,
     Sand = 1,
@@ -32,15 +34,14 @@ impl From<usize> for BaseTerrain {
     }
 }
 
-pub static BASE_TERRAINS: [BaseTerrain; BaseTerrain::VARIANT_COUNT] =
-    [BaseTerrain::Stone, BaseTerrain::Sand, BaseTerrain::Grass];
-
 pub const TERRAIN_COUNT: usize = BaseTerrain::VARIANT_COUNT;
-pub const TERRAINS_WITH_BORDERS_COUNT: usize = BaseTerrain::VARIANT_COUNT - 1;
-pub const BORDER_ASSET_COUNT: usize = 20;
-
 pub type TerrainArray<T> = [T; TERRAIN_COUNT];
+
+pub const TERRAINS_WITH_BORDERS_COUNT: usize = TERRAIN_COUNT - 1;
+pub const BORDER_ASSET_COUNT: usize = 20;
 pub type TerrainBorderArray<T> = [[T; BORDER_ASSET_COUNT]; TERRAINS_WITH_BORDERS_COUNT];
 
 pub const TERRAIN_DECORATION_COUNT: usize = 20;
-pub type TerrainDecorationArray<T> = [[T; TERRAIN_DECORATION_COUNT]; TERRAIN_COUNT];
+pub const TERRAINS_WITH_DECORATIONS_COUNT: usize = TERRAIN_COUNT;
+pub type TerrainDecorationArray<T> =
+    [[T; TERRAIN_DECORATION_COUNT]; TERRAINS_WITH_DECORATIONS_COUNT];

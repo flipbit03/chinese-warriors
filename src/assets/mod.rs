@@ -1,8 +1,11 @@
 use bevy::prelude::{App, Commands, Plugin};
 use bevy_asset_ron::RonAssetPlugin;
-use iyes_loopless::{prelude::{AppLooplessStateExt, ConditionSet}, state::NextState};
+use iyes_loopless::{
+    prelude::{AppLooplessStateExt, ConditionSet},
+    state::NextState,
+};
 
-use crate::{app::GameState, world::tile::TileBuilder};
+use crate::{app::GameState, world::tile::builder::WorldBuilder};
 
 use self::{
     asset_reloader::activate_live_asset_reloading,
@@ -23,7 +26,7 @@ pub struct AssetsPlugin;
 
 impl Plugin for AssetsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugin(RonAssetPlugin::<CwConfig>::new(&["config"]))
+        app.add_plugin(RonAssetPlugin::<CwConfig>::new(&["config.ron"]))
             .add_enter_system(GameState::Loading, activate_live_asset_reloading)
             .add_enter_system(GameState::Loading, load_config_save_handle)
             .add_enter_system(GameState::Loading, load_fonts)
@@ -33,14 +36,14 @@ impl Plugin for AssetsPlugin {
                 ConditionSet::new()
                     .run_in_state(GameState::Loading)
                     .run_if_resource_exists::<CwConfig>()
-                    .run_unless_resource_exists::<TileBuilder>()
+                    .run_unless_resource_exists::<WorldBuilder>()
                     .with_system(create_initial_tilebuilder)
                     .into(),
             )
             .add_system_set(
                 ConditionSet::new()
                     .run_in_state(GameState::Loading)
-                    .run_if_resource_exists::<TileBuilder>()
+                    .run_if_resource_exists::<WorldBuilder>()
                     .with_system(change_mode_to_ingame)
                     .into(),
             )

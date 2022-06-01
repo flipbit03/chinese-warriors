@@ -26,12 +26,8 @@ pub fn despawn_terrain(
         camera_projection.scale * 1.3,
     );
 
-    let no_despawn_area: Vec<TilePosition> = get_visible_tiles(
-        screen_rect,
-        config.terrain.tile_size,
-        config.terrain.tile_scale,
-    )
-    .collect();
+    let no_despawn_area: Vec<TilePosition> =
+        get_visible_tiles(screen_rect, config.world.tile_size, config.world.tile_scale).collect();
 
     for (tile_entity, tile_drawableterrainmaterial) in tile_query.iter() {
         if let None = no_despawn_area
@@ -42,8 +38,6 @@ pub fn despawn_terrain(
         }
     }
 }
-
-
 
 pub fn despawn_all_terrain(
     mut commands: Commands,

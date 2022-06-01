@@ -1,9 +1,10 @@
 use crate::assets::config::structs::CwConfig;
 use crate::assets::textures::TerrainTextures;
 
+use super::tile::builder::WorldBuilder;
 use super::tile::position::TilePosition;
 use super::tile::visibility::{get_screen_rect, get_visible_tiles};
-use super::tile::{TileBuilder, TileDrawInstrucion};
+use super::tile::WorldTileDrawInstrucion;
 use bevy::prelude::Transform;
 use bevy::prelude::*;
 use bevy::render::camera::Camera2d;
@@ -16,7 +17,7 @@ pub fn spawn_terrain_instruction(
     camera_query: Query<(&Transform, &OrthographicProjection), With<Camera2d>>,
     config: Res<CwConfig>,
     tile_query: Query<(Entity, &DrawableTerrainMaterial)>,
-    mut tile_builder: ResMut<TileBuilder>,
+    mut tile_builder: ResMut<WorldBuilder>,
 ) {
     let (camera_transform, camera_projection) = camera_query.single();
 
@@ -26,11 +27,9 @@ pub fn spawn_terrain_instruction(
         camera_projection.scale * 1.2,
     );
 
-    for tile_to_create in get_visible_tiles(
-        screen_rect,
-        config.terrain.tile_size,
-        tile_builder.tile_scale,
-    ) {
+    for tile_to_create in
+        get_visible_tiles(screen_rect, config.world.tile_size, tile_builder.tile_scale)
+    {
         if let Some(_) = tile_query.iter().position(|(_, p)| p.0 == tile_to_create) {
             continue;
         }
@@ -45,7 +44,10 @@ pub fn spawn_terrain_instruction(
 pub fn spawn_terrain_from_instruction(
     mut commands: Commands,
     terrain_textures: Res<TerrainTextures>,
-    tile_instructions_query: Query<(Entity, &TileDrawInstrucion), Added<TileDrawInstrucion>>,
+    tile_instructions_query: Query<
+        (Entity, &WorldTileDrawInstrucion),
+        Added<WorldTileDrawInstrucion>,
+    >,
 ) {
     for (instruction_entity, tile_to_spawn) in tile_instructions_query.iter() {
         let new_tile_terrain_base = tile_to_spawn.tile.terrain.clone().base as usize;
@@ -73,6 +75,7 @@ pub fn spawn_terrain_from_instruction(
                             tile_to_spawn.transform.translation.y,
                             tile_to_spawn.transform.translation.z + 0.00001,
                         ),
+                        scale: tile_to_spawn.transform.scale,
                         ..Default::default()
                     },
                     ..Default::default()
@@ -96,6 +99,7 @@ pub fn spawn_terrain_from_instruction(
                             tile_to_spawn.transform.translation.y,
                             tile_to_spawn.transform.translation.z + border_layer_base_z + 0.001,
                         ),
+                        scale: tile_to_spawn.transform.scale,
                         ..Default::default()
                     };
 
