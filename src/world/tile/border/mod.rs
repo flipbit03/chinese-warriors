@@ -1,3 +1,5 @@
+use strum::EnumCount;
+
 use self::{
     neighbor::get_border_from_neighbor_effects,
     structs::{
@@ -17,7 +19,7 @@ impl TileBorder {
         let center = cloned.center.0.base as usize;
         let stronger_than_me = center + 1;
 
-        if stronger_than_me == BaseTerrain::VARIANT_COUNT {
+        if stronger_than_me == BaseTerrain::COUNT {
             return Vec::new();
         }
 
@@ -31,7 +33,7 @@ impl TileBorder {
         let bottom_left = cloned.bottom_left.0.base as usize;
         let bottom_right = cloned.bottom_right.0.base as usize;
 
-        (stronger_than_me..BaseTerrain::VARIANT_COUNT)
+        (stronger_than_me..BaseTerrain::COUNT)
             .map(|terrain| {
                 let tileborder_from_4: Option<TileBorder> =
                     get_tileborder_from_terrain(terrain, matrix.clone());

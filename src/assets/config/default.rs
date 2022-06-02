@@ -23,7 +23,8 @@ impl Default for CwConfig {
         let biomes: BiomeDict = HashMap::from([(
             Biome::SandyForest,
             [
-                (BaseTerrain::Stone, 0.0..0.2),
+                (BaseTerrain::Water, 0.0..0.1),
+                (BaseTerrain::Stone, 0.1..0.2),
                 (BaseTerrain::Sand, 0.2..0.3),
                 (BaseTerrain::Grass, 0.5..1.0),
             ]

@@ -7,7 +7,7 @@ default-run = "chinese-warriors"
 [dependencies]
 bevy = { version = "0.7.0" }
 noise = "0.7.0"
-variant_count = "1.1.0"
+strum = { version = "0.24", features = ["derive"] }
 itertools = "0.10.3"
 bevy_asset_ron = "0.4.0"
 serde = "1"

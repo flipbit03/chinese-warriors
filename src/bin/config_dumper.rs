@@ -4,7 +4,7 @@ use chinese_warriors::assets::config::structs::CwConfig;
 use ron::{extensions::Extensions, ser::PrettyConfig};
 
 fn main() -> std::io::Result<()> {
-    let dump_path = "assets/default.config.ron";
+    let dump_path = "assets/config/world.config.ron";
 
     println!("Dumping Default CwConfig to {}", &dump_path);
 

@@ -50,24 +50,27 @@ pub fn spawn_terrain_from_instruction(
     >,
 ) {
     for (instruction_entity, tile_to_spawn) in tile_instructions_query.iter() {
-        let new_tile_terrain_base = tile_to_spawn.tile.terrain.clone().base as usize;
+        
+        // This is the BaseTerrain converted to a number so that we can use it in the arrays below
+        let bt_index = tile_to_spawn.tile.terrain.clone().base as usize;
+
         // TODO: Make all these terrains be 'children' so that they can be despawned together.
         commands.entity(instruction_entity).despawn();
 
         // Draw Base Terrain
         commands
             .spawn_bundle(SpriteBundle {
-                texture: terrain_textures.base_terrain[new_tile_terrain_base].clone(),
+                texture: terrain_textures.base_terrains[bt_index].base.clone(),
                 transform: tile_to_spawn.transform,
                 ..Default::default()
             })
             .insert(DrawableTerrainMaterial(tile_to_spawn.tile.position.clone()));
 
         // Draw Decoration
-        if let Some(decoration_number) = tile_to_spawn.tile.terrain.decoration {
+        if let Some(decoration_index) = tile_to_spawn.tile.terrain.decoration {
             commands
                 .spawn_bundle(SpriteBundle {
-                    texture: terrain_textures.decorations[new_tile_terrain_base][decoration_number]
+                    texture: terrain_textures.base_terrains[bt_index].decorations[decoration_index]
                         .clone(),
                     transform: Transform {
                         translation: Vec3::new(
@@ -103,11 +106,11 @@ pub fn spawn_terrain_from_instruction(
                         ..Default::default()
                     };
 
+                    let bt_index_from_border: usize = border_instruction.terrain.clone() as usize;
+
                     commands
                         .spawn_bundle(SpriteBundle {
-                            texture: terrain_textures.borders
-                                [border_instruction.terrain.clone() as usize - 1]
-                                [border_texture_index]
+                            texture: terrain_textures.base_terrains[bt_index_from_border].borders[border_texture_index]
                                 .clone(),
                             transform: border_terrain_transform,
                             ..Default::default()

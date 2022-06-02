@@ -9,6 +9,6 @@ pub struct MainFont {
 
 pub fn load_fonts(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(MainFont {
-        handle: asset_server.load("FiraSans-Bold.ttf"),
+        handle: asset_server.load("art/font/FiraSans-Bold.ttf"),
     });
 }

@@ -1,5 +1,5 @@
 use bevy::{
-    prelude::App,
+    prelude::{App, Msaa},
     window::{PresentMode, WindowDescriptor},
     DefaultPlugins,
 };
@@ -8,6 +8,7 @@ use iyes_loopless::prelude::AppLooplessStateExt;
 
 pub fn main() {
     App::new()
+        .insert_resource(Msaa { samples: 1 })
         .insert_resource(WindowDescriptor {
             title: "Chinese Warriors".to_string(),
             width: 1280.0,
@@ -16,6 +17,7 @@ pub fn main() {
             present_mode: PresentMode::Fifo,
             ..Default::default()
         })
+        .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
         .add_plugins(DefaultPlugins)
         .add_loopless_state(GameState::Loading)
         .add_plugin(chinese_warriors::assets::AssetsPlugin)
@@ -25,6 +27,5 @@ pub fn main() {
         .add_plugin(chinese_warriors::console::ConsolePlugin)
         .add_plugin(chinese_warriors::world::WorldPlugin)
         .add_plugin(chinese_warriors::input::InputPlugin)
-        .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
         .run();
 }
