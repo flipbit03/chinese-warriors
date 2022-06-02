@@ -8,8 +8,8 @@ use strum::{Display, EnumCount, EnumIter, EnumVariantNames};
 pub enum BaseTerrain {
     Stone = 0,
     Sand = 1,
-    Grass = 2,
-    Water = 3,
+    Water = 2,
+    Grass = 3,
 }
 
 impl Default for BaseTerrain {
@@ -29,8 +29,8 @@ impl From<usize> for BaseTerrain {
         match n {
             0 => BaseTerrain::Stone,
             1 => BaseTerrain::Sand,
-            2 => BaseTerrain::Grass,
-            3 => BaseTerrain::Water,
+            2 => BaseTerrain::Water,
+            3 => BaseTerrain::Grass,
             _ => panic!(),
         }
     }
