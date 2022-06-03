@@ -2,11 +2,11 @@
   world: (
     terrain_generation: (
       biomes: {
-        SandyForest: [
-          (Water,(start:0.0,end:0.3)),
+        FloodedRuins: [
           (Stone,(start:0.5,end:0.6)),
-          (Sand,(start:0.8,end:0.9)),
-          (Grass,(start:0.5,end:1.0))],
+          (Water,(start:0.0,end:0.5)),
+          (Grass,(start:0.7,end:0.9)),
+          (Sand,(start:0.5,end:0.7))],
       },
       base_terrain: (
         seed: 34,

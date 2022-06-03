@@ -7,9 +7,7 @@ use strum::IntoEnumIterator;
 
 pub mod loaders;
 
-use crate::world::tile::terrain::{
-    BaseTerrain,
-};
+use crate::world::tile::terrain::BaseTerrain;
 
 use self::loaders::{load_terrain_assets, TerrainHandles};
 
@@ -30,7 +28,7 @@ pub fn load_textures(
     commands.insert_resource(TerrainTextures {
         tile_size: Vec2::new(64.0, 64.0),
         base_terrains: BaseTerrain::iter()
-            .map(|base_terrain| load_terrain_assets(&asset_server, base_terrain))
+            .map(|base_terrain| { println!("Loading Terrain {:?}...", base_terrain); load_terrain_assets(&asset_server, base_terrain)})
             .collect(),
     });
 

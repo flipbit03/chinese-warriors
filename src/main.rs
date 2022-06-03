@@ -7,14 +7,20 @@ use chinese_warriors::app::GameState;
 use iyes_loopless::prelude::AppLooplessStateExt;
 
 pub fn main() {
-    App::new()
-        .insert_resource(Msaa { samples: 1 })
+    let app = &mut App::new();
+
+    #[cfg(target_arch = "wasm32")]
+    {
+        app.add_plugin(bevy_web_resizer::Plugin);
+    }
+
+    app.insert_resource(Msaa { samples: 1 })
         .insert_resource(WindowDescriptor {
             title: "Chinese Warriors".to_string(),
-            width: 1280.0,
-            height: 720.0,
             scale_factor_override: Some(1.0),
             present_mode: PresentMode::Fifo,
+            #[cfg(target_arch = "wasm32")]
+            canvas: Some("#gamescreen".to_string()),
             ..Default::default()
         })
         .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)

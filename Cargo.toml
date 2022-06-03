@@ -13,6 +13,7 @@ bevy_asset_ron = "0.4.0"
 serde = "1"
 ron = "0.7"
 iyes_loopless = { git = "https://github.com/IyesGames/iyes_loopless.git", rev = "452c5737b123eea8aebb0e973293c9eb6ba65c8b" }
+bevy-web-resizer = "2.0.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 bevy = { version = "0.7.0", features = ["dynamic"] }

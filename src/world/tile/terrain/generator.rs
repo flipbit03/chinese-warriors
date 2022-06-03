@@ -43,7 +43,7 @@ impl TerrainGenerator {
     }
 
     fn get_biome(&self) -> Biome {
-        Biome::SandyForest
+        Biome::FloodedRuins
     }
 
     fn get_base_terrain(&self, tp: &TilePosition) -> BaseTerrain {

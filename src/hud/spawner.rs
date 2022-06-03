@@ -58,7 +58,7 @@ pub fn update_hud_text(
     let mut text = hud_query.single_mut();
 
     text.sections[0].value = format!(
-        "x={} y={} (existing_tiles: {})\n{:?}",
+        "x={} y={}\nexisting_tiles={:04}\n{:?}",
         hero_transform.translation.x,
         hero_transform.translation.y,
         tile_query.iter().count(),

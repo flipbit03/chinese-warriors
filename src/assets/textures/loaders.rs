@@ -1,8 +1,6 @@
 use bevy::prelude::{AssetServer, Handle, Image};
 
-use crate::world::tile::terrain::{
-    BaseTerrain, BORDER_ASSET_COUNT, TERRAIN_DECORATION_COUNT,
-};
+use crate::world::tile::terrain::{BaseTerrain, BORDER_ASSET_COUNT, TERRAIN_DECORATION_COUNT};
 
 pub struct TerrainHandles {
     pub base_terrain: BaseTerrain,

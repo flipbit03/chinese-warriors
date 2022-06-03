@@ -21,7 +21,7 @@ use super::structs::CwConfig;
 impl Default for CwConfig {
     fn default() -> Self {
         let biomes: BiomeDict = HashMap::from([(
-            Biome::SandyForest,
+            Biome::FloodedRuins,
             [
                 (BaseTerrain::Water, 0.0..0.1),
                 (BaseTerrain::Stone, 0.1..0.2),

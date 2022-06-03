@@ -50,7 +50,6 @@ pub fn spawn_terrain_from_instruction(
     >,
 ) {
     for (instruction_entity, tile_to_spawn) in tile_instructions_query.iter() {
-        
         // This is the BaseTerrain converted to a number so that we can use it in the arrays below
         let bt_index = tile_to_spawn.tile.terrain.clone().base as usize;
 
@@ -110,7 +109,8 @@ pub fn spawn_terrain_from_instruction(
 
                     commands
                         .spawn_bundle(SpriteBundle {
-                            texture: terrain_textures.base_terrains[bt_index_from_border].borders[border_texture_index]
+                            texture: terrain_textures.base_terrains[bt_index_from_border].borders
+                                [border_texture_index]
                                 .clone(),
                             transform: border_terrain_transform,
                             ..Default::default()

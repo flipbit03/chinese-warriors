@@ -3,10 +3,11 @@ use iyes_loopless::prelude::ConditionSet;
 
 use crate::app::GameState;
 
-use self::{camera::input_camera_scale, hero::hero_input};
+use self::{camera::input_camera_scale, hero::hero_input, mouse_input::mouse_click_system};
 
 pub mod camera;
 pub mod hero;
+pub mod mouse_input;
 
 pub struct InputPlugin;
 
@@ -17,8 +18,13 @@ impl Plugin for InputPlugin {
                 .run_in_state(GameState::InGame)
                 .with_system(input_camera_scale)
                 .with_system(hero_input)
+                .with_system(mouse_click_system)
                 .into(),
         );
+    }
+
+    fn name(&self) -> &str {
+        std::any::type_name::<Self>()
     }
 }
 
