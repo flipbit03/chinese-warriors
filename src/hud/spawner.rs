@@ -1,15 +1,11 @@
 use bevy::{
     math::Rect,
-    prelude::{Color, Commands, Component, Query, Res, TextBundle, Transform, With, Without},
+    prelude::{Color, Commands, Component, Query, Res, TextBundle, Transform, With, Without, Entity},
     text::{HorizontalAlign, Text, TextAlignment, TextStyle},
     ui::{AlignSelf, PositionType, Style, Val},
 };
 
-use crate::{
-    assets::{config::structs::CwConfig, fonts::MainFont},
-    hero::structs::Hero,
-    world::spawner::DrawableTerrainMaterial,
-};
+use crate::{assets::{fonts::MainFont, config::structs::CwConfig}, hero::structs::Hero, world::tile::position::TilePosition};
 
 #[derive(Component)]
 pub struct HudText(u32);
@@ -51,17 +47,19 @@ pub fn update_hud_text(
     mut hud_query: Query<&mut Text, (With<HudText>, Without<Hero>)>,
     config: Res<CwConfig>,
     hero_query: Query<&Transform, With<Hero>>,
-    tile_query: Query<&DrawableTerrainMaterial>,
+    tile_query: Query<&TilePosition>,
+    all_entities_query: Query<Entity>,
 ) {
     let hero_transform = hero_query.single();
 
     let mut text = hud_query.single_mut();
 
     text.sections[0].value = format!(
-        "x={} y={}\nexisting_tiles={:04}\n{:?}",
+        "x={:08.1} y={:08.1}\ntile_position_count={:4}\nall_entities_count={:4}\n{:?}",
         hero_transform.translation.x,
         hero_transform.translation.y,
         tile_query.iter().count(),
+        all_entities_query.iter().count(),
         config.hero
     );
 }

@@ -1,6 +1,8 @@
+use bevy::prelude::Component;
+
 use super::terrain::generator::{Terrain, TerrainGenerator};
 
-#[derive(Hash, PartialEq, Eq, Debug, Clone, Default)]
+#[derive(Hash, PartialEq, Eq, Debug, Clone, Default, Component)]
 pub struct TilePosition {
     pub x: i32,
     pub y: i32,
