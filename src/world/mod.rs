@@ -7,7 +7,10 @@ use iyes_loopless::prelude::ConditionSet;
 
 use crate::app::GameState;
 
-use self::{spawner::{instruction::generate_terrain_instruction, drawer::draw_terrain_from_instruction}, despawner::{despawn_far_terrain, despawn_all_terrain, DespawnAllTerrain}};
+use self::{
+    despawner::{despawn_all_terrain, despawn_far_terrain, DespawnAllTerrain},
+    spawner::{drawer::draw_terrain_from_instruction, instruction::generate_terrain_instruction},
+};
 
 pub struct WorldPlugin;
 

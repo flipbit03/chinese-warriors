@@ -1,6 +1,6 @@
 use bevy::prelude::{Component, Transform};
 
-use self::{border::structs::TileBorder, position::TilePosition, terrain::generator::Terrain};
+use self::{border::structs::TileBorder, position::TilePosition, terrain::generator::WorldTerrain};
 
 pub mod border;
 pub mod builder;
@@ -9,10 +9,10 @@ pub mod terrain;
 pub mod traits;
 pub mod visibility;
 
-#[derive(Component, Clone, Debug, Default)]
+#[derive(Component, Clone, Debug)]
 pub struct WorldTile {
     pub position: TilePosition,
-    pub terrain: Terrain,
+    pub worldterrain: WorldTerrain,
     pub borders: Vec<TileBorder>,
 }
 

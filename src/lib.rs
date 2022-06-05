@@ -1,6 +1,7 @@
 pub mod app;
 pub mod assets;
 pub mod camera;
+pub mod collision;
 pub mod console;
 pub mod helpers;
 pub mod hero;

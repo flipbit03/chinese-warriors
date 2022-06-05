@@ -13,7 +13,7 @@ pub fn draw_terrain_from_instruction(
 ) {
     for (instruction_entity, tile_to_spawn) in tile_instructions_query.iter() {
         // This is the BaseTerrain converted to a number so that we can use it in the arrays below
-        let bt_index = tile_to_spawn.tile.terrain.clone().base as usize;
+        let base_terrain_index = tile_to_spawn.tile.worldterrain.clone().terrain.base as usize;
 
         commands
             .entity(instruction_entity)
@@ -25,7 +25,9 @@ pub fn draw_terrain_from_instruction(
             // Insert Base Terrain
             //////////////////
             .insert_bundle(SpriteBundle {
-                texture: terrain_textures.base_terrains[bt_index].base.clone(),
+                texture: terrain_textures.base_terrains[base_terrain_index]
+                    .base
+                    .clone(),
                 transform: tile_to_spawn.transform,
                 ..Default::default()
             })
@@ -37,9 +39,9 @@ pub fn draw_terrain_from_instruction(
             // Insert Decoration
             //////////////////
             .with_children(|p| {
-                if let Some(decoration_index) = tile_to_spawn.tile.terrain.decoration {
+                if let Some(decoration_index) = tile_to_spawn.tile.worldterrain.decoration {
                     p.spawn_bundle(SpriteBundle {
-                        texture: terrain_textures.base_terrains[bt_index].decorations
+                        texture: terrain_textures.base_terrains[base_terrain_index].decorations
                             [decoration_index]
                             .clone(),
                         transform: Transform {

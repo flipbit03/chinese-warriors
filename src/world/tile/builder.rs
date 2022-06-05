@@ -37,21 +37,21 @@ impl WorldBuilder {
         let matrix = TilePositionNeighbors::new(&self.generator, pos);
         WorldTile {
             position: matrix.center.1.clone(),
-            terrain: matrix.center.0.clone(),
+            worldterrain: matrix.center.0.clone(),
             borders: TileBorder::from(matrix),
         }
     }
 
     pub fn create(&mut self, tile_position: TilePosition) -> WorldTileDrawInstrucion {
         let tile = self.get(tile_position.clone());
-        let tile_z_order: f32 = tile.terrain.base.clone().into();
+        let terrain_z = tile.worldterrain.terrain.strength as f32 / 100.0;
         WorldTileDrawInstrucion {
             tile,
             transform: Transform {
                 translation: Vec3::new(
                     tile_position.x as f32 * self.tile_size.x * self.tile_scale,
                     tile_position.y as f32 * self.tile_size.y * self.tile_scale,
-                    tile_z_order / 100.0,
+                    terrain_z,
                 ),
                 scale: Vec3::splat(self.tile_scale),
                 ..Default::default()

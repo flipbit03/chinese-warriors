@@ -16,22 +16,22 @@ impl TileBorder {
     pub fn from(matrix: TilePositionNeighbors) -> Vec<Self> {
         let cloned = matrix.clone();
 
-        let center = cloned.center.0.base as usize;
+        let center = cloned.center.0.terrain.strength;
         let stronger_than_me = center + 1;
 
         if stronger_than_me == BaseTerrain::COUNT {
             return Vec::new();
         }
 
-        let left = cloned.left.0.base as usize;
-        let top = cloned.top.0.base as usize;
-        let right = cloned.right.0.base as usize;
-        let bottom = cloned.bottom.0.base as usize;
+        let left = cloned.left.0.terrain.strength;
+        let top = cloned.top.0.terrain.strength;
+        let right = cloned.right.0.terrain.strength;
+        let bottom = cloned.bottom.0.terrain.strength;
 
-        let top_left = cloned.top_left.0.base as usize;
-        let top_right = cloned.top_right.0.base as usize;
-        let bottom_left = cloned.bottom_left.0.base as usize;
-        let bottom_right = cloned.bottom_right.0.base as usize;
+        let top_left = cloned.top_left.0.terrain.strength;
+        let top_right = cloned.top_right.0.terrain.strength;
+        let bottom_left = cloned.bottom_left.0.terrain.strength;
+        let bottom_right = cloned.bottom_right.0.terrain.strength;
 
         (stronger_than_me..BaseTerrain::COUNT)
             .map(|terrain| {
@@ -127,15 +127,15 @@ fn get_tileborder_from_terrain(
     terrain: usize,
     matrix: TilePositionNeighbors,
 ) -> Option<TileBorder> {
-    let left = matrix.left.0.base as usize;
-    let top = matrix.top.0.base as usize;
-    let right = matrix.right.0.base as usize;
-    let bottom = matrix.bottom.0.base as usize;
+    let left = matrix.left.0.terrain.strength;
+    let top = matrix.top.0.terrain.strength;
+    let right = matrix.right.0.terrain.strength;
+    let bottom = matrix.bottom.0.terrain.strength;
 
-    let top_left = matrix.top_left.0.base as usize;
-    let top_right = matrix.top_right.0.base as usize;
-    let bottom_left = matrix.bottom_left.0.base as usize;
-    let bottom_right = matrix.bottom_right.0.base as usize;
+    let top_left = matrix.top_left.0.terrain.strength;
+    let top_right = matrix.top_right.0.terrain.strength;
+    let bottom_left = matrix.bottom_left.0.terrain.strength;
+    let bottom_right = matrix.bottom_right.0.terrain.strength;
 
     match (top == terrain, right == terrain, bottom == terrain, left == terrain) {
 

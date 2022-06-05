@@ -1,20 +1,92 @@
 (
   world: (
     terrain_generation: (
+      terrains: [
+        (
+          name: "Stone",
+          base: Stone,
+          color: Rgba(
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+          ),
+          walkable: true,
+        ),
+        (
+          name: "Sand",
+          base: Sand,
+          color: Rgba(
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+          ),
+          walkable: true,
+        ),
+        (
+          name: "Grass",
+          base: Grass,
+          color: Rgba(
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+          ),
+          walkable: true,
+        ),
+        (
+          name: "ShallowWater",
+          base: ShallowWater,
+          color: Rgba(
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+          ),
+          walkable: true,
+        ),
+        (
+          name: "DeepWater",
+          base: DeepWater,
+          color: Rgba(
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+          ),
+          walkable: false,
+        ),
+      ],
       biomes: {
-        FloodedRuins: [
-          (Stone,(start:0.5,end:0.6)),
-          (Water,(start:0.0,end:0.5)),
-          (Grass,(start:0.7,end:0.9)),
-          (Sand,(start:0.5,end:0.7))],
+        "FloodedRuins": (
+          range: (
+            start: 0.0,
+            end: 1.0,
+          ),
+          terrains: [
+            ("DeepWater",(start:0.0,end:0.2)),
+            ("ShallowWater",(start:0.2,end:0.5)),
+            ("Stone",(start:0.5,end:0.6)),
+            ("Sand",(start:0.5,end:0.7)),
+            ("Grass",(start:0.7,end:0.9)),
+          ],
+          default_terrain: "Stone",
+        ),
       },
       base_terrain: (
         seed: 34,
-        noise_scale_factor: (x:4.0,y:4.0),
+        noise_scale_factor: (
+          x: 4.0,
+          y: 4.0,
+        ),
       ),
       decoration: (
         seed: 34,
-        noise_scale_factor: (x:2.0,y:2.0),
+        noise_scale_factor: (
+          x: 2.0,
+          y: 2.0,
+        ),
       ),
     ),
     tile_size: (

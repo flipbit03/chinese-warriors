@@ -1,33 +1,39 @@
-use std::{collections::HashMap, ops::Range};
+pub mod util;
+use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::world::tile::position::TilePosition;
-
-use super::{
-    biomes::Biome,
-    noise::{NoiseGenerator, NoiseGeneratorConfig},
-    BaseTerrain,
+use crate::world::tile::{
+    position::TilePosition,
+    terrain::generator::util::{build_biome_dict, build_terrain_dict},
 };
 
-pub type BiomeDict = HashMap<Biome, Vec<(BaseTerrain, Range<f64>)>>;
+use super::{
+    biomes::{Biome, BiomeDict},
+    noise::{NoiseGenerator, NoiseGeneratorConfig},
+    Terrain, TerrainConfig,
+};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+pub type TerrainName = String;
+
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
 pub struct TerrainGeneratorConfig {
-    pub biomes: BiomeDict,
+    pub terrains: Vec<TerrainConfig>,
+    pub biomes: BiomeDict<TerrainName>,
     pub base_terrain: NoiseGeneratorConfig,
     pub decoration: NoiseGeneratorConfig,
 }
 
 pub struct TerrainGenerator {
-    pub biomes: BiomeDict,
+    pub terrains: HashMap<TerrainName, Terrain>,
+    pub biomes: BiomeDict<Terrain>,
     pub terrain_component: NoiseGenerator,
     pub decoration_component: NoiseGenerator,
 }
 
-#[derive(Debug, Default, Clone)]
-pub struct Terrain {
-    pub base: BaseTerrain,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorldTerrain {
+    pub terrain: Terrain,
     pub decoration: Option<usize>,
 }
 
@@ -35,30 +41,38 @@ pub const DECORATION_COUNT: usize = 21;
 
 impl TerrainGenerator {
     pub fn new_from_config(config: &TerrainGeneratorConfig) -> Self {
+        
+        // Generate all Terrains from TerrainConfigs
+        let terrains = build_terrain_dict(&config.terrains);
+
+        // Generate all Biomes from Terrains
+        let biomes = build_biome_dict(&terrains, &config.biomes);
+        
         Self {
-            biomes: config.biomes.clone(),
+            terrains,
+            biomes,
             decoration_component: NoiseGenerator::new_from_config(&config.decoration),
             terrain_component: NoiseGenerator::new_from_config(&config.base_terrain),
         }
     }
 
-    fn get_biome(&self) -> Biome {
-        Biome::FloodedRuins
+    fn get_biome(&self, _: &TilePosition) -> &Biome<Terrain> {
+        self.biomes.values().next().unwrap()
     }
 
-    fn get_base_terrain(&self, tp: &TilePosition) -> BaseTerrain {
+    fn get_terrain(&self, tp: &TilePosition) -> Terrain {
         let noise_value = self.terrain_component.get_noise(tp);
 
-        let biome_terrain_proportions = self.biomes.get(&self.get_biome()).unwrap();
+        let biome = self.get_biome(&tp);
 
-        for (terrain, range) in biome_terrain_proportions {
+        for (terrain, range) in &biome.terrains {
             if range.contains(&noise_value) {
                 return terrain.clone();
             }
         }
 
         // Range was not found, default terrain is the lowest priority one.
-        BaseTerrain::Stone
+        biome.default_terrain.clone()
     }
 
     fn get_decoration(&self, tp: &TilePosition) -> Option<usize> {
@@ -72,9 +86,9 @@ impl TerrainGenerator {
         }
     }
 
-    pub fn get_terrain(&self, tp: &TilePosition) -> Terrain {
-        let t = Terrain {
-            base: self.get_base_terrain(&tp),
+    pub fn get_world_terrain(&self, tp: &TilePosition) -> WorldTerrain {
+        let t = WorldTerrain {
+            terrain: self.get_terrain(&tp),
             decoration: self.get_decoration(&tp),
         };
         t

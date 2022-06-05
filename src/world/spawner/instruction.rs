@@ -7,7 +7,6 @@ use bevy::prelude::Transform;
 use bevy::prelude::*;
 use bevy::render::camera::Camera2d;
 
-
 pub fn generate_terrain_instruction(
     mut commands: Commands,
     camera_query: Query<(&Transform, &OrthographicProjection), With<Camera2d>>,

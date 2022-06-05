@@ -9,6 +9,15 @@ pub struct NoiseGeneratorConfig {
     pub noise_scale_factor: XY<f64>,
 }
 
+impl Default for NoiseGeneratorConfig {
+    fn default() -> Self {
+        Self {
+            seed: 34,
+            noise_scale_factor: XY { x: 4.0, y: 4.0 },
+        }
+    }
+}
+
 pub struct NoiseGenerator {
     pub config: NoiseGeneratorConfig,
     pub perlin: Perlin,

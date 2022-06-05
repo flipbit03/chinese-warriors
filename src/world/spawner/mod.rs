@@ -1,2 +1,2 @@
-pub mod instruction;
 pub mod drawer;
+pub mod instruction;

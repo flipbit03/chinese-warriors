@@ -1,11 +1,17 @@
 use bevy::{
     math::Rect,
-    prelude::{Color, Commands, Component, Query, Res, TextBundle, Transform, With, Without, Entity},
+    prelude::{
+        Color, Commands, Component, Entity, Query, Res, TextBundle, Transform, With, Without,
+    },
     text::{HorizontalAlign, Text, TextAlignment, TextStyle},
     ui::{AlignSelf, PositionType, Style, Val},
 };
 
-use crate::{assets::{fonts::MainFont, config::structs::CwConfig}, hero::structs::Hero, world::tile::position::TilePosition};
+use crate::{
+    assets::{config::structs::CwConfig, fonts::MainFont},
+    hero::structs::Hero,
+    world::tile::position::TilePosition,
+};
 
 #[derive(Component)]
 pub struct HudText(u32);

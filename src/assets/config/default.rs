@@ -8,10 +8,10 @@ use crate::{
     world::tile::{
         builder::WorldBuilderConfig,
         terrain::{
-            biomes::Biome,
-            generator::{BiomeDict, TerrainGeneratorConfig},
+            biomes::{Biome, BiomeDict},
+            generator::{TerrainGeneratorConfig, TerrainName},
             noise::NoiseGeneratorConfig,
-            BaseTerrain,
+            BaseTerrain, TerrainConfig,
         },
     },
 };
@@ -20,28 +20,40 @@ use super::structs::CwConfig;
 
 impl Default for CwConfig {
     fn default() -> Self {
-        let biomes: BiomeDict = HashMap::from([(
-            Biome::FloodedRuins,
-            [
-                (BaseTerrain::Water, 0.0..0.1),
-                (BaseTerrain::Stone, 0.1..0.2),
-                (BaseTerrain::Sand, 0.2..0.3),
-                (BaseTerrain::Grass, 0.5..1.0),
-            ]
-            .to_vec(),
+        let terrains: Vec<TerrainConfig> = [
+            TerrainConfig::new("Stone".to_string(), BaseTerrain::Stone, true),
+            TerrainConfig::new("Sand".to_string(), BaseTerrain::Sand, true),
+            TerrainConfig::new("Grass".to_string(), BaseTerrain::Grass, true),
+            TerrainConfig::new("ShallowWater".to_string(), BaseTerrain::ShallowWater, true),
+            TerrainConfig::new("DeepWater".to_string(), BaseTerrain::DeepWater, false),
+        ]
+        .to_vec();
+
+        let biomes: BiomeDict<TerrainName> = HashMap::from([(
+            "FloodedRuins".to_string(),
+            Biome::<TerrainName> {
+                range: 0.0..1.0,
+                terrains: [
+                    ("DeepWater".to_string(), 0.0..0.2),
+                    ("ShallowWater".to_string(), 0.2..0.5),
+                    ("Stone".to_string(), 0.5..0.6),
+                    ("Sand".to_string(), 0.5..0.7),
+                    ("Grass".to_string(), 0.7..0.9),
+                ]
+                .to_vec(),
+                default_terrain: "Stone".to_string(),
+            },
         )]);
 
         Self {
             world: WorldBuilderConfig {
                 terrain_generation: TerrainGeneratorConfig {
+                    terrains,
                     biomes,
-                    base_terrain: NoiseGeneratorConfig {
-                        seed: 7 + 18 + 9,
-                        noise_scale_factor: XY { x: 4.0, y: 4.0 },
-                    },
+                    base_terrain: Default::default(),
                     decoration: NoiseGeneratorConfig {
-                        seed: 7 + 18 + 9,
                         noise_scale_factor: XY { x: 2.0, y: 2.0 },
+                        ..Default::default()
                     },
                 },
                 tile_size: Vec2::new(64., 64.),

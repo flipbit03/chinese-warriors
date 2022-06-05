@@ -1,6 +1,6 @@
 use bevy::{
     prelude::{App, Msaa},
-    window::{PresentMode, WindowDescriptor, WindowMode},
+    window::{PresentMode, WindowDescriptor},
     DefaultPlugins,
 };
 use chinese_warriors::app::GameState;

@@ -12,8 +12,7 @@ fn main() -> std::io::Result<()> {
         &CwConfig::default(),
         PrettyConfig::new()
             .decimal_floats(true)
-            .extensions(Extensions::UNWRAP_NEWTYPES)
-            .depth_limit(4)
+            .depth_limit(6)
             .indentor("  ".to_ascii_lowercase())
             .separate_tuple_members(true),
     )
