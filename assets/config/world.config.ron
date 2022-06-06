@@ -1,3 +1,4 @@
+#![enable(implicit_some)]
 (
   world: (
     terrain_generation: (
@@ -5,56 +6,61 @@
         (
           name: "Stone",
           base: Stone,
-          color: Rgba(
-            red: 1.0,
-            green: 1.0,
-            blue: 1.0,
-            alpha: 1.0,
+          color: None,
+          walkable: true,
+        ),
+        (
+          name: "DarkStone",
+          base: Grass,
+          color: (
+            155,
+            155,
+            155,
           ),
           walkable: true,
         ),
         (
           name: "Sand",
           base: Sand,
-          color: Rgba(
-            red: 1.0,
-            green: 1.0,
-            blue: 1.0,
-            alpha: 1.0,
-          ),
+          color: None,
           walkable: true,
         ),
         (
           name: "Grass",
           base: Grass,
-          color: Rgba(
-            red: 1.0,
-            green: 1.0,
-            blue: 1.0,
-            alpha: 1.0,
+          color: None,
+          walkable: true,
+        ),
+        (
+          name: "DeepGrass",
+          base: Grass,
+          color: (
+            140,
+            255,
+            255,
+          ),
+          walkable: true,
+        ),
+        (
+          name: "TaintedGrass",
+          base: Grass,
+          color: (
+            140,
+            155,
+            79,
           ),
           walkable: true,
         ),
         (
           name: "ShallowWater",
           base: ShallowWater,
-          color: Rgba(
-            red: 1.0,
-            green: 1.0,
-            blue: 1.0,
-            alpha: 1.0,
-          ),
+          color: None,
           walkable: true,
         ),
         (
           name: "DeepWater",
           base: DeepWater,
-          color: Rgba(
-            red: 1.0,
-            green: 1.0,
-            blue: 1.0,
-            alpha: 1.0,
-          ),
+          color: None,
           walkable: false,
         ),
       ],
@@ -65,11 +71,12 @@
             end: 1.0,
           ),
           terrains: [
-            ("DeepWater",(start:0.0,end:0.2)),
+            ("DeepWater",(start:0.1,end:0.2)),
             ("ShallowWater",(start:0.2,end:0.5)),
             ("Stone",(start:0.5,end:0.6)),
-            ("Sand",(start:0.5,end:0.7)),
-            ("Grass",(start:0.7,end:0.9)),
+            ("Grass",(start:0.6,end:0.7)),
+            ("DeepGrass",(start:0.7,end:0.85)),
+            ("TaintedGrass",(start:0.85,end:0.9)),
           ],
           default_terrain: "Stone",
         ),

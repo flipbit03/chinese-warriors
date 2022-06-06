@@ -1,11 +1,10 @@
 pub mod util;
-use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
 use crate::world::tile::{
     position::TilePosition,
-    terrain::generator::util::{build_biome_dict, build_terrain_dict},
+    terrain::generator::util::{build_biome_dict, build_terrain_list},
 };
 
 use super::{
@@ -25,7 +24,8 @@ pub struct TerrainGeneratorConfig {
 }
 
 pub struct TerrainGenerator {
-    pub terrains: HashMap<TerrainName, Terrain>,
+    pub terrains: Vec<Terrain>,
+    pub terrain_count: usize,
     pub biomes: BiomeDict<Terrain>,
     pub terrain_component: NoiseGenerator,
     pub decoration_component: NoiseGenerator,
@@ -41,15 +41,16 @@ pub const DECORATION_COUNT: usize = 21;
 
 impl TerrainGenerator {
     pub fn new_from_config(config: &TerrainGeneratorConfig) -> Self {
-        
         // Generate all Terrains from TerrainConfigs
-        let terrains = build_terrain_dict(&config.terrains);
+        let terrains = build_terrain_list(&config.terrains);
+        let terrain_count = (&terrains).into_iter().count();
 
         // Generate all Biomes from Terrains
         let biomes = build_biome_dict(&terrains, &config.biomes);
-        
+
         Self {
             terrains,
+            terrain_count,
             biomes,
             decoration_component: NoiseGenerator::new_from_config(&config.decoration),
             terrain_component: NoiseGenerator::new_from_config(&config.base_terrain),

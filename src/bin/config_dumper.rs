@@ -14,6 +14,7 @@ fn main() -> std::io::Result<()> {
             .decimal_floats(true)
             .depth_limit(6)
             .indentor("  ".to_ascii_lowercase())
+            .extensions(Extensions::all())
             .separate_tuple_members(true),
     )
     .unwrap();

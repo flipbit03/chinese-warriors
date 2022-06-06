@@ -10,5 +10,5 @@ pub struct HeroConstrainedMovement<T> {
 }
 
 pub fn collision_with_non_walkable_terrain(hero_query: Query<&Transform, With<Hero>>) {
-    let hero_transform = hero_query.single();
+    let _ = hero_query.single();
 }

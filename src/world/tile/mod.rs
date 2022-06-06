@@ -1,4 +1,7 @@
-use bevy::prelude::{Component, Transform};
+use bevy::{
+    prelude::{Component, Transform},
+    sprite::Sprite,
+};
 
 use self::{border::structs::TileBorder, position::TilePosition, terrain::generator::WorldTerrain};
 
@@ -20,4 +23,5 @@ pub struct WorldTile {
 pub struct WorldTileDrawInstrucion {
     pub tile: WorldTile,
     pub transform: Transform,
+    pub sprite: Sprite,
 }

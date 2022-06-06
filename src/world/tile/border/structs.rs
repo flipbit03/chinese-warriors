@@ -1,6 +1,6 @@
-use crate::world::tile::terrain::BaseTerrain;
+use crate::world::tile::terrain::Terrain;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TileBorderType {
     VerticalWall = 1,
     HorizontalWall = 2,
@@ -11,7 +11,7 @@ pub enum TileBorderType {
 
 #[derive(Clone, Debug)]
 pub struct TileBorder {
-    pub terrain: BaseTerrain,
+    pub terrain: Terrain,
     pub spec: BorderSpec,
 }
 

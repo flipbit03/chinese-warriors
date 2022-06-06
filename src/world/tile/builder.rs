@@ -36,9 +36,9 @@ impl WorldBuilder {
     fn get(&self, pos: TilePosition) -> WorldTile {
         let matrix = TilePositionNeighbors::new(&self.generator, pos);
         WorldTile {
-            position: matrix.center.1.clone(),
-            worldterrain: matrix.center.0.clone(),
-            borders: TileBorder::from(matrix),
+            borders: TileBorder::from(&matrix, &self.generator),
+            position: matrix.center.1,
+            worldterrain: matrix.center.0,
         }
     }
 
@@ -46,6 +46,7 @@ impl WorldBuilder {
         let tile = self.get(tile_position.clone());
         let terrain_z = tile.worldterrain.terrain.strength as f32 / 100.0;
         WorldTileDrawInstrucion {
+            sprite: tile.worldterrain.terrain.sprite_color(),
             tile,
             transform: Transform {
                 translation: Vec3::new(

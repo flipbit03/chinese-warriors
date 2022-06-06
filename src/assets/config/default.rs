@@ -22,8 +22,26 @@ impl Default for CwConfig {
     fn default() -> Self {
         let terrains: Vec<TerrainConfig> = [
             TerrainConfig::new("Stone".to_string(), BaseTerrain::Stone, true),
+            TerrainConfig::new_color(
+                "DarkStone".to_string(),
+                BaseTerrain::Grass,
+                true,
+                (155, 155, 155),
+            ),
             TerrainConfig::new("Sand".to_string(), BaseTerrain::Sand, true),
             TerrainConfig::new("Grass".to_string(), BaseTerrain::Grass, true),
+            TerrainConfig::new_color(
+                "DeepGrass".to_string(),
+                BaseTerrain::Grass,
+                true,
+                (140, 255, 255),
+            ),
+            TerrainConfig::new_color(
+                "TaintedGrass".to_string(),
+                BaseTerrain::Grass,
+                true,
+                (140, 155, 79),
+            ),
             TerrainConfig::new("ShallowWater".to_string(), BaseTerrain::ShallowWater, true),
             TerrainConfig::new("DeepWater".to_string(), BaseTerrain::DeepWater, false),
         ]
@@ -34,11 +52,12 @@ impl Default for CwConfig {
             Biome::<TerrainName> {
                 range: 0.0..1.0,
                 terrains: [
-                    ("DeepWater".to_string(), 0.0..0.2),
+                    ("DeepWater".to_string(), 0.1..0.2),
                     ("ShallowWater".to_string(), 0.2..0.5),
                     ("Stone".to_string(), 0.5..0.6),
-                    ("Sand".to_string(), 0.5..0.7),
-                    ("Grass".to_string(), 0.7..0.9),
+                    ("Grass".to_string(), 0.6..0.7),
+                    ("DeepGrass".to_string(), 0.7..0.85),
+                    ("TaintedGrass".to_string(), 0.85..0.9),
                 ]
                 .to_vec(),
                 default_terrain: "Stone".to_string(),

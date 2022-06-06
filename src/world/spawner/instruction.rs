@@ -12,7 +12,7 @@ pub fn generate_terrain_instruction(
     camera_query: Query<(&Transform, &OrthographicProjection), With<Camera2d>>,
     config: Res<CwConfig>,
     tile_query: Query<(Entity, &TilePosition)>,
-    mut tile_builder: ResMut<WorldBuilder>,
+    mut world_builder: ResMut<WorldBuilder>,
 ) {
     let (camera_transform, camera_projection) = camera_query.single();
 
@@ -22,14 +22,16 @@ pub fn generate_terrain_instruction(
         camera_projection.scale * 1.18,
     );
 
-    for tile_to_create in
-        get_visible_tiles(screen_rect, config.world.tile_size, tile_builder.tile_scale)
-    {
+    for tile_to_create in get_visible_tiles(
+        screen_rect,
+        config.world.tile_size,
+        world_builder.tile_scale,
+    ) {
         if let Some(_) = tile_query.iter().position(|(_, p)| *p == tile_to_create) {
             continue;
         }
 
-        let new_tile = tile_builder.create(tile_to_create);
+        let new_tile = world_builder.create(tile_to_create);
 
         // Spawn
         commands.spawn().insert(new_tile);

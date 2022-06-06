@@ -1,5 +1,3 @@
-use strum::EnumCount;
-
 use self::{
     neighbor::get_border_from_neighbor_effects,
     structs::{
@@ -7,72 +5,80 @@ use self::{
     },
 };
 
-use super::{position::TilePositionNeighbors, terrain::BaseTerrain};
+use super::{
+    position::TilePositionNeighbors,
+    terrain::{generator::TerrainGenerator, Terrain},
+};
 
 pub mod neighbor;
 pub mod structs;
 
 impl TileBorder {
-    pub fn from(matrix: TilePositionNeighbors) -> Vec<Self> {
-        let cloned = matrix.clone();
-
-        let center = cloned.center.0.terrain.strength;
-        let stronger_than_me = center + 1;
-
-        if stronger_than_me == BaseTerrain::COUNT {
+    pub fn from(matrix: &TilePositionNeighbors, gen: &TerrainGenerator) -> Vec<Self> {
+        // We receive no borders if we are the strongest terrain.
+        if &matrix.center.0.terrain == gen.terrains.last().unwrap() {
+            // Return empty array.
             return Vec::new();
         }
 
-        let left = cloned.left.0.terrain.strength;
-        let top = cloned.top.0.terrain.strength;
-        let right = cloned.right.0.terrain.strength;
-        let bottom = cloned.bottom.0.terrain.strength;
+        let center = &matrix.center.0.terrain;
 
-        let top_left = cloned.top_left.0.terrain.strength;
-        let top_right = cloned.top_right.0.terrain.strength;
-        let bottom_left = cloned.bottom_left.0.terrain.strength;
-        let bottom_right = cloned.bottom_right.0.terrain.strength;
+        let left = &matrix.left.0.terrain;
+        let top = &matrix.top.0.terrain;
+        let right = &matrix.right.0.terrain;
+        let bottom = &matrix.bottom.0.terrain;
 
-        (stronger_than_me..BaseTerrain::COUNT)
-            .map(|terrain| {
+        let top_left = &matrix.top_left.0.terrain;
+        let top_right = &matrix.top_right.0.terrain;
+        let bottom_left = &matrix.bottom_left.0.terrain;
+        let bottom_right = &matrix.bottom_right.0.terrain;
+
+        ((center.strength + 1)..gen.terrain_count)
+            .map(|terrain_strength| {
                 let tileborder_from_4: Option<TileBorder> =
-                    get_tileborder_from_terrain(terrain, matrix.clone());
+                    get_tileborder_from_terrain(&gen.terrains[terrain_strength], matrix);
 
-                if let Some(border) = tileborder_from_4 {
-                    return border;
+                if let Some(_) = tileborder_from_4 {
+                    return tileborder_from_4;
                 };
 
                 let upper_left = get_border_from_neighbor_effects(
-                    left == terrain,
-                    top == terrain,
-                    top_left == terrain,
+                    left == &gen.terrains[terrain_strength],
+                    top == &gen.terrains[terrain_strength],
+                    top_left == &gen.terrains[terrain_strength],
                 );
 
                 let upper_right = get_border_from_neighbor_effects(
-                    right == terrain,
-                    top == terrain,
-                    top_right == terrain,
+                    right == &gen.terrains[terrain_strength],
+                    top == &gen.terrains[terrain_strength],
+                    top_right == &gen.terrains[terrain_strength],
                 );
 
                 let bottom_left = get_border_from_neighbor_effects(
-                    left == terrain,
-                    bottom == terrain,
-                    bottom_left == terrain,
+                    left == &gen.terrains[terrain_strength],
+                    bottom == &gen.terrains[terrain_strength],
+                    bottom_left == &gen.terrains[terrain_strength],
                 );
 
                 let bottom_right = get_border_from_neighbor_effects(
-                    right == terrain,
-                    bottom == terrain,
-                    bottom_right == terrain,
+                    right == &gen.terrains[terrain_strength],
+                    bottom == &gen.terrains[terrain_strength],
+                    bottom_right == &gen.terrains[terrain_strength],
                 );
 
                 let borders = [upper_left, upper_right, bottom_right, bottom_left];
 
-                TileBorder {
-                    terrain: terrain.into(),
+                if borders == [None, None, None, None] {
+                    return None;
+                };
+
+                Some(TileBorder {
+                    terrain: gen.terrains[terrain_strength].clone(),
                     spec: borders.into(),
-                }
+                })
             })
+            .filter(|x| x.is_some())
+            .map(|x| x.unwrap())
             .collect()
     }
 
@@ -124,86 +130,84 @@ impl TileBorder {
 }
 
 fn get_tileborder_from_terrain(
-    terrain: usize,
-    matrix: TilePositionNeighbors,
+    terrain: &Terrain,
+    matrix: &TilePositionNeighbors,
 ) -> Option<TileBorder> {
-    let left = matrix.left.0.terrain.strength;
-    let top = matrix.top.0.terrain.strength;
-    let right = matrix.right.0.terrain.strength;
-    let bottom = matrix.bottom.0.terrain.strength;
+    let left = &matrix.left.0.terrain;
+    let top = &matrix.top.0.terrain;
+    let right = &matrix.right.0.terrain;
+    let bottom = &matrix.bottom.0.terrain;
 
-    let top_left = matrix.top_left.0.terrain.strength;
-    let top_right = matrix.top_right.0.terrain.strength;
-    let bottom_left = matrix.bottom_left.0.terrain.strength;
-    let bottom_right = matrix.bottom_right.0.terrain.strength;
+    let top_left = &matrix.top_left.0.terrain;
+    let top_right = &matrix.top_right.0.terrain;
+    let bottom_left = &matrix.bottom_left.0.terrain;
+    let bottom_right = &matrix.bottom_right.0.terrain;
 
-    match (top == terrain, right == terrain, bottom == terrain, left == terrain) {
-
+    match (
+        top == terrain,
+        right == terrain,
+        bottom == terrain,
+        left == terrain,
+    ) {
         // All Inner Corners
         (true, true, true, true) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::all_inner_corners()
+            terrain: terrain.clone(),
+            spec: BorderSpec::all_inner_corners(),
         }),
 
         // Open C's
         (false, true, true, true) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::open_c(OpenEnd::Top)
+            terrain: terrain.clone(),
+            spec: BorderSpec::open_c(OpenEnd::Top),
         }),
         (true, false, true, true) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::open_c(OpenEnd::Right)
+            terrain: terrain.clone(),
+            spec: BorderSpec::open_c(OpenEnd::Right),
         }),
         (true, true, false, true) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::open_c(OpenEnd::Bottom)
+            terrain: terrain.clone(),
+            spec: BorderSpec::open_c(OpenEnd::Bottom),
         }),
         (true, true, true, false) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::open_c(OpenEnd::Left)
+            terrain: terrain.clone(),
+            spec: BorderSpec::open_c(OpenEnd::Left),
         }),
 
         // Tunnels
         (true, false, true, false) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::tunnel(TunnelOrientation::Horizontal)
+            terrain: terrain.clone(),
+            spec: BorderSpec::tunnel(TunnelOrientation::Horizontal),
         }),
         (false, true, false, true) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::tunnel(TunnelOrientation::Vertical)
+            terrain: terrain.clone(),
+            spec: BorderSpec::tunnel(TunnelOrientation::Vertical),
         }),
 
         // Diagonals
         (true, false, false, true) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::diagonal(
-                DiagonalLocation::TopLeft,
-                bottom_right == terrain)
+            terrain: terrain.clone(),
+            spec: BorderSpec::diagonal(DiagonalLocation::TopLeft, bottom_right == terrain),
         }),
         (true, true, false, false) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::diagonal(
-                DiagonalLocation::TopRight,
-                bottom_left == terrain)
+            terrain: terrain.clone(),
+            spec: BorderSpec::diagonal(DiagonalLocation::TopRight, bottom_left == terrain),
         }),
         (false, true, true, false) => Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::diagonal(
-                DiagonalLocation::BottomRight,
-                top_left == terrain)
+            terrain: terrain.clone(),
+            spec: BorderSpec::diagonal(DiagonalLocation::BottomRight, top_left == terrain),
         }),
-        (false, false, true, true) =>  Some(TileBorder {
-            terrain: terrain.into(),
-            spec: BorderSpec::diagonal(
-                DiagonalLocation::BottomLeft,
-                top_right == terrain)
+        (false, false, true, true) => Some(TileBorder {
+            terrain: terrain.clone(),
+            spec: BorderSpec::diagonal(DiagonalLocation::BottomLeft, top_right == terrain),
         }),
 
-        _ => None
-        // (false, true, false, false) => todo!(),
-        // (false, false, false, false) => todo!(),
-        // (true, false, false, false) => todo!(),
-        // (false, false, false, true) => todo!(),
-        // (false, false, true, false) => todo!(),
+        // These last cases
+        // should be handled by the external (Neightbors) rule.
+        // (false, true, false, false) => None,
+        // (false, false, false, false) => None,
+        // (true, false, false, false) => None,
+        // (false, false, false, true) => None,
+        // (false, false, true, false) => None,
+        _ => None,
     }
 }
