@@ -49,7 +49,6 @@ pub fn draw_terrain_from_instruction(
                             translation: Vec3::new(0.0, 0.0, 0.00001),
                             ..Default::default()
                         },
-                        sprite: tile_to_spawn.sprite.clone(),
                         ..Default::default()
                     });
                 }
