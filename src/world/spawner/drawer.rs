@@ -22,6 +22,10 @@ pub fn draw_terrain_from_instruction(
             //////////////////
             .remove::<WorldTileDrawInstrucion>()
             //////////////////
+            // Insert TilePosition (Our marker)
+            //////////////////
+            .insert(tile_to_spawn.tile.position.clone())
+            //////////////////
             // Insert Base Terrain
             //////////////////
             .insert_bundle(SpriteBundle {
@@ -32,10 +36,6 @@ pub fn draw_terrain_from_instruction(
                 sprite: tile_to_spawn.sprite.clone(),
                 ..Default::default()
             })
-            //////////////////
-            // Insert TilePosition (Our marker)
-            //////////////////
-            .insert(tile_to_spawn.tile.position.clone())
             //////////////////
             // Insert Decoration
             //////////////////
@@ -67,7 +67,7 @@ pub fn draw_terrain_from_instruction(
                         let border_layer_base_z = terrain_order as f32 / 1000.0;
                         for border_texture_index in border_instruction.get_texture_indexes() {
                             let border_terrain_transform = Transform {
-                                translation: Vec3::new(0.0, 0.0, border_layer_base_z + 0.001),
+                                translation: Vec3::new(0.0, 0.0, border_layer_base_z + 0.0001),
                                 ..Default::default()
                             };
 

@@ -1,54 +1,65 @@
 use itertools::Itertools;
 
 use crate::world::tile::terrain::{
-    biomes::{Biome, BiomeDict},
+    biomes::{Biome, BiomeConfig},
+    noise::{NoiseGenerator, NoiseGeneratorConfig},
     Terrain, TerrainConfig,
 };
 
-use super::TerrainName;
-
-pub fn build_terrain_list(terrain_config_list: &Vec<TerrainConfig>) -> Vec<Terrain> {
+pub fn build_initial_terrain_list(terrain_config_list: &Vec<TerrainConfig>) -> Vec<Terrain> {
     terrain_config_list
         .into_iter()
-        .enumerate()
-        .map(|(strength, config)| Terrain::new_from_config(config, strength))
+        .map(|config| Terrain::new_from_config(config, 0))
         .collect()
 }
 
-pub fn build_biome_dict(
-    terrain_list: &Vec<Terrain>,
-    biome_config: &BiomeDict<TerrainName>,
-) -> BiomeDict<Terrain> {
-    let mut biomes = BiomeDict::<Terrain>::new();
-
+pub fn build_biome_list(
+    initial_terrain_list: &Vec<Terrain>,
+    seed: u32,
+    biome_config: &Vec<BiomeConfig>,
+) -> Vec<Biome> {
     biome_config
         .into_iter()
-        .for_each(|(biome_name, biome_config)| {
-            biomes.insert(
-                biome_name.to_owned(),
-                Biome::<Terrain> {
-                    range: biome_config.range.clone(),
-                    terrains: (&biome_config.terrains)
-                        .into_iter()
-                        .map(|(terrain_name, range)| {
-                            (
-                                terrain_list
-                                    .into_iter()
-                                    .find(|t| t.name == *terrain_name)
-                                    .unwrap()
-                                    .clone(),
-                                range.clone(),
-                            )
-                        })
-                        .collect_vec(),
-                    default_terrain: terrain_list
-                        .into_iter()
-                        .find(|t| t.name == biome_config.default_terrain)
-                        .unwrap()
-                        .clone(),
-                },
-            );
-        });
+        .enumerate()
+        .map(|(biome_order, biome_config)| {
+            let customized_terrain_list = (&biome_config.terrains)
+                .into_iter()
+                .enumerate()
+                .map(|(biome_terrain_order, (terrain_name, terrain_range))| {
+                    (
+                        Terrain {
+                            strength: biome_order * 10 + biome_terrain_order,
+                            ..initial_terrain_list
+                                .into_iter()
+                                .find(|t| t.name == *terrain_name)
+                                .unwrap()
+                                .clone()
+                        },
+                        terrain_range.clone(),
+                    )
+                })
+                .collect_vec();
 
-    biomes
+            let customized_terrain_list_count = customized_terrain_list.len();
+
+            Biome {
+                name: biome_config.name.clone(),
+                range: biome_config.range.clone(),
+                default_terrain: customized_terrain_list
+                    .iter()
+                    .find(|(t, _)| t.name == biome_config.default_terrain)
+                    .unwrap()
+                    .0
+                    .clone(),
+                terrains: customized_terrain_list,
+                terrain_count: customized_terrain_list_count,
+                noise_terrain: NoiseGenerator::new_from_config(
+                    &NoiseGeneratorConfig::from_seed_offset(seed, &biome_config.noise_terrain),
+                ),
+                noise_decoration: NoiseGenerator::new_from_config(
+                    &NoiseGeneratorConfig::from_seed_offset(seed, &biome_config.noise_decoration),
+                ),
+            }
+        })
+        .collect_vec()
 }

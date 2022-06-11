@@ -4,6 +4,33 @@ use serde::{Deserialize, Serialize};
 use crate::{utilities::xy::XY, world::tile::position::TilePosition};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct NoiseGeneratorSeedOffsetConfig {
+    pub seed_offset: i32,
+    pub noise_scale_factor: XY<f64>,
+}
+
+impl Default for NoiseGeneratorSeedOffsetConfig {
+    fn default() -> Self {
+        Self {
+            seed_offset: 0,
+            noise_scale_factor: XY { x: 4.0, y: 4.0 },
+        }
+    }
+}
+
+impl NoiseGeneratorSeedOffsetConfig {
+    pub fn new(seed_offset: i32, x_scale_fact: f64, y_scale_fact: f64) -> Self {
+        Self {
+            seed_offset,
+            noise_scale_factor: XY {
+                x: x_scale_fact,
+                y: y_scale_fact,
+            },
+        }
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NoiseGeneratorConfig {
     pub seed: u32,
     pub noise_scale_factor: XY<f64>,
@@ -14,6 +41,16 @@ impl Default for NoiseGeneratorConfig {
         Self {
             seed: 34,
             noise_scale_factor: XY { x: 4.0, y: 4.0 },
+        }
+    }
+}
+
+impl NoiseGeneratorConfig {
+    #[allow(arithmetic_overflow)]
+    pub fn from_seed_offset(seed: u32, offset: &NoiseGeneratorSeedOffsetConfig) -> Self {
+        Self {
+            seed: ((seed as i32) - offset.seed_offset) as u32,
+            noise_scale_factor: offset.noise_scale_factor,
         }
     }
 }

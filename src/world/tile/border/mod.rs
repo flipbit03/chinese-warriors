@@ -15,13 +15,18 @@ pub mod structs;
 
 impl TileBorder {
     pub fn from(matrix: &TilePositionNeighbors, gen: &TerrainGenerator) -> Vec<Self> {
+        // Find our index in the global terrains array
+        let our_terrain_index = gen
+            .terrains
+            .iter()
+            .position(|t| *t == matrix.center.0.terrain)
+            .unwrap();
+
         // We receive no borders if we are the strongest terrain.
-        if &matrix.center.0.terrain == gen.terrains.last().unwrap() {
+        if our_terrain_index + 1 == gen.terrain_count {
             // Return empty array.
             return Vec::new();
         }
-
-        let center = &matrix.center.0.terrain;
 
         let left = &matrix.left.0.terrain;
         let top = &matrix.top.0.terrain;
@@ -33,37 +38,38 @@ impl TileBorder {
         let bottom_left = &matrix.bottom_left.0.terrain;
         let bottom_right = &matrix.bottom_right.0.terrain;
 
-        ((center.strength + 1)..gen.terrain_count)
-            .map(|terrain_strength| {
+        (&gen.terrains[our_terrain_index + 1..gen.terrain_count])
+            .iter()
+            .map(|stronger_terrain| {
                 let tileborder_from_4: Option<TileBorder> =
-                    get_tileborder_from_terrain(&gen.terrains[terrain_strength], matrix);
+                    get_tileborder_from_stronger_terrain(stronger_terrain, matrix);
 
                 if let Some(_) = tileborder_from_4 {
                     return tileborder_from_4;
                 };
 
                 let upper_left = get_border_from_neighbor_effects(
-                    left == &gen.terrains[terrain_strength],
-                    top == &gen.terrains[terrain_strength],
-                    top_left == &gen.terrains[terrain_strength],
+                    left == stronger_terrain,
+                    top == stronger_terrain,
+                    top_left == stronger_terrain,
                 );
 
                 let upper_right = get_border_from_neighbor_effects(
-                    right == &gen.terrains[terrain_strength],
-                    top == &gen.terrains[terrain_strength],
-                    top_right == &gen.terrains[terrain_strength],
+                    right == stronger_terrain,
+                    top == stronger_terrain,
+                    top_right == stronger_terrain,
                 );
 
                 let bottom_left = get_border_from_neighbor_effects(
-                    left == &gen.terrains[terrain_strength],
-                    bottom == &gen.terrains[terrain_strength],
-                    bottom_left == &gen.terrains[terrain_strength],
+                    left == stronger_terrain,
+                    bottom == stronger_terrain,
+                    bottom_left == stronger_terrain,
                 );
 
                 let bottom_right = get_border_from_neighbor_effects(
-                    right == &gen.terrains[terrain_strength],
-                    bottom == &gen.terrains[terrain_strength],
-                    bottom_right == &gen.terrains[terrain_strength],
+                    right == stronger_terrain,
+                    bottom == stronger_terrain,
+                    bottom_right == stronger_terrain,
                 );
 
                 let borders = [upper_left, upper_right, bottom_right, bottom_left];
@@ -73,7 +79,7 @@ impl TileBorder {
                 };
 
                 Some(TileBorder {
-                    terrain: gen.terrains[terrain_strength].clone(),
+                    terrain: stronger_terrain.clone(),
                     spec: borders.into(),
                 })
             })
@@ -129,7 +135,7 @@ impl TileBorder {
     }
 }
 
-fn get_tileborder_from_terrain(
+fn get_tileborder_from_stronger_terrain(
     terrain: &Terrain,
     matrix: &TilePositionNeighbors,
 ) -> Option<TileBorder> {

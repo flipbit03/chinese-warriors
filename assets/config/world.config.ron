@@ -2,11 +2,58 @@
 (
   world: (
     terrain_generation: (
+      seed: 34,
       terrains: [
+        (
+          name: "DeepWater",
+          base: DeepWater,
+          color: None,
+          walkable: false,
+        ),
+        (
+          name: "Grass",
+          base: Grass,
+          color: None,
+          walkable: true,
+        ),
         (
           name: "Stone",
           base: Stone,
           color: None,
+          walkable: true,
+        ),
+        (
+          name: "Sand",
+          base: Sand,
+          color: None,
+          walkable: true,
+        ),
+        (
+          name: "ShallowWater",
+          base: ShallowWater,
+          color: None,
+          walkable: true,
+        ),
+        (
+          name: "Snow",
+          base: Snow,
+          color: None,
+          walkable: false,
+        ),
+        (
+          name: "Mud",
+          base: Mud,
+          color: None,
+          walkable: false,
+        ),
+        (
+          name: "DarkSand",
+          base: Sand,
+          color: (
+            235,
+            235,
+            235,
+          ),
           walkable: true,
         ),
         (
@@ -17,18 +64,6 @@
             155,
             155,
           ),
-          walkable: true,
-        ),
-        (
-          name: "Sand",
-          base: Sand,
-          color: None,
-          walkable: true,
-        ),
-        (
-          name: "Grass",
-          base: Grass,
-          color: None,
           walkable: true,
         ),
         (
@@ -51,48 +86,58 @@
           ),
           walkable: true,
         ),
-        (
-          name: "ShallowWater",
-          base: ShallowWater,
-          color: None,
-          walkable: true,
-        ),
-        (
-          name: "DeepWater",
-          base: DeepWater,
-          color: None,
-          walkable: false,
-        ),
       ],
-      biomes: {
-        "FloodedRuins": (
+      biomes: [
+        (
+          name: "Beach",
           range: (
             start: 0.0,
+            end: 0.5,
+          ),
+          terrains: [
+            ("Sand",(start:0.0,end:0.7)),
+            ("DarkSand",(start:0.7,end:1.0)),
+          ],
+          default_terrain: "Sand",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:4.0,y:4.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+        (
+          name: "FloodedRuins",
+          range: (
+            start: 0.5,
             end: 1.0,
           ),
           terrains: [
-            ("DeepWater",(start:0.1,end:0.2)),
-            ("ShallowWater",(start:0.2,end:0.5)),
             ("Stone",(start:0.5,end:0.6)),
             ("Grass",(start:0.6,end:0.7)),
             ("DeepGrass",(start:0.7,end:0.85)),
             ("TaintedGrass",(start:0.85,end:0.9)),
+            ("ShallowWater",(start:0.2,end:0.5)),
+            ("DeepWater",(start:0.1,end:0.2)),
           ],
           default_terrain: "Stone",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:4.0,y:4.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
         ),
-      },
-      base_terrain: (
-        seed: 34,
+      ],
+      biome_noise: (
+        seed_offset: 0,
         noise_scale_factor: (
-          x: 4.0,
-          y: 4.0,
-        ),
-      ),
-      decoration: (
-        seed: 34,
-        noise_scale_factor: (
-          x: 2.0,
-          y: 2.0,
+          x: 100.0,
+          y: 100.0,
         ),
       ),
     ),
@@ -104,5 +149,9 @@
   ),
   hero: (
     move_speed: 2.1,
+    spawn_point: (
+      15614.0,
+      8297.0,
+    ),
   ),
 )

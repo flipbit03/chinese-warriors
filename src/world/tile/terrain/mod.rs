@@ -18,11 +18,31 @@ use strum::{Display, EnumCount, EnumIter, EnumVariantNames};
     Eq,
 )]
 pub enum BaseTerrain {
-    Stone = 0,
-    Sand = 1,
-    Grass = 2,
-    ShallowWater = 3,
-    DeepWater = 4,
+    DeepWater = 0,
+    Grass = 1,
+    Stone = 2,
+    Sand = 3,
+    ShallowWater = 4,
+    Snow = 5,
+    Mud = 6,
+}
+
+impl From<usize> for BaseTerrain {
+    fn from(n: usize) -> Self {
+        match n {
+            0 => BaseTerrain::DeepWater,
+            1 => BaseTerrain::Grass,
+            2 => BaseTerrain::Stone,
+            3 => BaseTerrain::Sand,
+            4 => BaseTerrain::ShallowWater,
+            5 => BaseTerrain::Snow,
+            6 => BaseTerrain::Mud,
+            x => {
+                println!("Bateu o numero {x} no BaseTerrain!\n");
+                panic!()
+            }
+        }
+    }
 }
 
 /// A Terrain Config Object used in the configs
@@ -88,34 +108,6 @@ impl Terrain {
             color: c.color.clone(),
             walkable: c.walkable,
         }
-    }
-}
-
-impl From<usize> for BaseTerrain {
-    fn from(n: usize) -> Self {
-        match n {
-            0 => BaseTerrain::Stone,
-            1 => BaseTerrain::Sand,
-            2 => BaseTerrain::Grass,
-            3 => BaseTerrain::ShallowWater,
-            4 => BaseTerrain::DeepWater,
-            x => {
-                println!("Bateu o numero {x} no BaseTerrain!\n");
-                panic!()
-            }
-        }
-    }
-}
-
-impl Default for BaseTerrain {
-    fn default() -> Self {
-        Self::Sand
-    }
-}
-
-impl Into<f32> for BaseTerrain {
-    fn into(self) -> f32 {
-        (self as u16).try_into().unwrap()
     }
 }
 

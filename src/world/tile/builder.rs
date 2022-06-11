@@ -44,7 +44,7 @@ impl WorldBuilder {
 
     pub fn create(&mut self, tile_position: TilePosition) -> WorldTileDrawInstrucion {
         let tile = self.get(tile_position.clone());
-        let terrain_z = tile.worldterrain.terrain.strength as f32 / 100.0;
+        let terrain_z = tile.worldterrain.terrain.strength as f32 / 10000.0;
         WorldTileDrawInstrucion {
             sprite: tile.worldterrain.terrain.sprite_color(),
             tile,

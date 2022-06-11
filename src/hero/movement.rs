@@ -16,18 +16,16 @@ pub fn hero_movement_from_instruction(
     mut camera_query: Query<&mut Transform, With<Camera2d>>,
     mut query: Query<(&mut Hero, &mut Transform), Without<Camera2d>>,
 ) {
-    if let None = optional_hmi {
-        return;
-    }
+    let (mut hero, mut hero_transform) = query.single_mut();
+    let mut camera_transform = camera_query.single_mut();
+
+    // Make hero walk
+    hero.walking = true;
 
     let hmi = optional_hmi.unwrap();
 
-    let mut camera_transform = camera_query.single_mut();
-
     // TODO: Fix Diagonal Move Speed
     let move_speed = config.hero.move_speed * camera_transform.scale.x;
-
-    let (mut hero, mut hero_transform) = query.single_mut();
 
     let hero_x = hero_transform.translation.x.round();
     let hero_y = hero_transform.translation.y.round();
@@ -35,7 +33,6 @@ pub fn hero_movement_from_instruction(
     let distance_left_x = (hmi.0.x - hero_x).abs();
     let distance_left_y = (hmi.0.y - hero_y).abs();
 
-    hero.walking = true;
     if distance_left_x > 1.0 {
         match hmi.0.x > hero_x {
             true => {
@@ -61,10 +58,7 @@ pub fn hero_movement_from_instruction(
     }
     camera_transform.translation = hero_transform.translation.clone();
 
-    println!("Distance left X={} Y={}", distance_left_x, distance_left_y);
-
     if distance_left_x <= 1.0 && distance_left_y <= 1.0 {
-        println!("Chegamos ao destino!");
         commands.remove_resource::<HeroMoveToInstruction>();
         hero.walking = false;
     }

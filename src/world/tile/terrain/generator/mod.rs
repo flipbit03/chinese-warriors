@@ -4,12 +4,12 @@ use serde::{Deserialize, Serialize};
 
 use crate::world::tile::{
     position::TilePosition,
-    terrain::generator::util::{build_biome_dict, build_terrain_list},
+    terrain::generator::util::{build_biome_list, build_initial_terrain_list},
 };
 
 use super::{
-    biomes::{Biome, BiomeDict},
-    noise::{NoiseGenerator, NoiseGeneratorConfig},
+    biomes::{Biome, BiomeConfig},
+    noise::{NoiseGenerator, NoiseGeneratorConfig, NoiseGeneratorSeedOffsetConfig},
     Terrain, TerrainConfig,
 };
 
@@ -17,18 +17,17 @@ pub type TerrainName = String;
 
 #[derive(Default, Debug, Clone, Serialize, Deserialize)]
 pub struct TerrainGeneratorConfig {
+    pub seed: u32,
     pub terrains: Vec<TerrainConfig>,
-    pub biomes: BiomeDict<TerrainName>,
-    pub base_terrain: NoiseGeneratorConfig,
-    pub decoration: NoiseGeneratorConfig,
+    pub biomes: Vec<BiomeConfig>,
+    pub biome_noise: NoiseGeneratorSeedOffsetConfig,
 }
 
 pub struct TerrainGenerator {
     pub terrains: Vec<Terrain>,
     pub terrain_count: usize,
-    pub biomes: BiomeDict<Terrain>,
-    pub terrain_component: NoiseGenerator,
-    pub decoration_component: NoiseGenerator,
+    pub biomes: Vec<Biome>,
+    pub biome_noise: NoiseGenerator,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -41,45 +40,52 @@ pub const DECORATION_COUNT: usize = 21;
 
 impl TerrainGenerator {
     pub fn new_from_config(config: &TerrainGeneratorConfig) -> Self {
-        // Generate all Terrains from TerrainConfigs
-        let terrains = build_terrain_list(&config.terrains);
-        let terrain_count = (&terrains).into_iter().count();
+        // Generate all initial Terrains from TerrainConfigs
+        let initial_terrain_list = build_initial_terrain_list(&config.terrains);
 
-        // Generate all Biomes from Terrains
-        let biomes = build_biome_dict(&terrains, &config.biomes);
+        // Generate all Biomes, using the terrains above as templates.
+        let biomes = build_biome_list(&initial_terrain_list, config.seed, &config.biomes);
+
+        // Generate a global list of Terrains (and updated strengths) from the Biomes.
+        let mut terrains = Vec::new();
+        biomes.iter().for_each(|b| {
+            b.terrains
+                .iter()
+                .for_each(|(t, _)| terrains.push(t.clone()));
+        });
+        let terrain_count = (&terrains).iter().count();
 
         Self {
             terrains,
             terrain_count,
             biomes,
-            decoration_component: NoiseGenerator::new_from_config(&config.decoration),
-            terrain_component: NoiseGenerator::new_from_config(&config.base_terrain),
+            biome_noise: NoiseGenerator::new_from_config(&NoiseGeneratorConfig::from_seed_offset(
+                config.seed,
+                &config.biome_noise,
+            )),
         }
     }
 
-    fn get_biome(&self, _: &TilePosition) -> &Biome<Terrain> {
-        self.biomes.values().next().unwrap()
+    fn get_biome_and_index(&self, tp: &TilePosition) -> &Biome {
+        self.biomes
+            .iter()
+            .find(|biome| biome.range.contains(&self.biome_noise.get_noise(tp)))
+            .unwrap_or(&self.biomes[0])
     }
 
-    fn get_terrain(&self, tp: &TilePosition) -> Terrain {
-        let noise_value = self.terrain_component.get_noise(tp);
-
-        let biome = self.get_biome(&tp);
-
-        for (terrain, range) in &biome.terrains {
-            if range.contains(&noise_value) {
-                return terrain.clone();
-            }
-        }
-
-        // Range was not found, default terrain is the lowest priority one.
-        biome.default_terrain.clone()
+    fn get_terrain(biome: &Biome, tp: &TilePosition) -> Terrain {
+        biome
+            .terrains
+            .iter()
+            .find(|(_, range)| range.contains(&biome.noise_terrain.get_noise(tp)))
+            .unwrap_or(&(biome.default_terrain.clone(), 0.0..1.0))
+            .0
+            .clone()
     }
 
-    fn get_decoration(&self, tp: &TilePosition) -> Option<usize> {
-        let noise_value = self.decoration_component.get_noise(tp);
-
-        let decoration = (noise_value * ((DECORATION_COUNT - 1) as f64)) as usize;
+    fn get_decoration(biome: &Biome, tp: &TilePosition) -> Option<usize> {
+        let decoration =
+            (biome.noise_decoration.get_noise(tp) * ((DECORATION_COUNT - 1) as f64)) as usize;
 
         match decoration {
             0 => None,
@@ -88,9 +94,11 @@ impl TerrainGenerator {
     }
 
     pub fn get_world_terrain(&self, tp: &TilePosition) -> WorldTerrain {
+        let biome = self.get_biome_and_index(tp);
+
         let t = WorldTerrain {
-            terrain: self.get_terrain(&tp),
-            decoration: self.get_decoration(&tp),
+            terrain: TerrainGenerator::get_terrain(&biome, &tp),
+            decoration: TerrainGenerator::get_decoration(&biome, &tp),
         };
         t
     }

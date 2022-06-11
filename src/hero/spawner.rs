@@ -5,17 +5,21 @@ use bevy::{
     sprite::SpriteSheetBundle,
 };
 
-use crate::assets::textures::GuriTextureAtlas;
+use crate::assets::{config::structs::CwConfig, textures::GuriTextureAtlas};
 
 use super::structs::{Hero, HeroWalkCycleTimer};
 
-pub fn spawn_hero(mut commands: Commands, guri_atlas: Res<GuriTextureAtlas>) {
+pub fn spawn_hero(
+    mut commands: Commands,
+    config: Res<CwConfig>,
+    guri_atlas: Res<GuriTextureAtlas>,
+) {
     println!("Spawning hero...");
     commands
         .spawn_bundle(SpriteSheetBundle {
             texture_atlas: guri_atlas.texture_handle.clone(),
             transform: Transform {
-                translation: Vec3::new(14711.0, 12905.0, 1.0),
+                translation: Vec3::new(config.hero.spawn_point.x, config.hero.spawn_point.y, 1.0),
                 ..Transform::from_scale(Vec3::splat(1.0))
             },
             ..Default::default()
