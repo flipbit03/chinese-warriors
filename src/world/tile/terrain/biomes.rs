@@ -20,6 +20,7 @@ pub struct Biome {
     pub default_terrain: Terrain,
     pub noise_terrain: NoiseGenerator,
     pub noise_decoration: NoiseGenerator,
+    pub decoration_eagerness: Option<Vec<Range<f64>>>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -30,6 +31,7 @@ pub struct BiomeConfig {
     pub default_terrain: TerrainName,
     pub noise_terrain: NoiseGeneratorSeedOffsetConfig,
     pub noise_decoration: NoiseGeneratorSeedOffsetConfig,
+    pub decoration_eagerness: Option<Vec<Range<f64>>>,
 }
 
 pub type BiomeDict<T> = HashMap<BiomeName, T>;

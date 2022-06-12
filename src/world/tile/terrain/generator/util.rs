@@ -59,6 +59,7 @@ pub fn build_biome_list(
                 noise_decoration: NoiseGenerator::new_from_config(
                     &NoiseGeneratorConfig::from_seed_offset(seed, &biome_config.noise_decoration),
                 ),
+                decoration_eagerness: biome_config.decoration_eagerness.clone(),
             }
         })
         .collect_vec()

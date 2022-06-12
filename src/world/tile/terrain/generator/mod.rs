@@ -36,8 +36,6 @@ pub struct WorldTerrain {
     pub decoration: Option<usize>,
 }
 
-pub const DECORATION_COUNT: usize = 21;
-
 impl TerrainGenerator {
     pub fn new_from_config(config: &TerrainGeneratorConfig) -> Self {
         // Generate all initial Terrains from TerrainConfigs
@@ -83,13 +81,26 @@ impl TerrainGenerator {
             .clone()
     }
 
-    fn get_decoration(biome: &Biome, tp: &TilePosition) -> Option<usize> {
-        let decoration =
-            (biome.noise_decoration.get_noise(tp) * ((DECORATION_COUNT - 1) as f64)) as usize;
+    pub const DECORATION_COUNT: usize = 20;
 
-        match decoration {
-            0 => None,
-            _ => Some(decoration - 1),
+    fn get_decoration(biome: &Biome, tp: &TilePosition) -> Option<usize> {
+        let decoration_noise = biome.noise_decoration.get_noise(tp);
+
+        match (biome.decoration_eagerness.as_ref())
+            .unwrap_or(&Vec::new())
+            .iter()
+            .find(|dr| dr.contains(&decoration_noise))
+        {
+            Some(found_range) => {
+                // Normalize everyone from 0.0
+                let max = found_range.end - found_range.start;
+                let num = decoration_noise - found_range.start;
+
+                let decoration = (TerrainGenerator::DECORATION_COUNT as f64 * num) / max;
+
+                Some(decoration as usize)
+            }
+            None => None,
         }
     }
 
