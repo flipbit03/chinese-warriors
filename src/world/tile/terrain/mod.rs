@@ -37,6 +37,7 @@ impl From<usize> for BaseTerrain {
             4 => BaseTerrain::ShallowWater,
             5 => BaseTerrain::Snow,
             6 => BaseTerrain::Mud,
+
             x => {
                 println!("Bateu o numero {x} no BaseTerrain!\n");
                 panic!()

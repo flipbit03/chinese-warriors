@@ -4,16 +4,127 @@
     terrain_generation: (
       seed: 34,
       terrains: [
+
+
         (
           name: "DeepWater",
           base: DeepWater,
           color: None,
           walkable: false,
         ),
+         (
+          name: "ShallowWater",
+          base: ShallowWater,
+          color: None,
+          walkable: true,
+        ),
+         (
+          name: "SwampWater",
+          base: ShallowWater,
+          color: (
+            215,
+            240,
+            200,
+          ),
+          walkable: true,
+        ),
         (
           name: "Grass",
           base: Grass,
           color: None,
+          walkable: true,
+        ),
+         (
+         name: "TundraGrass",
+          base: Grass,
+           color: (
+            230,
+            230,
+            255,
+          ),
+          walkable: true,
+        ),
+        (
+         name: "FrozenGrass",
+          base: Grass,
+           color: (
+            170,
+            190,
+            255,
+          ),
+          walkable: true,
+        ),
+         (
+          name: "PlainsGrass",
+          base: Grass,
+           color: (
+            250,
+            235,
+            220,
+          ),
+          walkable: true,
+        ),
+         (
+          name: "DarkGrass",
+          base: Grass,
+          color: (
+            225,
+            225,
+            225,
+          ),
+          walkable: true,
+        ),
+         (
+          name: "SwampGrass",
+          base: Grass,
+          color: (
+            190,
+            185,
+            160,
+          ),
+          walkable: true,
+        ),
+
+         (
+          name: "Mud",
+          base: Mud,
+          color: None,
+          walkable: false,
+        ),
+         (
+          name: "Clay",
+          base: Mud,
+          color: (
+            255,
+            235,
+            220,
+          ),
+          walkable: false,
+        ),
+         (
+          name: "DarkMud",
+          base: Mud,
+          color: (
+            225,
+            225,
+            225,
+          ),
+          walkable: false,
+        ),
+         (
+          name: "Sand",
+          base: Sand,
+          color: None,
+          walkable: true,
+        ),
+          (
+          name: "WetSand",
+          base: Sand,
+          color: (
+            235,
+            235,
+            235,
+          ),
           walkable: true,
         ),
         (
@@ -23,106 +134,218 @@
           walkable: true,
         ),
         (
-          name: "Sand",
-          base: Sand,
-          color: None,
+          name: "RedStone",
+          base: Stone,
+         color: (
+            235,
+            200,
+            160,
+          ),
           walkable: true,
         ),
-        (
-          name: "ShallowWater",
-          base: ShallowWater,
-          color: None,
+         (
+          name: "DarkStone",
+          base: Stone,
+         color: (
+            215,
+            215,
+            215,
+          ),
           walkable: true,
         ),
+
+
+         (
+          name: "SandStone",
+          base: Stone,
+          color: (
+            255,
+            225,
+            175,
+          ),
+          walkable: true,
+        ),
+
+
         (
           name: "Snow",
           base: Snow,
           color: None,
-          walkable: false,
-        ),
-        (
-          name: "Mud",
-          base: Mud,
-          color: None,
-          walkable: false,
-        ),
-        (
-          name: "DarkSand",
-          base: Sand,
-          color: (
-            235,
-            235,
-            235,
-          ),
           walkable: true,
         ),
-        (
-          name: "DarkStone",
-          base: Grass,
+         (
+          name: "BlueSnow",
+          base: Snow,
           color: (
-            155,
-            155,
-            155,
-          ),
-          walkable: true,
-        ),
-        (
-          name: "DeepGrass",
-          base: Grass,
-          color: (
-            140,
-            255,
+            230,
+            240,
             255,
           ),
           walkable: true,
         ),
-        (
-          name: "TaintedGrass",
-          base: Grass,
-          color: (
-            140,
-            155,
-            79,
-          ),
-          walkable: true,
-        ),
+
+
+
+
       ],
       biomes: [
-        (
-          name: "Beach",
+       (
+          name: "RockDesert",
           range: (
             start: 0.0,
-            end: 0.5,
+            end: 0.2,
           ),
           terrains: [
-            ("Sand",(start:0.0,end:0.7)),
-            ("DarkSand",(start:0.7,end:1.0)),
+
+
+              ("Sand",(start:0.7,end:1.0)),
+              ("SandStone",(start:0.5,end:0.7)),
+                ("RedStone",(start:0.0,end:0.5)),
+
+
+
+
           ],
           default_terrain: "Sand",
           noise_terrain: (
             seed_offset: 0,
-            noise_scale_factor: (x:4.0,y:4.0),
+            noise_scale_factor: (x:5.0,y:5.0),
           ),
           noise_decoration: (
             seed_offset: 0,
             noise_scale_factor: (x:2.0,y:2.0),
           ),
         ),
-        (
-          name: "FloodedRuins",
+         
+
+
+         (
+          name: "Quarry",
           range: (
-            start: 0.5,
-            end: 1.0,
+            start: 0.3,
+            end: 0.35,
           ),
           terrains: [
-            ("Stone",(start:0.5,end:0.6)),
-            ("Grass",(start:0.6,end:0.7)),
-            ("DeepGrass",(start:0.7,end:0.85)),
-            ("TaintedGrass",(start:0.85,end:0.9)),
-            ("ShallowWater",(start:0.2,end:0.5)),
-            ("DeepWater",(start:0.1,end:0.2)),
+
+
+               ("Sand",(start:0.70,end:1.0)),
+               ("DarkStone",(start:0.5,end:0.70)),
+               ("Stone",(start:0.2,end:0.5)),
+                ("RedStone",(start:0.0,end:0.2)),
+
+
+
+
+
           ],
           default_terrain: "Stone",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:5.0,y:5.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+         (
+          name: "Desert",
+          range: (
+            start: 0.35,
+            end: 0.5,
+          ),
+          terrains: [
+            
+            ("SandStone",(start:0.0,end:0.2)),
+              ("SandStone",(start:0.85,end:1.0)),
+                ("Sand",(start:0.2,end:0.85)),
+          
+           
+
+          ],
+          default_terrain: "Sand",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:20.0,y:20.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+         (
+          name: "Oasis",
+          range: (
+            start: 0.25,
+            end: 0.3,
+          ),
+          terrains: [
+
+            ("Sand",(start:0.0,end:0.25)),
+           ("WetSand",(start:0.25,end:0.3)),
+             ("WetSand",(start:0.7,end:0.8)),
+            ("Sand",(start:0.8,end:1.0)),
+            ("ShallowWater",(start:0.3,end:0.7)),
+
+          ],
+          default_terrain: "Sand",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:15.0,y:15.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+       
+          (
+          name: "Plains",
+          range: (
+            start: 0.6,
+            end: 0.78,
+          ),
+          terrains: [
+             ("ShallowWater",(start:0.0,end:0.1)),
+             ("Clay",(start:0.1,end:0.24)),
+              ("Grass",(start:0.24,end:0.55)),
+                 ("Grass",(start:0.8,end:1.0)),
+               ("PlainsGrass",(start:0.55,end:0.8)),
+
+           
+
+
+          ],
+          default_terrain: "Grass",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:10.0,y:10.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+
+        (
+          name: "Swamp",
+          range: (
+            start: 0.5,
+            end: 0.6,
+          ),
+          terrains: [
+            ("DarkMud",(start:0.5,end:0.6)),
+
+
+            ("DarkGrass",(start:0.6,end:0.7)),
+              ("SwampGrass",(start:0.7,end:1.0)),
+
+
+
+            ("SwampWater",(start:0.25,end:0.6)),
+
+          ],
+          default_terrain: "DarkGrass",
           noise_terrain: (
             seed_offset: 0,
             noise_scale_factor: (x:4.0,y:4.0),
@@ -132,12 +355,77 @@
             noise_scale_factor: (x:2.0,y:2.0),
           ),
         ),
+
+           (
+          name: "Tundra",
+          range: (
+            start: 0.78,
+            end: 0.83,
+          ),
+          terrains: [
+
+  
+          ("TundraGrass",(start:0.0,end:0.5)),
+               ("FrozenGrass",(start:0.5,end:1.0)),
+             
+             
+            
+ 
+
+
+          ],
+          default_terrain: "TundraGrass",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:9.0,y:9.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+
+
+         (
+          name: "Snow",
+          range: (
+            start: 0.83,
+            end: 1.0,
+          ),
+          terrains: [
+
+
+           ("ShallowWater",(start:0.0,end:0.35)),
+             ("BlueSnow",(start:0.9,end:1.0)),
+
+
+             ("BlueSnow",(start:0.35,end:0.45)),
+                ("Snow",(start:0.45,end:0.9)),
+                
+
+
+
+
+
+          ],
+          default_terrain: "Snow",
+          noise_terrain: (
+            seed_offset: 0,
+            noise_scale_factor: (x:25.0,y:25.0),
+          ),
+          noise_decoration: (
+            seed_offset: 0,
+            noise_scale_factor: (x:2.0,y:2.0),
+          ),
+        ),
+        
+
       ],
       biome_noise: (
         seed_offset: 0,
         noise_scale_factor: (
-          x: 100.0,
-          y: 100.0,
+          x: 125.0,
+          y: 125.0,
         ),
       ),
     ),
@@ -148,7 +436,7 @@
     tile_scale: 1.0,
   ),
   hero: (
-    move_speed: 2.1,
+    move_speed: 20.1,
     spawn_point: (
       15614.0,
       8297.0,
