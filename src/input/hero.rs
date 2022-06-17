@@ -4,9 +4,9 @@ use bevy::{
     render::camera::Camera2d,
 };
 
-use crate::{
-    assets::config::structs::CwConfig,
-    hero::structs::{Hero, HeroFacing},
+use crate::hero::{
+    current_tile::MoveSpeed,
+    structs::{Hero, HeroFacing},
 };
 
 use super::mouse_input::HeroMoveToInstruction;
@@ -14,16 +14,15 @@ use super::mouse_input::HeroMoveToInstruction;
 pub fn hero_input(
     mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
-    config: Res<CwConfig>,
     mut camera_query: Query<&mut Transform, With<Camera2d>>,
-    mut query: Query<(&mut Hero, &mut Transform), Without<Camera2d>>,
+    mut hero_query: Query<(&mut Hero, &mut Transform, &MoveSpeed), Without<Camera2d>>,
 ) {
     let mut camera_transform = camera_query.single_mut();
 
-    // TODO: Fix Diagonal Move Speed
-    let move_speed = config.hero.move_speed * camera_transform.scale.x;
+    let (mut hero, mut hero_transform, hero_movespeed) = hero_query.single_mut();
 
-    let (mut hero, mut hero_transform) = query.single_mut();
+    // TODO: Fix Diagonal Move Speed
+    let move_speed = hero_movespeed.0 * camera_transform.scale.x;
 
     // If any key is pressed, remove currently existing MouseClick Hero Move Instruct
     let mut any_input = false;

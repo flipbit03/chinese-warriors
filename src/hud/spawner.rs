@@ -10,7 +10,7 @@ use bevy::{
 use crate::{
     assets::{config::structs::CwConfig, fonts::MainFont},
     hero::structs::Hero,
-    world::tile::position::TilePosition,
+    world::tile::{position::TilePosition, WorldTile},
 };
 
 #[derive(Component)]
@@ -52,18 +52,32 @@ pub fn spawn_hud_text(mut commands: Commands, main_font: Res<MainFont>) {
 pub fn update_hud_text(
     mut hud_query: Query<&mut Text, (With<HudText>, Without<Hero>)>,
     config: Res<CwConfig>,
-    hero_query: Query<&Transform, With<Hero>>,
+    hero_query: Query<(&Transform, Option<&WorldTile>), With<Hero>>,
     tile_query: Query<&TilePosition>,
     all_entities_query: Query<Entity>,
 ) {
-    let hero_transform = hero_query.single();
+    let (hero_transform, hero_tile) = hero_query.single();
 
     let mut text = hud_query.single_mut();
 
+    let tile_str = match hero_tile {
+        Some(t) => {
+            format!(
+                "tilepos=(x={:05.1}, y={:05.1}) terrain={:?} move_speed_mult={:01.1} ",
+                t.position.x,
+                t.position.y,
+                t.worldterrain.terrain.name,
+                t.worldterrain.terrain.move_speed_multiplier
+            )
+        }
+        None => "No WorldTile in Hero".to_string(),
+    };
+
     text.sections[0].value = format!(
-        "x={:08.1} y={:08.1}\ntile_position_count={:4}\nall_entities_count={:4}\n{:?}",
+        "x={:08.1} y={:08.1}\n{}\ntile_position_count={:4}\nall_entities_count={:4}\n{:?}",
         hero_transform.translation.x,
         hero_transform.translation.y,
+        tile_str,
         tile_query.iter().count(),
         all_entities_query.iter().count(),
         config.hero

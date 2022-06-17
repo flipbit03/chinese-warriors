@@ -12,7 +12,7 @@ pub fn generate_terrain_instruction(
     camera_query: Query<(&Transform, &OrthographicProjection), With<Camera2d>>,
     config: Res<CwConfig>,
     tile_query: Query<(Entity, &TilePosition)>,
-    mut world_builder: ResMut<WorldBuilder>,
+    world_builder: Res<WorldBuilder>,
 ) {
     let (camera_transform, camera_projection) = camera_query.single();
 

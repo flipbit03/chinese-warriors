@@ -24,4 +24,5 @@ pub struct WorldTileDrawInstrucion {
     pub tile: WorldTile,
     pub transform: Transform,
     pub sprite: Sprite,
+    pub debug_grid: bool,
 }

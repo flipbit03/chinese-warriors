@@ -9,12 +9,14 @@
           base: DeepWater,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "ShallowWater",
           base: ShallowWater,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "SwampWater",
@@ -25,12 +27,14 @@
             200,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "Grass",
           base: Grass,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "TundraGrass",
@@ -41,6 +45,7 @@
             255,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "FrozenGrass",
@@ -51,6 +56,7 @@
             255,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "PlainsGrass",
@@ -61,6 +67,7 @@
             220,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "DarkGrass",
@@ -71,6 +78,7 @@
             225,
           ),
           walkable: true,
+          move_speed_multiplier: 0.5,
         ),
         (
           name: "SwampGrass",
@@ -81,12 +89,14 @@
             160,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "Mud",
           base: Mud,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "Clay",
@@ -97,6 +107,7 @@
             220,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "DarkMud",
@@ -107,12 +118,14 @@
             225,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "Sand",
           base: Sand,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "WetSand",
@@ -123,12 +136,14 @@
             235,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "Stone",
           base: Stone,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "RedStone",
@@ -139,6 +154,7 @@
             160,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "DarkStone",
@@ -149,6 +165,7 @@
             215,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "SandStone",
@@ -159,12 +176,14 @@
             175,
           ),
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "Snow",
           base: Snow,
           color: None,
           walkable: true,
+          move_speed_multiplier: None,
         ),
         (
           name: "BlueSnow",
@@ -175,6 +194,7 @@
             255,
           ),
           walkable: false,
+          move_speed_multiplier: None,
         ),
       ],
       biomes: [
@@ -388,8 +408,8 @@
       biome_noise: (
         seed_offset: 0,
         noise_scale_factor: (
-          x: 125.0,
-          y: 125.0,
+          x: 2.0,
+          y: 2.0,
         ),
       ),
     ),
@@ -398,6 +418,7 @@
       64.0,
     ),
     tile_scale: 1.0,
+    debug_grid: false,
   ),
   hero: (
     move_speed: 2.1,

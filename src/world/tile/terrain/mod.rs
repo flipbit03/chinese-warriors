@@ -54,36 +54,51 @@ pub struct TerrainConfig {
     pub base: BaseTerrain,
     pub color: Option<(u8, u8, u8)>,
     pub walkable: bool,
+    pub move_speed_multiplier: Option<f32>,
 }
 
 impl TerrainConfig {
-    pub fn new(name: String, base: BaseTerrain, walkable: bool) -> Self {
+    pub fn new(
+        name: String,
+        base: BaseTerrain,
+        walkable: bool,
+        move_speed_multiplier: Option<f32>,
+    ) -> Self {
         Self {
             name,
             base,
             color: Default::default(),
             walkable,
+            move_speed_multiplier,
         }
     }
 
-    pub fn new_color(name: String, base: BaseTerrain, walkable: bool, color: (u8, u8, u8)) -> Self {
+    pub fn new_color(
+        name: String,
+        base: BaseTerrain,
+        walkable: bool,
+        color: (u8, u8, u8),
+        move_speed_multiplier: Option<f32>,
+    ) -> Self {
         Self {
             name,
             base,
             color: Some(color),
             walkable,
+            move_speed_multiplier,
         }
     }
 }
 
 // A Terrain used in the generator
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Terrain {
     pub name: String,
     pub strength: usize,
     pub base: BaseTerrain,
     pub color: Option<(u8, u8, u8)>,
     pub walkable: bool,
+    pub move_speed_multiplier: f32,
 }
 
 impl Terrain {
@@ -108,6 +123,7 @@ impl Terrain {
             base: c.base.clone(),
             color: c.color.clone(),
             walkable: c.walkable,
+            move_speed_multiplier: c.move_speed_multiplier.unwrap_or(1.0),
         }
     }
 }

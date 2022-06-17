@@ -4,10 +4,12 @@ use iyes_loopless::prelude::{AppLooplessStateExt, ConditionSet};
 use crate::{app::GameState, input::mouse_input::HeroMoveToInstruction};
 
 use self::{
-    animation::animate_hero, movement::hero_movement_from_instruction, spawner::spawn_hero,
+    animation::animate_hero, current_tile::hero_current_tile_and_movespeed,
+    movement::hero_movement_from_instruction, spawner::spawn_hero,
 };
 
 pub mod animation;
+pub mod current_tile;
 pub mod movement;
 pub mod spawner;
 pub mod structs;
@@ -21,6 +23,7 @@ impl Plugin for HeroPlugin {
                 ConditionSet::new()
                     .run_in_state(GameState::InGame)
                     .with_system(animate_hero)
+                    .with_system(hero_current_tile_and_movespeed)
                     .into(),
             )
             .add_system_set(

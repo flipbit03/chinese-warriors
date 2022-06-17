@@ -1,6 +1,6 @@
 use bevy::{
     math::Vec2,
-    prelude::{AssetServer, Assets, Commands, Handle, Res, ResMut},
+    prelude::{AssetServer, Assets, Commands, Handle, Image, Res, ResMut},
     sprite::TextureAtlas,
 };
 use strum::IntoEnumIterator;
@@ -18,6 +18,7 @@ pub struct GuriTextureAtlas {
 pub struct TerrainTextures {
     pub tile_size: Vec2,
     pub base_terrains: Vec<TerrainHandles>,
+    pub debug_grid: Handle<Image>,
 }
 
 pub fn load_textures(
@@ -33,6 +34,7 @@ pub fn load_textures(
                 load_terrain_assets(&asset_server, base_terrain)
             })
             .collect(),
+        debug_grid: asset_server.load("art/terrain/debug.png"),
     });
 
     commands.insert_resource(GuriTextureAtlas {

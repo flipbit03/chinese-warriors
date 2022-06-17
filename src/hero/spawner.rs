@@ -5,7 +5,10 @@ use bevy::{
     sprite::SpriteSheetBundle,
 };
 
-use crate::assets::{config::structs::CwConfig, textures::GuriTextureAtlas};
+use crate::{
+    assets::{config::structs::CwConfig, textures::GuriTextureAtlas},
+    hero::current_tile::MoveSpeed,
+};
 
 use super::structs::{Hero, HeroWalkCycleTimer};
 
@@ -25,5 +28,6 @@ pub fn spawn_hero(
             ..Default::default()
         })
         .insert(Hero::default())
+        .insert(MoveSpeed(1.0))
         .insert(HeroWalkCycleTimer(Timer::from_seconds(0.07, true)));
 }

@@ -86,6 +86,18 @@ pub fn draw_terrain_from_instruction(
                             });
                         }
                     });
+            })
+            .with_children(|p| {
+                if tile_to_spawn.debug_grid {
+                    p.spawn_bundle(SpriteBundle {
+                        texture: terrain_textures.debug_grid.clone(),
+                        transform: Transform {
+                            translation: Vec3::new(0.0, 0.0, 0.01),
+                            ..Default::default()
+                        },
+                        ..Default::default()
+                    });
+                }
             });
     }
 }

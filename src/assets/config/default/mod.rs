@@ -22,10 +22,11 @@ impl Default for CwConfig {
                     terrains: generate_default_terrain_set(),
                     biomes: generate_default_biome_set(),
                     seed: 34,
-                    biome_noise: NoiseGeneratorSeedOffsetConfig::new(0, 125.0, 125.0),
+                    biome_noise: NoiseGeneratorSeedOffsetConfig::new(0, 2.0, 2.0),
                 },
                 tile_size: Vec2::new(64., 64.),
                 tile_scale: 1.0,
+                debug_grid: true,
             },
             hero: HeroConfig {
                 move_speed: 2.1,
