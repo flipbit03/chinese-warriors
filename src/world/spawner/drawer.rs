@@ -33,7 +33,7 @@ pub fn draw_terrain_from_instruction(
                     .base
                     .clone(),
                 transform: tile_to_spawn.transform,
-                sprite: tile_to_spawn.sprite.clone(),
+                sprite: tile_to_spawn.terrain_sprite.clone(),
                 ..Default::default()
             })
             //////////////////
@@ -49,6 +49,7 @@ pub fn draw_terrain_from_instruction(
                             translation: Vec3::new(0.0, 0.0, 0.00001),
                             ..Default::default()
                         },
+                        sprite: tile_to_spawn.decoration_sprite.clone(),
                         ..Default::default()
                     });
                 }
@@ -71,7 +72,8 @@ pub fn draw_terrain_from_instruction(
                                 ..Default::default()
                             };
 
-                            let border_sprite_color = border_instruction.terrain.sprite_color();
+                            let border_sprite_color =
+                                border_instruction.terrain.terrain_sprite_color();
 
                             let bt_index_from_border: usize =
                                 border_instruction.terrain.base.clone() as usize;

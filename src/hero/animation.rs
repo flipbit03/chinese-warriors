@@ -8,6 +8,7 @@ use crate::assets::textures::GuriTextureAtlas;
 
 use super::structs::{Hero, HeroFacing, HeroWalkCycleTimer};
 
+// TODO: Animation speed has to respect "MoveSpeed"
 pub fn animate_hero(
     time: Res<Time>,
     guri_atlas: Res<GuriTextureAtlas>,

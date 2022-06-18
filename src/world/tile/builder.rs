@@ -49,7 +49,8 @@ impl WorldBuilder {
         let tile = self.get(tile_position.clone());
         let terrain_z = tile.worldterrain.terrain.strength as f32 / 10000.0; // 0.0001
         WorldTileDrawInstrucion {
-            sprite: tile.worldterrain.terrain.sprite_color(),
+            terrain_sprite: tile.worldterrain.terrain.terrain_sprite_color(),
+            decoration_sprite: tile.worldterrain.terrain.decoration_sprite_color(),
             tile,
             transform: Transform {
                 translation: Vec3::new(

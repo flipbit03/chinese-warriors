@@ -46,13 +46,16 @@ impl From<usize> for BaseTerrain {
     }
 }
 
+pub type ColorTriplet = (u8, u8, u8);
+
 /// A Terrain Config Object used in the configs
 ///  strength is not available here as it comes from the array's position
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct TerrainConfig {
     pub name: String,
     pub base: BaseTerrain,
-    pub color: Option<(u8, u8, u8)>,
+    pub color: Option<ColorTriplet>,
+    pub decoration_color: Option<ColorTriplet>,
     pub walkable: bool,
     pub move_speed_multiplier: Option<f32>,
 }
@@ -68,6 +71,7 @@ impl TerrainConfig {
             name,
             base,
             color: Default::default(),
+            decoration_color: Default::default(),
             walkable,
             move_speed_multiplier,
         }
@@ -77,13 +81,15 @@ impl TerrainConfig {
         name: String,
         base: BaseTerrain,
         walkable: bool,
-        color: (u8, u8, u8),
+        color: Option<ColorTriplet>,
+        decoration_color: Option<ColorTriplet>,
         move_speed_multiplier: Option<f32>,
     ) -> Self {
         Self {
             name,
             base,
-            color: Some(color),
+            color,
+            decoration_color,
             walkable,
             move_speed_multiplier,
         }
@@ -96,23 +102,36 @@ pub struct Terrain {
     pub name: String,
     pub strength: usize,
     pub base: BaseTerrain,
-    pub color: Option<(u8, u8, u8)>,
+    pub color: Option<ColorTriplet>,
+    pub decoration_color: Option<ColorTriplet>,
     pub walkable: bool,
     pub move_speed_multiplier: f32,
 }
 
 impl Terrain {
-    pub fn sprite_color(&self) -> Sprite {
-        if let None = self.color {
-            return Sprite::default();
-        };
-
-        Sprite {
-            color: {
-                let (r, g, b) = self.color.unwrap();
-                Color::rgb_u8(r, g, b)
+    pub fn terrain_sprite_color(&self) -> Sprite {
+        match self.color {
+            None => Sprite::default(),
+            Some(c) => Sprite {
+                color: {
+                    let (r, g, b) = c;
+                    Color::rgb_u8(r, g, b)
+                },
+                ..Default::default()
             },
-            ..Default::default()
+        }
+    }
+
+    pub fn decoration_sprite_color(&self) -> Sprite {
+        match self.decoration_color {
+            None => Sprite::default(),
+            Some(c) => Sprite {
+                color: {
+                    let (r, g, b) = c;
+                    Color::rgb_u8(r, g, b)
+                },
+                ..Default::default()
+            },
         }
     }
 
@@ -122,6 +141,7 @@ impl Terrain {
             strength,
             base: c.base.clone(),
             color: c.color.clone(),
+            decoration_color: c.decoration_color,
             walkable: c.walkable,
             move_speed_multiplier: c.move_speed_multiplier.unwrap_or(1.0),
         }

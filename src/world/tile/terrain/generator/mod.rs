@@ -30,9 +30,12 @@ pub struct TerrainGenerator {
     pub biome_noise: NoiseGenerator,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct WorldTerrain {
+    /// Terrain Material
     pub terrain: Terrain,
+
+    // Decoration
     pub decoration: Option<usize>,
 }
 

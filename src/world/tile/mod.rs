@@ -21,8 +21,18 @@ pub struct WorldTile {
 
 #[derive(Component, Debug)]
 pub struct WorldTileDrawInstrucion {
+    // Terrain Material + Borders + Decoration
     pub tile: WorldTile,
+
+    // Global Position
     pub transform: Transform,
-    pub sprite: Sprite,
+
+    // Draw a debug grid in this tile?
     pub debug_grid: bool,
+
+    // Sprite config used to modify the terrain (mainly, the color attribute)
+    pub terrain_sprite: Sprite,
+
+    // Sprite config used to modify the decoration (mainly, the color attribute)
+    pub decoration_sprite: Sprite,
 }
