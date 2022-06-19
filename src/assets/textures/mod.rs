@@ -1,8 +1,4 @@
-use bevy::{
-    math::Vec2,
-    prelude::{AssetServer, Assets, Commands, Handle, Image, Res, ResMut},
-    sprite::TextureAtlas,
-};
+use bevy::{math::Vec2, prelude::*, sprite::TextureAtlas};
 use strum::IntoEnumIterator;
 
 pub mod loaders;
@@ -21,28 +17,15 @@ pub struct TerrainTextures {
     pub debug_grid: Handle<Image>,
 }
 
-pub fn load_textures(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-) {
+pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(TerrainTextures {
         tile_size: Vec2::new(64.0, 64.0),
         base_terrains: BaseTerrain::iter()
             .map(|base_terrain| {
-                println!("Loading Terrain {:?}...", base_terrain);
+                info!("Loading Terrain {:?}...", base_terrain);
                 load_terrain_assets(&asset_server, base_terrain)
             })
             .collect(),
         debug_grid: asset_server.load("art/terrain/debug.png"),
-    });
-
-    commands.insert_resource(GuriTextureAtlas {
-        texture_handle: texture_atlases.add(TextureAtlas::from_grid(
-            asset_server.load("art/hero/guri/spritesheet.png"),
-            Vec2::new(32.0, 32.0),
-            7,
-            1,
-        )),
     });
 }

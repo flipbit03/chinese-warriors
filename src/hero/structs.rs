@@ -1,8 +1,4 @@
-use bevy::{
-    core::Timer,
-    math::Vec2,
-    prelude::{Component, Deref, DerefMut},
-};
+use bevy::{math::Vec2, prelude::Component};
 use serde::{Deserialize, Serialize};
 
 pub enum HeroFacing {
@@ -10,13 +6,16 @@ pub enum HeroFacing {
     Right,
 }
 
-#[derive(Component, Deref, DerefMut)]
-pub struct HeroWalkCycleTimer(pub Timer);
+#[derive(Debug)]
+pub enum HeroAction {
+    Idling,
+    Walking,
+}
 
 #[derive(Component)]
 pub struct Hero {
     pub facing: HeroFacing,
-    pub walking: bool,
+    pub action: HeroAction,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -29,7 +28,7 @@ impl Default for Hero {
     fn default() -> Self {
         Self {
             facing: HeroFacing::Left,
-            walking: false,
+            action: HeroAction::Idling,
         }
     }
 }

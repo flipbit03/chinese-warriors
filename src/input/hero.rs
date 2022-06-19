@@ -1,12 +1,13 @@
 use bevy::{
     input::Input,
+    math::Vec2,
     prelude::{Commands, KeyCode, Query, Res, Transform, With, Without},
     render::camera::Camera2d,
 };
 
 use crate::hero::{
     current_tile::MoveSpeed,
-    structs::{Hero, HeroFacing},
+    structs::{Hero, HeroAction, HeroFacing},
 };
 
 use super::mouse_input::HeroMoveToInstruction;
@@ -21,72 +22,98 @@ pub fn hero_input(
 
     let (mut hero, mut hero_transform, hero_movespeed) = hero_query.single_mut();
 
-    // TODO: Fix Diagonal Move Speed
-    let move_speed = hero_movespeed.0 * camera_transform.scale.x;
+    let up = keyboard_input.pressed(KeyCode::W);
+    let left = keyboard_input.pressed(KeyCode::A);
+    let down = keyboard_input.pressed(KeyCode::S);
+    let right = keyboard_input.pressed(KeyCode::D);
+
+    let mut dir = Vec2::new(0.0, 0.0);
+    let diff = 2.0;
+
+    match (up, down, left, right) {
+        // Nothing pressed, and "cancelling" combinations
+        (true, true, true, true)
+        | (true, true, false, false)
+        | (false, false, true, true)
+        | (false, false, false, false) => {
+            hero.action = HeroAction::Idling;
+            dir.x = 0.0;
+            dir.y = 0.0;
+        }
+
+        // Up Left
+        (true, false, true, false) => {
+            hero.action = HeroAction::Walking;
+            hero.facing = HeroFacing::Left;
+            dir.y = diff;
+            dir.x = -diff;
+        }
+
+        // Up Right
+        (true, _, _, true) => {
+            hero.action = HeroAction::Walking;
+            hero.facing = HeroFacing::Right;
+            dir.y = diff;
+            dir.x = diff;
+        }
+
+        // Down Left
+        (_, true, true, _) => {
+            hero.action = HeroAction::Walking;
+            hero.facing = HeroFacing::Left;
+            dir.y = -diff;
+            dir.x = -diff;
+        }
+
+        // Down Right
+        (_, true, _, true) => {
+            hero.action = HeroAction::Walking;
+            hero.facing = HeroFacing::Right;
+            dir.y = -diff;
+            dir.x = diff;
+        }
+
+        // Left
+        (_, _, true, _) => {
+            hero.action = HeroAction::Walking;
+            hero.facing = HeroFacing::Left;
+            dir.x = -diff;
+        }
+
+        // Right
+        (_, _, _, true) => {
+            hero.action = HeroAction::Walking;
+            hero.facing = HeroFacing::Right;
+            dir.x = diff;
+        }
+
+        // Up
+        (true, _, _, _) => {
+            hero.action = HeroAction::Walking;
+            dir.y = diff;
+        }
+
+        // Down
+        (_, true, _, _) => {
+            hero.action = HeroAction::Walking;
+            dir.y = -diff;
+        }
+    }
 
     // If any key is pressed, remove currently existing MouseClick Hero Move Instruct
-    let mut any_input = false;
-
-    // Left
-    if keyboard_input.just_pressed(KeyCode::A) {
-        hero.facing = HeroFacing::Left;
-        any_input = true;
-    }
-
-    if keyboard_input.pressed(KeyCode::A) {
-        hero.facing = HeroFacing::Left;
-        hero.walking = true;
-        hero_transform.translation.x -= move_speed;
-        any_input = true;
-    }
-
-    if keyboard_input.just_released(KeyCode::A) {
-        hero.facing = HeroFacing::Left;
-        hero.walking = false;
-    }
-
-    // Right
-    if keyboard_input.just_pressed(KeyCode::D) {
-        hero.facing = HeroFacing::Right;
-        any_input = true;
-    }
-
-    if keyboard_input.pressed(KeyCode::D) {
-        hero.facing = HeroFacing::Right;
-        hero.walking = true;
-        hero_transform.translation.x += move_speed;
-        any_input = true;
-    }
-
-    if keyboard_input.just_released(KeyCode::D) {
-        hero.facing = HeroFacing::Right;
-        hero.walking = false;
-    }
-
-    // Up
-    if keyboard_input.pressed(KeyCode::W) {
-        hero.walking = true;
-        hero_transform.translation.y += move_speed;
-        any_input = true;
-    }
-
-    if keyboard_input.just_released(KeyCode::W) {
-        hero.walking = false;
-    }
-
-    // Down
-    if keyboard_input.pressed(KeyCode::S) {
-        hero.walking = true;
-        hero_transform.translation.y -= move_speed;
-        any_input = true;
-    }
-
-    if keyboard_input.just_released(KeyCode::S) {
-        hero.walking = false;
-    }
-
+    let any_input = up | down | left | right;
     if any_input {
         commands.remove_resource::<HeroMoveToInstruction>();
     }
+
+    if dir.x != 0.0 && dir.y != 0.0 {
+        dir.x = dir.x.abs().sqrt().copysign(dir.x);
+        dir.y = dir.y.abs().sqrt().copysign(dir.y);
+    }
+
+    let move_speed = hero_movespeed.0 * camera_transform.scale.x;
+    hero_transform.translation.x = hero_transform.translation.x + (dir.x / 2.0 * move_speed);
+    hero_transform.translation.y = hero_transform.translation.y + (dir.y / 2.0 * move_speed);
+
     camera_transform.translation = hero_transform.translation.clone();
 }

@@ -1,7 +1,10 @@
 pub mod biomes;
 pub mod generator;
 pub mod noise;
-use bevy::{prelude::Color, sprite::Sprite};
+use bevy::{
+    prelude::{error, Color},
+    sprite::Sprite,
+};
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumCount, EnumIter, EnumVariantNames};
 
@@ -39,7 +42,7 @@ impl From<usize> for BaseTerrain {
             6 => BaseTerrain::Mud,
 
             x => {
-                println!("Bateu o numero {x} no BaseTerrain!\n");
+                error!("Bateu o numero {} no BaseTerrain!\n", x);
                 panic!()
             }
         }

@@ -8,23 +8,21 @@ use crate::{
     input::mouse_input::HeroMoveToInstruction,
 };
 
-use super::current_tile::MoveSpeed;
+use super::{current_tile::MoveSpeed, structs::HeroAction};
 
 pub fn hero_movement_from_instruction(
     mut commands: Commands,
     optional_hmi: Option<Res<HeroMoveToInstruction>>,
-    mut camera_query: Query<&mut Transform, With<Camera2d>>,
+    camera_query: Query<&mut Transform, With<Camera2d>>,
     mut hero_query: Query<(&mut Hero, &mut Transform, &MoveSpeed), Without<Camera2d>>,
 ) {
     let (mut hero, mut hero_transform, hero_movespeed) = hero_query.single_mut();
-    let mut camera_transform = camera_query.single_mut();
+    let camera_transform = camera_query.single();
 
-    // Make hero walk
-    hero.walking = true;
+    hero.action = HeroAction::Walking;
 
     let hmi = optional_hmi.unwrap();
 
-    // TODO: Fix Diagonal Move Speed
     let hero_move_speed = hero_movespeed.0 * camera_transform.scale.x;
 
     let hero_x = hero_transform.translation.x.round();
@@ -60,10 +58,9 @@ pub fn hero_movement_from_instruction(
             }
         }
     }
-    camera_transform.translation = hero_transform.translation.clone();
 
     if distance_left_x <= 1.0 && distance_left_y <= 1.0 {
         commands.remove_resource::<HeroMoveToInstruction>();
-        hero.walking = false;
+        hero.action = HeroAction::Idling;
     }
 }

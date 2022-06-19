@@ -3,6 +3,7 @@ use bevy::{
     window::{PresentMode, WindowDescriptor},
     DefaultPlugins,
 };
+use bevy_ase::loader::AseLoaderDefaultPlugin;
 use chinese_warriors::app::GameState;
 use iyes_loopless::prelude::AppLooplessStateExt;
 
@@ -23,8 +24,10 @@ pub fn main() {
             canvas: Some("#gamescreen".to_string()),
             ..Default::default()
         })
-        .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
         .add_plugins(DefaultPlugins)
+        .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
+        .add_plugin(AseLoaderDefaultPlugin)
+        .add_plugin(benimator::AnimationPlugin::default())
         .add_loopless_state(GameState::Loading)
         .add_plugin(chinese_warriors::assets::AssetsPlugin)
         .add_plugin(chinese_warriors::camera::CameraPlugin)

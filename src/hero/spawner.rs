@@ -1,33 +1,35 @@
-use bevy::{
-    core::Timer,
-    math::Vec3,
-    prelude::{Commands, Res, Transform},
-    sprite::SpriteSheetBundle,
-};
+use benimator::Play;
+use bevy::{math::Vec3, prelude::*, sprite::SpriteSheetBundle};
+use bevy_ase::asset::Animation;
 
 use crate::{
-    assets::{config::structs::CwConfig, textures::GuriTextureAtlas},
+    assets::{aseprite::GuriAssets, config::structs::CwConfig},
     hero::current_tile::MoveSpeed,
 };
 
-use super::structs::{Hero, HeroWalkCycleTimer};
+use super::structs::Hero;
 
 pub fn spawn_hero(
     mut commands: Commands,
     config: Res<CwConfig>,
-    guri_atlas: Res<GuriTextureAtlas>,
+    guri_assets: Res<GuriAssets>,
+    animations: Res<Assets<Animation>>,
 ) {
-    println!("Spawning hero...");
+    info!("Spawning hero...");
+
+    let animation = animations.get(guri_assets.idle_anim.0.clone()).unwrap();
+
     commands
         .spawn_bundle(SpriteSheetBundle {
-            texture_atlas: guri_atlas.texture_handle.clone(),
+            texture_atlas: animation.atlas(),
             transform: Transform {
                 translation: Vec3::new(config.hero.spawn_point.x, config.hero.spawn_point.y, 1.0),
                 ..Transform::from_scale(Vec3::splat(1.0))
             },
             ..Default::default()
         })
+        .insert(guri_assets.idle_anim.1.clone())
+        .insert(Play)
         .insert(Hero::default())
-        .insert(MoveSpeed(1.0))
-        .insert(HeroWalkCycleTimer(Timer::from_seconds(0.07, true)));
+        .insert(MoveSpeed(1.0));
 }

@@ -1,4 +1,7 @@
-use bevy::prelude::{App, Plugin};
+use bevy::{
+    input::system::exit_on_esc_system,
+    prelude::{App, Plugin},
+};
 use iyes_loopless::prelude::ConditionSet;
 
 use crate::app::GameState;
@@ -24,6 +27,7 @@ impl Plugin for InputPlugin {
                 .with_system(hero_input)
                 .with_system(global_mouse_position)
                 .with_system(mouse_left_click_to_hero_move_instruction)
+                .with_system(exit_on_esc_system)
                 .into(),
         );
     }

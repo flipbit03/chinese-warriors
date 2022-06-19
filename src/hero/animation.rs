@@ -1,37 +1,44 @@
 use bevy::{
-    core::Time,
-    prelude::{Assets, Query, Res, With},
-    sprite::{TextureAtlas, TextureAtlasSprite},
+    prelude::{Assets, Commands, Entity, Query, Res},
+    sprite::TextureAtlasSprite,
 };
+use bevy_ase::asset::Animation;
 
-use crate::assets::textures::GuriTextureAtlas;
+use crate::assets::aseprite::GuriAssets;
 
-use super::structs::{Hero, HeroFacing, HeroWalkCycleTimer};
+use super::structs::{Hero, HeroAction, HeroFacing};
 
 // TODO: Animation speed has to respect "MoveSpeed"
+// TODO: Walk Cycle does not happen on move instruction.
 pub fn animate_hero(
-    time: Res<Time>,
-    guri_atlas: Res<GuriTextureAtlas>,
-    texture_atlases: Res<Assets<TextureAtlas>>,
-    mut query: Query<(&mut HeroWalkCycleTimer, &mut TextureAtlasSprite, &Hero), With<Hero>>,
+    mut commands: Commands,
+    guri_assets: Res<GuriAssets>,
+    animations: Res<Assets<Animation>>,
+    mut hero_query: Query<(Entity, &Hero, &mut TextureAtlasSprite)>,
 ) {
-    let (mut timer, mut sprite, hero) = query.single_mut();
-    timer.tick(time.delta());
-    if timer.just_finished() {
-        let texture_atlas = texture_atlases
-            .get(guri_atlas.texture_handle.clone())
-            .unwrap();
-        match hero.facing {
-            HeroFacing::Right => {
-                sprite.flip_x = true;
-            }
-            HeroFacing::Left => {
-                sprite.flip_x = false;
-            }
-        };
+    let (hero_entity, hero, mut hero_tap) = hero_query.single_mut();
 
-        if let true = hero.walking {
-            sprite.index = (sprite.index + 1) % texture_atlas.textures.len();
-        };
+    let (hero_animation, hero_spriteanimationsheet) = match hero.action {
+        HeroAction::Idling => (
+            animations.get(guri_assets.idle_anim.0.clone()).unwrap(),
+            guri_assets.idle_anim.1.clone(),
+        ),
+        HeroAction::Walking => (
+            animations
+                .get(guri_assets.walk_cycle_anim.0.clone())
+                .unwrap(),
+            guri_assets.walk_cycle_anim.1.clone(),
+        ),
     };
+
+    let mut hero_entity_commands = commands.entity(hero_entity);
+
+    hero_tap.flip_x = match hero.facing {
+        HeroFacing::Left => false,
+        HeroFacing::Right => true,
+    };
+
+    hero_entity_commands
+        .insert(hero_animation.atlas())
+        .insert(hero_spriteanimationsheet);
 }

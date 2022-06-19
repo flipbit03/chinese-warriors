@@ -1,6 +1,6 @@
 use bevy::{
     input::Input,
-    prelude::{KeyCode, OrthographicProjection, Query, Res, With},
+    prelude::{info, KeyCode, OrthographicProjection, Query, Res, With},
     render::camera::Camera2d,
 };
 
@@ -17,7 +17,7 @@ pub fn input_camera_scale(
         scale += 3.0;
         scale /= 100.0;
         camera.scale = scale;
-        println!("camera.scale = {}", &camera.scale);
+        info!("camera.scale = {}", &camera.scale);
     }
 
     if keyboard_input.pressed(KeyCode::E) {
@@ -25,7 +25,7 @@ pub fn input_camera_scale(
         scale -= 3.0;
         scale /= 100.0;
 
-        println!("camera.scale = {}", &camera.scale);
+        info!("camera.scale = {}", &camera.scale);
     }
 
     camera.scale = scale.max(0.5).min(2.0);
