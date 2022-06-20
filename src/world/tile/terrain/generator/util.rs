@@ -6,7 +6,9 @@ use crate::world::tile::terrain::{
     Terrain, TerrainConfig,
 };
 
-pub fn build_initial_terrain_list(terrain_config_list: &Vec<TerrainConfig>) -> Vec<Terrain> {
+pub fn build_initial_terrain_list(
+    terrain_config_list: &Vec<TerrainConfig>,
+) -> Vec<Terrain> {
     terrain_config_list
         .into_iter()
         .map(|config| Terrain::new_from_config(config, 0))
@@ -54,10 +56,16 @@ pub fn build_biome_list(
                 terrains: customized_terrain_list,
                 terrain_count: customized_terrain_list_count,
                 noise_terrain: NoiseGenerator::new_from_config(
-                    &NoiseGeneratorConfig::from_seed_offset(seed, &biome_config.noise_terrain),
+                    &NoiseGeneratorConfig::from_seed_offset(
+                        seed,
+                        &biome_config.noise_terrain,
+                    ),
                 ),
                 noise_decoration: NoiseGenerator::new_from_config(
-                    &NoiseGeneratorConfig::from_seed_offset(seed, &biome_config.noise_decoration),
+                    &NoiseGeneratorConfig::from_seed_offset(
+                        seed,
+                        &biome_config.noise_decoration,
+                    ),
                 ),
                 decoration_eagerness: biome_config.decoration_eagerness.clone(),
             }

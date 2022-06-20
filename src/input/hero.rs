@@ -103,6 +103,7 @@ pub fn hero_input(
     // If any key is pressed, remove currently existing MouseClick Hero Move Instruct
     let any_input = up | down | left | right;
     if any_input {
+        hero.action = HeroAction::Idling;
         commands.remove_resource::<HeroMoveToInstruction>();
     }
 
@@ -112,8 +113,10 @@ pub fn hero_input(
     }
 
     let move_speed = hero_movespeed.0 * camera_transform.scale.x;
-    hero_transform.translation.x = hero_transform.translation.x + (dir.x / 2.0 * move_speed);
-    hero_transform.translation.y = hero_transform.translation.y + (dir.y / 2.0 * move_speed);
+    hero_transform.translation.x =
+        hero_transform.translation.x + (dir.x / 2.0 * move_speed);
+    hero_transform.translation.y =
+        hero_transform.translation.y + (dir.y / 2.0 * move_speed);
 
     camera_transform.translation = hero_transform.translation.clone();
 }

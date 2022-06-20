@@ -1,7 +1,8 @@
 use bevy::{
     math::Rect,
     prelude::{
-        Color, Commands, Component, Entity, Query, Res, TextBundle, Transform, With, Without,
+        Color, Commands, Component, Entity, Query, Res, TextBundle, Transform, With,
+        Without,
     },
     text::{HorizontalAlign, Text, TextAlignment, TextStyle},
     ui::{AlignSelf, PositionType, Style, Val},

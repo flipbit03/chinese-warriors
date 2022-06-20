@@ -12,16 +12,15 @@ use super::{current_tile::MoveSpeed, structs::HeroAction};
 
 pub fn hero_movement_from_instruction(
     mut commands: Commands,
-    optional_hmi: Option<Res<HeroMoveToInstruction>>,
+    hmi: Res<HeroMoveToInstruction>,
     camera_query: Query<&mut Transform, With<Camera2d>>,
     mut hero_query: Query<(&mut Hero, &mut Transform, &MoveSpeed), Without<Camera2d>>,
 ) {
     let (mut hero, mut hero_transform, hero_movespeed) = hero_query.single_mut();
     let camera_transform = camera_query.single();
 
+    // We have an instruction to walk somewhere...
     hero.action = HeroAction::Walking;
-
-    let hmi = optional_hmi.unwrap();
 
     let hero_move_speed = hero_movespeed.0 * camera_transform.scale.x;
 

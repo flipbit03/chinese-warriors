@@ -45,7 +45,8 @@ impl TerrainGenerator {
         let initial_terrain_list = build_initial_terrain_list(&config.terrains);
 
         // Generate all Biomes, using the terrains above as templates.
-        let biomes = build_biome_list(&initial_terrain_list, config.seed, &config.biomes);
+        let biomes =
+            build_biome_list(&initial_terrain_list, config.seed, &config.biomes);
 
         // Generate a global list of Terrains (and updated strengths) from the Biomes.
         let mut terrains = Vec::new();
@@ -60,10 +61,12 @@ impl TerrainGenerator {
             terrains,
             terrain_count,
             biomes,
-            biome_noise: NoiseGenerator::new_from_config(&NoiseGeneratorConfig::from_seed_offset(
-                config.seed,
-                &config.biome_noise,
-            )),
+            biome_noise: NoiseGenerator::new_from_config(
+                &NoiseGeneratorConfig::from_seed_offset(
+                    config.seed,
+                    &config.biome_noise,
+                ),
+            ),
         }
     }
 
@@ -99,7 +102,8 @@ impl TerrainGenerator {
                 let max = found_range.end - found_range.start;
                 let num = decoration_noise - found_range.start;
 
-                let decoration = (TerrainGenerator::DECORATION_COUNT as f64 * num) / max;
+                let decoration =
+                    (TerrainGenerator::DECORATION_COUNT as f64 * num) / max;
 
                 Some(decoration as usize)
             }

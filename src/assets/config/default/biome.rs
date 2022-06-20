@@ -1,4 +1,6 @@
-use crate::world::tile::terrain::{biomes::BiomeConfig, noise::NoiseGeneratorSeedOffsetConfig};
+use crate::world::tile::terrain::{
+    biomes::BiomeConfig, noise::NoiseGeneratorSeedOffsetConfig,
+};
 
 pub fn generate_default_biome_set() -> Vec<BiomeConfig> {
     [

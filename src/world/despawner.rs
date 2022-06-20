@@ -24,7 +24,8 @@ pub fn despawn_far_terrain(
     );
 
     let no_despawn_area: Vec<TilePosition> =
-        get_visible_tiles(screen_rect, config.world.tile_size, config.world.tile_scale).collect();
+        get_visible_tiles(screen_rect, config.world.tile_size, config.world.tile_scale)
+            .collect();
 
     for (tile_entity, tile_position) in tile_query.iter() {
         if let None = no_despawn_area.iter().position(|x| x == tile_position) {
@@ -33,7 +34,10 @@ pub fn despawn_far_terrain(
     }
 }
 
-pub fn despawn_all_terrain(mut commands: Commands, tile_query: Query<Entity, With<TilePosition>>) {
+pub fn despawn_all_terrain(
+    mut commands: Commands,
+    tile_query: Query<Entity, With<TilePosition>>,
+) {
     for tile_entity in tile_query.iter() {
         commands.entity(tile_entity).despawn_recursive()
     }

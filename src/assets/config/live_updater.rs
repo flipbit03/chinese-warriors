@@ -1,7 +1,8 @@
 use bevy::prelude::{info, AssetEvent, Assets, Commands, EventReader, Res};
 
 use crate::{
-    assets::game::generate_tile_builder_resource_from_config, world::despawner::DespawnAllTerrain,
+    assets::game::generate_tile_builder_resource_from_config,
+    world::despawner::DespawnAllTerrain,
 };
 
 use super::structs::CwConfig;
@@ -23,10 +24,10 @@ pub fn live_update_main_config(
         }
     }
 
-    if let Some(c) = updated_config {
+    if let Some(updated_config) = updated_config {
         info!("Updated Config!");
-        generate_tile_builder_resource_from_config(&mut commands, &c);
+        generate_tile_builder_resource_from_config(&mut commands, &updated_config);
         commands.insert_resource(DespawnAllTerrain);
-        commands.insert_resource(c.clone());
+        commands.insert_resource(updated_config.clone());
     };
 }

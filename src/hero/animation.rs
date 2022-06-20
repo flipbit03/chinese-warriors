@@ -1,6 +1,7 @@
+use benimator::SpriteSheetAnimation;
 use bevy::{
-    prelude::{Assets, Commands, Entity, Query, Res},
-    sprite::TextureAtlasSprite,
+    prelude::{Assets, Handle, Query, Res},
+    sprite::{TextureAtlas, TextureAtlasSprite},
 };
 use bevy_ase::asset::Animation;
 
@@ -11,14 +12,18 @@ use super::structs::{Hero, HeroAction, HeroFacing};
 // TODO: Animation speed has to respect "MoveSpeed"
 // TODO: Walk Cycle does not happen on move instruction.
 pub fn animate_hero(
-    mut commands: Commands,
     guri_assets: Res<GuriAssets>,
     animations: Res<Assets<Animation>>,
-    mut hero_query: Query<(Entity, &Hero, &mut TextureAtlasSprite)>,
+    mut hero_query: Query<(
+        &Hero,
+        &mut Handle<TextureAtlas>,
+        &mut Handle<SpriteSheetAnimation>,
+        &mut TextureAtlasSprite,
+    )>,
 ) {
-    let (hero_entity, hero, mut hero_tap) = hero_query.single_mut();
+    let (hero, mut hero_ta, mut hero_sa, mut hero_tap) = hero_query.single_mut();
 
-    let (hero_animation, hero_spriteanimationsheet) = match hero.action {
+    let (hero_current_animation, hero_sprite_animation_sheet) = match hero.action {
         HeroAction::Idling => (
             animations.get(guri_assets.idle_anim.0.clone()).unwrap(),
             guri_assets.idle_anim.1.clone(),
@@ -31,14 +36,11 @@ pub fn animate_hero(
         ),
     };
 
-    let mut hero_entity_commands = commands.entity(hero_entity);
-
     hero_tap.flip_x = match hero.facing {
         HeroFacing::Left => false,
         HeroFacing::Right => true,
     };
 
-    hero_entity_commands
-        .insert(hero_animation.atlas())
-        .insert(hero_spriteanimationsheet);
+    *hero_ta = hero_current_animation.atlas();
+    *hero_sa = hero_sprite_animation_sheet;
 }

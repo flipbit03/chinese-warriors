@@ -4,11 +4,15 @@ use bevy::{
     DefaultPlugins,
 };
 use bevy_ase::loader::AseLoaderDefaultPlugin;
-use chinese_warriors::app::GameState;
+use chinese_warriors::{app::GameState, assets::config::structs::CwCliConfig};
+use clap::Parser;
 use iyes_loopless::prelude::AppLooplessStateExt;
 
 pub fn main() {
     let app = &mut App::new();
+
+    // CwCliConfig::;
+    let args = CwCliConfig::parse();
 
     #[cfg(target_arch = "wasm32")]
     {
@@ -25,6 +29,7 @@ pub fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
+        .insert_resource(args)
         .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
         .add_plugin(AseLoaderDefaultPlugin)
         .add_plugin(benimator::AnimationPlugin::default())

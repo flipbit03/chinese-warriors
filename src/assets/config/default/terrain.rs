@@ -1,6 +1,10 @@
+use itertools::Itertools;
+
 use crate::world::tile::terrain::{BaseTerrain, TerrainConfig};
 
-pub fn generate_default_terrain_set() -> Vec<TerrainConfig> {
+pub fn generate_default_terrain_set(
+    debug_generate_move_speed_ramp: bool,
+) -> Vec<TerrainConfig> {
     [
         TerrainConfig::new("DeepWater".to_string(), BaseTerrain::DeepWater, true, None),
         TerrainConfig::new(
@@ -24,7 +28,7 @@ pub fn generate_default_terrain_set() -> Vec<TerrainConfig> {
             true,
             Some((230, 230, 255)),
             None,
-            None,
+            Some(1.5),
         ),
         TerrainConfig::new_color(
             "FrozenGrass".to_string(),
@@ -32,7 +36,7 @@ pub fn generate_default_terrain_set() -> Vec<TerrainConfig> {
             true,
             Some((170, 190, 255)),
             None,
-            None,
+            Some(1.6),
         ),
         TerrainConfig::new_color(
             "PlainsGrass".to_string(),
@@ -40,7 +44,7 @@ pub fn generate_default_terrain_set() -> Vec<TerrainConfig> {
             true,
             Some((250, 235, 220)),
             None,
-            None,
+            Some(1.7),
         ),
         TerrainConfig::new_color(
             "DarkGrass".to_string(),
@@ -119,5 +123,13 @@ pub fn generate_default_terrain_set() -> Vec<TerrainConfig> {
             None,
         ),
     ]
-    .to_vec()
+    .iter_mut()
+    .enumerate()
+    .map(|(i, x)| {
+        if debug_generate_move_speed_ramp {
+            x.move_speed_multiplier = Some(1.1 + i as f32 / 10.)
+        };
+        x.clone()
+    })
+    .collect_vec()
 }

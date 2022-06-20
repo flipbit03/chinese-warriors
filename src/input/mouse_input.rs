@@ -19,8 +19,10 @@ pub fn global_mouse_position(
 
         // noooo idea how this works
         let ndc = (mouse_position / window_size) * 2.0 - Vec2::ONE;
-        let ndc_to_world = camera_transform.compute_matrix() * camera.projection_matrix.inverse();
-        let global_mouse_position = ndc_to_world.project_point3(ndc.extend(-1.0)).truncate();
+        let ndc_to_world =
+            camera_transform.compute_matrix() * camera.projection_matrix.inverse();
+        let global_mouse_position =
+            ndc_to_world.project_point3(ndc.extend(-1.0)).truncate();
         commands.insert_resource(MouseGlobalTranslation(global_mouse_position));
     }
 }

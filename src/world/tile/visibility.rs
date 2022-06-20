@@ -6,7 +6,11 @@ use itertools::Itertools;
 
 use super::{position::TilePosition, traits::WidthHeight};
 
-pub fn get_screen_rect(t: &Transform, p: &OrthographicProjection, scale: f32) -> Rect<f32> {
+pub fn get_screen_rect(
+    t: &Transform,
+    p: &OrthographicProjection,
+    scale: f32,
+) -> Rect<f32> {
     Rect {
         left: t.translation.x - (p.left.abs() * scale),
         right: t.translation.x + (p.right.abs() * scale),
@@ -26,7 +30,8 @@ where
     let horiz_divisor = tile_size.x * tile_scale;
     let vert_divisor = tile_size.y * tile_scale;
 
-    let horizontal_tile_count = (screen_dimensions.width() / horiz_divisor).ceil() as i32;
+    let horizontal_tile_count =
+        (screen_dimensions.width() / horiz_divisor).ceil() as i32;
     let horizontal_start = (screen_dimensions.left / horiz_divisor).floor() as i32;
     let horizontal_end = horizontal_start + horizontal_tile_count + 1;
 

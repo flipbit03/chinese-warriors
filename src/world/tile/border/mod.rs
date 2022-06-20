@@ -1,7 +1,8 @@
 use self::{
     neighbor::get_border_from_neighbor_effects,
     structs::{
-        BorderSpec, DiagonalLocation, OpenEnd, TileBorder, TileBorderType, TunnelOrientation,
+        BorderSpec, DiagonalLocation, OpenEnd, TileBorder, TileBorderType,
+        TunnelOrientation,
     },
 };
 
@@ -192,19 +193,31 @@ fn get_tileborder_from_stronger_terrain(
         // Diagonals
         (true, false, false, true) => Some(TileBorder {
             terrain: terrain.clone(),
-            spec: BorderSpec::diagonal(DiagonalLocation::TopLeft, bottom_right == terrain),
+            spec: BorderSpec::diagonal(
+                DiagonalLocation::TopLeft,
+                bottom_right == terrain,
+            ),
         }),
         (true, true, false, false) => Some(TileBorder {
             terrain: terrain.clone(),
-            spec: BorderSpec::diagonal(DiagonalLocation::TopRight, bottom_left == terrain),
+            spec: BorderSpec::diagonal(
+                DiagonalLocation::TopRight,
+                bottom_left == terrain,
+            ),
         }),
         (false, true, true, false) => Some(TileBorder {
             terrain: terrain.clone(),
-            spec: BorderSpec::diagonal(DiagonalLocation::BottomRight, top_left == terrain),
+            spec: BorderSpec::diagonal(
+                DiagonalLocation::BottomRight,
+                top_left == terrain,
+            ),
         }),
         (false, false, true, true) => Some(TileBorder {
             terrain: terrain.clone(),
-            spec: BorderSpec::diagonal(DiagonalLocation::BottomLeft, top_right == terrain),
+            spec: BorderSpec::diagonal(
+                DiagonalLocation::BottomLeft,
+                top_right == terrain,
+            ),
         }),
 
         // These last cases

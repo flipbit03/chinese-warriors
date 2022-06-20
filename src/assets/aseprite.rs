@@ -14,7 +14,10 @@ pub struct GuriAssets {
     pub idle_anim: (Handle<Animation>, Handle<SpriteSheetAnimation>),
 }
 
-pub fn load_aseprite_assets(asset_server: Res<AssetServer>, mut aseloader: ResMut<Loader>) {
+pub fn load_aseprite_assets(
+    asset_server: Res<AssetServer>,
+    mut aseloader: ResMut<Loader>,
+) {
     info!("Loading Guri.aseprite...");
     let h: Handle<AseAsset> = asset_server.load(GURI_ASEPRITE_PATH);
     aseloader.add(h.clone());
@@ -23,7 +26,10 @@ pub fn load_aseprite_assets(asset_server: Res<AssetServer>, mut aseloader: ResMu
 pub struct AllAsepritesLoaded;
 
 // Wait until all sprites are loaded.
-pub fn wait_for_loaded_aseprites_to_be_processed(mut commands: Commands, ase_loader: Res<Loader>) {
+pub fn wait_for_loaded_aseprites_to_be_processed(
+    mut commands: Commands,
+    ase_loader: Res<Loader>,
+) {
     if ase_loader.is_loaded() {
         info!("All Aseprite files loaded");
         commands.insert_resource(AllAsepritesLoaded);

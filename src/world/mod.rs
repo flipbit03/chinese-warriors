@@ -9,7 +9,10 @@ use crate::app::GameState;
 
 use self::{
     despawner::{despawn_all_terrain, despawn_far_terrain, DespawnAllTerrain},
-    spawner::{drawer::draw_terrain_from_instruction, instruction::generate_terrain_instruction},
+    spawner::{
+        drawer::draw_terrain_from_instruction,
+        instruction::generate_terrain_instruction,
+    },
 };
 
 pub struct WorldPlugin;

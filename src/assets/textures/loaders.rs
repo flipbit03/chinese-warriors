@@ -1,6 +1,8 @@
 use bevy::prelude::{AssetServer, Handle, Image};
 
-use crate::world::tile::terrain::{BaseTerrain, BORDER_ASSET_COUNT, TERRAIN_DECORATION_COUNT};
+use crate::world::tile::terrain::{
+    BaseTerrain, BORDER_ASSET_COUNT, TERRAIN_DECORATION_COUNT,
+};
 
 pub struct TerrainHandles {
     pub base_terrain: BaseTerrain,
@@ -17,13 +19,15 @@ pub fn load_terrain_assets(
         format!("art/terrain/{}", base_terrain.to_string().to_lowercase());
 
     // Base Tile
-    let base: Handle<Image> = asset_server.load(format!("{}/tile.png", base_folder_name).as_str());
+    let base: Handle<Image> =
+        asset_server.load(format!("{}/tile.png", base_folder_name).as_str());
 
     // Decorations
     let decorations = (0..(TERRAIN_DECORATION_COUNT))
         .map(|n| {
             asset_server.load::<Image, &str>(
-                &format!("{}/decoration/decoration{}.png", base_folder_name, n).as_str(),
+                &format!("{}/decoration/decoration{}.png", base_folder_name, n)
+                    .as_str(),
             )
         })
         .collect::<Vec<Handle<Image>>>();

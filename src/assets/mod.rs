@@ -9,11 +9,14 @@ use crate::{app::GameState, world::tile::builder::WorldBuilder};
 
 use self::{
     aseprite::{
-        load_aseprite_assets, load_guri_animations, wait_for_loaded_aseprites_to_be_processed,
-        AllAsepritesLoaded, GuriAssets,
+        load_aseprite_assets, load_guri_animations,
+        wait_for_loaded_aseprites_to_be_processed, AllAsepritesLoaded, GuriAssets,
     },
     asset_reloader::activate_live_asset_reloading,
-    config::{live_updater::live_update_main_config, load_config_save_handle, structs::CwConfig},
+    config::{
+        live_updater::live_update_main_config, load_config_save_handle,
+        structs::CwConfig,
+    },
     fonts::load_fonts,
     game::create_initial_tilebuilder,
     textures::{load_textures, TerrainTextures},

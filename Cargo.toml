@@ -5,6 +5,7 @@ edition = "2021"
 default-run = "chinese-warriors"
 
 [dependencies]
+clap = { version = "3.2.5", features = ["derive"] }
 bevy_ase = { git = "https://github.com/flipbit03/bevy_ase.git", rev = "ec7aa18dd20b8e926cd0747985034afe1315c0b4", features = [
   "benimator",
 ] }

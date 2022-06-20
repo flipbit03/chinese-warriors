@@ -3,7 +3,10 @@ use bevy::{
     sprite::Sprite,
 };
 
-use self::{border::structs::TileBorder, position::TilePosition, terrain::generator::WorldTerrain};
+use self::{
+    border::structs::TileBorder, position::TilePosition,
+    terrain::generator::WorldTerrain,
+};
 
 pub mod border;
 pub mod builder;
