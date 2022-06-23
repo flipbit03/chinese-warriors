@@ -127,7 +127,7 @@ pub fn generate_default_terrain_set(
     .enumerate()
     .map(|(i, x)| {
         if debug_generate_move_speed_ramp {
-            x.move_speed_multiplier = Some(1.1 + i as f32 / 10.)
+            x.move_speed_multiplier = Some(0.5 + i as f32 / 10.)
         };
         x.clone()
     })

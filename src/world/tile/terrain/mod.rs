@@ -28,6 +28,11 @@ pub enum BaseTerrain {
     ShallowWater = 4,
     Snow = 5,
     Mud = 6,
+    FrozenWater = 7,
+    Clay = 8,
+    Gravel = 9,
+    ThickStone = 10,
+    Lava = 11,
 }
 
 impl From<usize> for BaseTerrain {
@@ -40,6 +45,11 @@ impl From<usize> for BaseTerrain {
             4 => BaseTerrain::ShallowWater,
             5 => BaseTerrain::Snow,
             6 => BaseTerrain::Mud,
+            7 => BaseTerrain::FrozenWater,
+            8 => BaseTerrain::Clay,
+            9 => BaseTerrain::Gravel,
+            10 => BaseTerrain::ThickStone,
+            11 => BaseTerrain::Lava,
 
             x => {
                 error!("Bateu o numero {} no BaseTerrain!\n", x);

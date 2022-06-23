@@ -64,9 +64,10 @@ pub fn update_hud_text(
     let tile_str = match hero_tile {
         Some(t) => {
             format!(
-                "tilepos=(x={:05.1}, y={:05.1}) terrain={:?} move_speed_mult={:01.1} ",
+                "tilepos  : x={:08.1} y={:08.1}\nbiome={:?}\nterrain={:?} (move_speed_mult={:01.1})",
                 t.position.x,
                 t.position.y,
+                t.worldterrain.biome_name,
                 t.worldterrain.terrain.name,
                 t.worldterrain.terrain.move_speed_multiplier
             )
@@ -75,12 +76,12 @@ pub fn update_hud_text(
     };
 
     text.sections[0].value = format!(
-        "x={:08.1} y={:08.1}\n{}\ntile_position_count={:4}\nall_entities_count={:4}\n{:?}",
+        "world_pos: x={:08.1} y={:08.1}\n{}\ntile_position_count={:4}\nall_entities_count={:4}\nhero_move_speed={:?}",
         hero_transform.translation.x,
         hero_transform.translation.y,
         tile_str,
         tile_query.iter().count(),
         all_entities_query.iter().count(),
-        config.hero
+        config.hero.move_speed
     );
 }

@@ -35,6 +35,9 @@ pub struct WorldTerrain {
     /// Terrain Material
     pub terrain: Terrain,
 
+    /// Biome Name
+    pub biome_name: String,
+
     // Decoration
     pub decoration: Option<usize>,
 }
@@ -115,6 +118,7 @@ impl TerrainGenerator {
         let biome = self.get_biome_and_index(tp);
 
         let t = WorldTerrain {
+            biome_name: biome.name.clone(),
             terrain: TerrainGenerator::get_terrain(&biome, &tp),
             decoration: TerrainGenerator::get_decoration(&biome, &tp),
         };

@@ -1,4 +1,4 @@
-use benimator::Play;
+use benimator::{Play, PlaySpeedMultiplier};
 use bevy::{math::Vec3, prelude::*, sprite::SpriteSheetBundle};
 use bevy_ase::asset::Animation;
 
@@ -34,6 +34,7 @@ pub fn spawn_hero(
         })
         .insert(guri_assets.idle_anim.1.clone())
         .insert(Play)
+        .insert(PlaySpeedMultiplier::new(2.0))
         .insert(Hero::default())
         .insert(MoveSpeed(1.0));
 }

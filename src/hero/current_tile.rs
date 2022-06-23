@@ -34,7 +34,7 @@ pub fn hero_current_tile_and_movespeed(
     let hero_movespeed = MoveSpeed(
         (config.hero.move_speed
             * instruction.tile.worldterrain.terrain.move_speed_multiplier)
-            .max(1.0),
+            .max(0.2),
     );
 
     commands

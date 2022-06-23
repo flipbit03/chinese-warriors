@@ -5,11 +5,14 @@ edition = "2021"
 default-run = "chinese-warriors"
 
 [dependencies]
+# benimator = { path = "../benimator", version = "0.0.0-dev" }
+# bevy_ase = { path = "../bevy_ase", features = ["benimator"] }
+
 clap = { version = "3.2.5", features = ["derive"] }
-bevy_ase = { git = "https://github.com/flipbit03/bevy_ase.git", rev = "ec7aa18dd20b8e926cd0747985034afe1315c0b4", features = [
+bevy_ase = { git = "https://github.com/flipbit03/bevy_ase.git", rev = "3e6a236baf466f1f85908fbbd26e8d8705b36d1a", features = [
   "benimator",
 ] }
-benimator = "3.3.0"
+benimator = "3.5.0"
 bevy = { version = "0.7.0" }
 noise = "0.7.0"
 strum = { version = "0.24", features = ["derive"] }

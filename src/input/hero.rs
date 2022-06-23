@@ -103,7 +103,6 @@ pub fn hero_input(
     // If any key is pressed, remove currently existing MouseClick Hero Move Instruct
     let any_input = up | down | left | right;
     if any_input {
-        hero.action = HeroAction::Idling;
         commands.remove_resource::<HeroMoveToInstruction>();
     }
 
