@@ -41,5 +41,6 @@ pub fn main() {
         .add_plugin(chinese_warriors::console::ConsolePlugin)
         .add_plugin(chinese_warriors::world::WorldPlugin)
         .add_plugin(chinese_warriors::input::InputPlugin)
+        .add_plugin(chinese_warriors::shadow::ShadowsPlugin)
         .run();
 }

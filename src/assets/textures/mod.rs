@@ -17,6 +17,10 @@ pub struct TerrainTextures {
     pub debug_grid: Handle<Image>,
 }
 
+pub struct ShadowTexture {
+    pub texture_handle: Handle<Image>,
+}
+
 pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(TerrainTextures {
         tile_size: Vec2::new(64.0, 64.0),
@@ -28,4 +32,8 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
             .collect(),
         debug_grid: asset_server.load("art/terrain/debug.png"),
     });
+
+    commands.insert_resource(ShadowTexture {
+        texture_handle: asset_server.load("art/shadow/shadow32.png"),
+    })
 }

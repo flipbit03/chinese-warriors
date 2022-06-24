@@ -5,6 +5,7 @@ use bevy_ase::asset::Animation;
 use crate::{
     assets::{aseprite::GuriAssets, config::structs::CwConfig},
     hero::current_tile::MoveSpeed,
+    shadow::structs::CastsShadow,
 };
 
 use super::structs::Hero;
@@ -36,5 +37,6 @@ pub fn spawn_hero(
         .insert(Play)
         .insert(PlaySpeedMultiplier::new(2.0))
         .insert(Hero::default())
-        .insert(MoveSpeed(1.0));
+        .insert(MoveSpeed(1.0))
+        .insert(CastsShadow::default());
 }
