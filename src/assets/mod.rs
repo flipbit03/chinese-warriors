@@ -14,8 +14,7 @@ use self::{
     },
     asset_reloader::activate_live_asset_reloading,
     config::{
-        live_updater::live_update_main_config, load_config_save_handle,
-        structs::CwConfig,
+        live_updater::live_update_main_config, load_config_save_handle, structs::CwConfig,
     },
     fonts::load_fonts,
     game::create_initial_tilebuilder,

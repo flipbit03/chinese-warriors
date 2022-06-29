@@ -26,8 +26,7 @@ pub fn load_terrain_assets(
     let decorations = (0..(TERRAIN_DECORATION_COUNT))
         .map(|n| {
             asset_server.load::<Image, &str>(
-                &format!("{}/decoration/decoration{}.png", base_folder_name, n)
-                    .as_str(),
+                &format!("{}/decoration/decoration{}.png", base_folder_name, n).as_str(),
             )
         })
         .collect::<Vec<Handle<Image>>>();

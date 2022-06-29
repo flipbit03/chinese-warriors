@@ -4,6 +4,7 @@
 CwConfig(
   debug_flags: CwDebugFlags(
     print_player_position: true,
+    debug_chunk: true,
   ),
   world: WorldBuilderConfig(
     terrain_generation: TerrainGeneratorConfig(

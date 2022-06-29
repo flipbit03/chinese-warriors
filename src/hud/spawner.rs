@@ -11,7 +11,7 @@ use bevy::{
 use crate::{
     assets::{config::structs::CwConfig, fonts::MainFont},
     hero::structs::Hero,
-    world::tile::{position::TilePosition, WorldTile},
+    world::tile::{chunk::WorldChunk, WorldTile},
 };
 
 #[derive(Component)]
@@ -54,7 +54,7 @@ pub fn update_hud_text(
     mut hud_query: Query<&mut Text, (With<HudText>, Without<Hero>)>,
     config: Res<CwConfig>,
     hero_query: Query<(&Transform, Option<&WorldTile>), With<Hero>>,
-    tile_query: Query<&TilePosition>,
+    world_chunks_query: Query<&WorldChunk>,
     all_entities_query: Query<Entity>,
 ) {
     let (hero_transform, hero_tile) = hero_query.single();
@@ -67,20 +67,20 @@ pub fn update_hud_text(
                 "tilepos  : x={:08.1} y={:08.1}\nbiome={:?}\nterrain={:?} (move_speed_mult={:01.1})",
                 t.position.x,
                 t.position.y,
-                t.worldterrain.biome_name,
-                t.worldterrain.terrain.name,
-                t.worldterrain.terrain.move_speed_multiplier
+                t.biome_name,
+                t.terrain.name,
+                t.terrain.move_speed_multiplier
             )
         }
         None => "No WorldTile in Hero".to_string(),
     };
 
     text.sections[0].value = format!(
-        "world_pos: x={:08.1} y={:08.1}\n{}\ntile_position_count={:4}\nall_entities_count={:4}\nhero_move_speed={:?}",
+        "world_pos: x={:08.1} y={:08.1}\n{}\nchunk_count={:4}\nall_entities_count={:4}\nhero_move_speed={:?}",
         hero_transform.translation.x,
         hero_transform.translation.y,
         tile_str,
-        tile_query.iter().count(),
+        world_chunks_query.iter().count(),
         all_entities_query.iter().count(),
         config.hero.move_speed
     );

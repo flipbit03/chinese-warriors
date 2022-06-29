@@ -27,8 +27,8 @@ impl Plugin for InputPlugin {
         // Disable "exit on esc" for the wasm target
         #[cfg(not(target_arch = "wasm32"))]
         {
-            let debug_input_systems = ConditionSet::new()
-                .with_system(bevy::input::system::exit_on_esc_system);
+            let debug_input_systems =
+                ConditionSet::new().with_system(bevy::input::system::exit_on_esc_system);
             app.add_system_set(debug_input_systems.into());
         }
 

@@ -47,10 +47,7 @@ impl Default for NoiseGeneratorConfig {
 
 impl NoiseGeneratorConfig {
     #[allow(arithmetic_overflow)]
-    pub fn from_seed_offset(
-        seed: u32,
-        offset: &NoiseGeneratorSeedOffsetConfig,
-    ) -> Self {
+    pub fn from_seed_offset(seed: u32, offset: &NoiseGeneratorSeedOffsetConfig) -> Self {
         Self {
             seed: ((seed as i32) - offset.seed_offset) as u32,
             noise_scale_factor: offset.noise_scale_factor,

@@ -1,39 +1,58 @@
 use crate::assets::config::structs::CwConfig;
 use crate::world::tile::builder::WorldBuilder;
+use crate::world::tile::chunk::WorldChunk;
 use crate::world::tile::position::TilePosition;
-use crate::world::tile::visibility::{get_screen_rect, get_visible_tiles};
+use crate::world::tile::visibility::{get_screen_rect, get_visible_chunks};
 
 use bevy::prelude::Transform;
 use bevy::prelude::*;
 use bevy::render::camera::Camera2d;
+use bevy::utils::HashSet;
+use itertools::Itertools;
 
-pub fn generate_terrain_instruction(
+#[derive(Default)]
+pub struct LoadedChunks {
+    pub chunk_set: HashSet<TilePosition>,
+}
+
+pub fn spawn_chunk_instruction(
     mut commands: Commands,
-    camera_query: Query<(&Transform, &OrthographicProjection), With<Camera2d>>,
-    config: Res<CwConfig>,
-    tile_query: Query<(Entity, &TilePosition)>,
+    camera_query: Query<(&Camera, &Transform, &OrthographicProjection), With<Camera2d>>,
     world_builder: Res<WorldBuilder>,
+    config: Res<CwConfig>,
+    existing_chunks_query: Query<&WorldChunk, With<WorldChunk>>,
 ) {
-    let (camera_transform, camera_projection) = camera_query.single();
+    let (_camera, camera_transform, camera_projection) = camera_query.single();
 
-    let screen_rect = get_screen_rect(
+    let screen_dimensions = get_screen_rect(
         camera_transform,
         camera_projection,
-        camera_projection.scale * 1.18,
+        camera_projection.scale * 2.0,
     );
 
-    for tile_to_create in get_visible_tiles(
-        screen_rect,
+    let existing_chunk_positions = existing_chunks_query
+        .iter()
+        .map(|wc| wc.position.clone())
+        .collect_vec();
+
+    let chunks_to_spawn = get_visible_chunks(
+        screen_dimensions,
         config.world.tile_size,
-        world_builder.tile_scale,
-    ) {
-        if let Some(_) = tile_query.iter().position(|(_, p)| *p == tile_to_create) {
-            continue;
-        }
+        config.world.tile_scale,
+    )
+    .filter(|visible_chunk_position| {
+        !(&existing_chunk_positions).contains(visible_chunk_position)
+    })
+    .collect_vec();
 
-        let new_tile = world_builder.create(tile_to_create);
-
-        // Spawn
-        commands.spawn().insert(new_tile);
-    }
+    // Spawn Chunk Instructions (another system will pick those up for the actual drawing)
+    chunks_to_spawn
+        .into_iter()
+        .for_each(|chunk_position_to_spawn| {
+            commands
+                .spawn_bundle(world_builder.get_chunk(&chunk_position_to_spawn))
+                .insert(WorldChunk {
+                    position: chunk_position_to_spawn,
+                });
+        });
 }

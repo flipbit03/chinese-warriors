@@ -6,40 +6,38 @@ use self::{
     },
 };
 
-use super::{
-    position::TilePositionNeighbors,
-    terrain::{generator::TerrainGenerator, Terrain},
-};
+use super::{position::TilePositionNeighbors, terrain::Terrain};
 
 pub mod neighbor;
 pub mod structs;
 
 impl TileBorder {
-    pub fn from(matrix: &TilePositionNeighbors, gen: &TerrainGenerator) -> Vec<Self> {
+    pub fn from(
+        matrix: &TilePositionNeighbors,
+        terrains: &Vec<Terrain>,
+        terrain_count: usize,
+    ) -> Vec<Self> {
         // Find our index in the global terrains array
-        let our_terrain_index = gen
-            .terrains
-            .iter()
-            .position(|t| *t == matrix.center.0.terrain)
-            .unwrap();
+        let our_terrain_index =
+            terrains.iter().position(|t| *t == matrix.center.0).unwrap();
 
         // We receive no borders if we are the strongest terrain.
-        if our_terrain_index + 1 == gen.terrain_count {
+        if our_terrain_index + 1 == terrain_count {
             // Return empty array.
             return Vec::new();
         }
 
-        let left = &matrix.left.0.terrain;
-        let top = &matrix.top.0.terrain;
-        let right = &matrix.right.0.terrain;
-        let bottom = &matrix.bottom.0.terrain;
+        let left = &matrix.left.0;
+        let top = &matrix.top.0;
+        let right = &matrix.right.0;
+        let bottom = &matrix.bottom.0;
 
-        let top_left = &matrix.top_left.0.terrain;
-        let top_right = &matrix.top_right.0.terrain;
-        let bottom_left = &matrix.bottom_left.0.terrain;
-        let bottom_right = &matrix.bottom_right.0.terrain;
+        let top_left = &matrix.top_left.0;
+        let top_right = &matrix.top_right.0;
+        let bottom_left = &matrix.bottom_left.0;
+        let bottom_right = &matrix.bottom_right.0;
 
-        (&gen.terrains[our_terrain_index + 1..gen.terrain_count])
+        (&terrains[our_terrain_index + 1..terrain_count])
             .iter()
             .map(|stronger_terrain| {
                 let tileborder_from_4: Option<TileBorder> =
@@ -140,15 +138,15 @@ fn get_tileborder_from_stronger_terrain(
     terrain: &Terrain,
     matrix: &TilePositionNeighbors,
 ) -> Option<TileBorder> {
-    let left = &matrix.left.0.terrain;
-    let top = &matrix.top.0.terrain;
-    let right = &matrix.right.0.terrain;
-    let bottom = &matrix.bottom.0.terrain;
+    let left = &matrix.left.0;
+    let top = &matrix.top.0;
+    let right = &matrix.right.0;
+    let bottom = &matrix.bottom.0;
 
-    let top_left = &matrix.top_left.0.terrain;
-    let top_right = &matrix.top_right.0.terrain;
-    let bottom_left = &matrix.bottom_left.0.terrain;
-    let bottom_right = &matrix.bottom_right.0.terrain;
+    let top_left = &matrix.top_left.0;
+    let top_right = &matrix.top_right.0;
+    let bottom_left = &matrix.bottom_left.0;
+    let bottom_right = &matrix.bottom_right.0;
 
     match (
         top == terrain,
@@ -221,7 +219,7 @@ fn get_tileborder_from_stronger_terrain(
         }),
 
         // These last cases
-        // should be handled by the external (Neightbors) rule.
+        // should be handled by the external (Neighbors) rule.
         // (false, true, false, false) => None,
         // (false, false, false, false) => None,
         // (true, false, false, false) => None,

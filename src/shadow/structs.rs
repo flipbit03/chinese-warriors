@@ -11,8 +11,8 @@ impl Default for CastsShadow {
     fn default() -> Self {
         Self {
             x_scale: 1.0,
-            y_offset: 0.0,
-            alpha: 0.7,
+            y_offset: -2.0,
+            alpha: 0.5,
         }
     }
 }

@@ -2,13 +2,16 @@ use bevy::{
     math::{Vec2, Vec3},
     prelude::Transform,
 };
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
+use crate::world::tile::chunk::WorldChunkBundle;
+
 use super::{
-    border::structs::TileBorder,
-    position::TilePositionNeighbors,
+    chunk::{WorldChunkInstruction, CHUNK_SIDE_SIZE},
+    position::ChunkPosition,
     terrain::generator::{TerrainGenerator, TerrainGeneratorConfig},
-    TilePosition, WorldTile, WorldTileDrawInstrucion,
+    TilePosition, WorldTileDrawInstrucion,
 };
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -36,21 +39,13 @@ impl WorldBuilder {
         }
     }
 
-    fn get(&self, pos: TilePosition) -> WorldTile {
-        let matrix = TilePositionNeighbors::new(&self.generator, pos);
-        WorldTile {
-            borders: TileBorder::from(&matrix, &self.generator),
-            position: matrix.center.1,
-            worldterrain: matrix.center.0,
-        }
-    }
-
-    pub fn create(&self, tile_position: TilePosition) -> WorldTileDrawInstrucion {
-        let tile = self.get(tile_position.clone());
-        let terrain_z = tile.worldterrain.terrain.strength as f32 / 10000.0; // 0.0001
+    pub fn create_tile_draw_instruction(
+        &self,
+        tile_position: &TilePosition,
+    ) -> WorldTileDrawInstrucion {
+        let tile = self.generator.get_world_tile(&tile_position);
+        let terrain_z = tile.terrain.strength as f32 / 10000.0; // 0.0001
         WorldTileDrawInstrucion {
-            terrain_sprite: tile.worldterrain.terrain.terrain_sprite_color(),
-            decoration_sprite: tile.worldterrain.terrain.decoration_sprite_color(),
             tile,
             transform: Transform {
                 translation: Vec3::new(
@@ -62,6 +57,40 @@ impl WorldBuilder {
                 ..Default::default()
             },
             debug_grid: self.debug_grid,
+        }
+    }
+
+    pub fn get_chunk(&self, position: &ChunkPosition) -> WorldChunkBundle {
+        let x_range = ((position.x * CHUNK_SIDE_SIZE) - (CHUNK_SIDE_SIZE / 2))
+            ..=((position.x * CHUNK_SIDE_SIZE) + (CHUNK_SIDE_SIZE / 2));
+        let y_range = ((position.y * CHUNK_SIDE_SIZE) - (CHUNK_SIDE_SIZE / 2))
+            ..=((position.y * CHUNK_SIDE_SIZE) + (CHUNK_SIDE_SIZE / 2));
+
+        let z = x_range.cartesian_product(y_range).collect_vec();
+
+        WorldChunkBundle {
+            transform: Transform::from_xyz(
+                (position.x as f32
+                    * CHUNK_SIDE_SIZE as f32
+                    * self.tile_size.x
+                    * self.tile_scale) as f32,
+                (position.y as f32
+                    * CHUNK_SIDE_SIZE as f32
+                    * self.tile_size.y
+                    * self.tile_scale) as f32,
+                0.0,
+            ),
+            instruction: WorldChunkInstruction {
+                tiles: z
+                    .iter()
+                    .map(|tile_pos| tile_pos.clone().into())
+                    .map(|tile_pos: TilePosition| {
+                        self.create_tile_draw_instruction(&tile_pos)
+                    })
+                    .collect_vec()
+                    .try_into()
+                    .unwrap(),
+            },
         }
     }
 }

@@ -7,9 +7,7 @@ pub fn get_border_from_neighbor_effects(
 ) -> Option<TileBorderType> {
     match (horizontal_neighbor, vertical_neighbor, diagonal_neighbor) {
         (true, true, true) | (true, true, false) => Some(TileBorderType::InnerCorner),
-        (true, false, true) | (true, false, false) => {
-            Some(TileBorderType::VerticalWall)
-        }
+        (true, false, true) | (true, false, false) => Some(TileBorderType::VerticalWall),
         (false, true, true) | (false, true, false) => {
             Some(TileBorderType::HorizontalWall)
         }

@@ -1,32 +1,32 @@
 #![enable(implicit_some)]
-(
-  world: (
-    terrain_generation: (
+#![enable(unwrap_newtypes)]
+#![enable(unwrap_variant_newtypes)]
+CwConfig(
+  debug_flags: CwDebugFlags(
+    print_player_position: true,
+    debug_chunk: false,
+  ),
+  world: WorldBuilderConfig(
+    terrain_generation: TerrainGeneratorConfig(
       seed: 34,
       terrains: [
-        (
+        TerrainConfig(
           name: "DeepWater",
           base: DeepWater,
           color: None,
+          decoration_color: None,
           walkable: true,
           move_speed_multiplier: None,
         ),
-     
-        (
+        TerrainConfig(
           name: "ShallowWater",
           base: ShallowWater,
           color: None,
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.4,
+          move_speed_multiplier: None,
         ),
-         (
-          name: "Lava",
-          base: Lava,
-          color: None,
-          walkable: true,
-          move_speed_multiplier: 0.3,
-        ),
-             (
+        TerrainConfig(
           name: "SwampWater",
           base: ShallowWater,
           color: (
@@ -34,44 +34,19 @@
             240,
             200,
           ),
-          walkable: true,
-          move_speed_multiplier: 0.4,
-        ),
-         (
-          name: "FrozenWater",
-          base: FrozenWater,
-          color: None,
-          walkable: true,
-          move_speed_multiplier: 1.4,
-        ),
-         (
-          name: "Snow",
-          base: Snow,
-          color: None,
-          walkable: true,
-          move_speed_multiplier: 0.5,
-        ),
-        (
-          name: "BlueSnow",
-          base: Snow,
-          color: (
-            230,
-            240,
-            255,
-          ),
-          walkable: false,
-          move_speed_multiplier: 0.6,
-        ),
-
-      
-        (
-          name: "Grass",
-          base: Grass,
-          color: None,
+          decoration_color: None,
           walkable: true,
           move_speed_multiplier: None,
         ),
-        (
+        TerrainConfig(
+          name: "Grass",
+          base: Grass,
+          color: None,
+          decoration_color: None,
+          walkable: true,
+          move_speed_multiplier: None,
+        ),
+        TerrainConfig(
           name: "TundraGrass",
           base: Grass,
           color: (
@@ -79,10 +54,11 @@
             230,
             255,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 1.0,
+          move_speed_multiplier: 1.5,
         ),
-        (
+        TerrainConfig(
           name: "FrozenGrass",
           base: Grass,
           color: (
@@ -90,10 +66,11 @@
             190,
             255,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.9,
+          move_speed_multiplier: 1.6,
         ),
-        (
+        TerrainConfig(
           name: "PlainsGrass",
           base: Grass,
           color: (
@@ -101,10 +78,11 @@
             235,
             220,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: None,
+          move_speed_multiplier: 1.7,
         ),
-        (
+        TerrainConfig(
           name: "DarkGrass",
           base: Grass,
           color: (
@@ -112,10 +90,11 @@
             225,
             225,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.9,
+          move_speed_multiplier: None,
         ),
-        (
+        TerrainConfig(
           name: "SwampGrass",
           base: Grass,
           color: (
@@ -123,28 +102,31 @@
             185,
             160,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.8,
+          move_speed_multiplier: None,
         ),
-        (
+        TerrainConfig(
           name: "Mud",
           base: Mud,
           color: None,
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.8,
+          move_speed_multiplier: None,
         ),
-        (
-          name: "RedMud",
+        TerrainConfig(
+          name: "Clay",
           base: Mud,
           color: (
             255,
             235,
             220,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.8,
+          move_speed_multiplier: None,
         ),
-        (
+        TerrainConfig(
           name: "DarkMud",
           base: Mud,
           color: (
@@ -152,35 +134,19 @@
             225,
             225,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.7,
+          move_speed_multiplier: None,
         ),
-         (
-          name: "Clay",
-          base: Clay,
+        TerrainConfig(
+          name: "Sand",
+          base: Sand,
           color: None,
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.7,
+          move_speed_multiplier: None,
         ),
-          (
-          name: "VolcanicClay",
-          base: Clay,
-          
-          color: (
-            230,
-            60 ,
-            90,
-          ),
-          
-          decoration_color: (
-            230,
-            60 ,
-            90,
-          ),
-          walkable: true,
-          move_speed_multiplier: 0.7,
-        ),
-        (
+        TerrainConfig(
           name: "WetSand",
           base: Sand,
           color: (
@@ -188,621 +154,303 @@
             235,
             235,
           ),
-          walkable: true,
-          move_speed_multiplier: 0.9,
-        ),
-        (
-          name: "Sand",
-          base: Sand,
-          color: None,
-          walkable: true,
-          move_speed_multiplier: 0.9,
-        ),
-       
-        (
-          name: "Gravel",
-          base: Gravel,
-           color:None,
-          walkable: true,
-         move_speed_multiplier: 0.7,
-        ),
-         (
-          name: "DarkGravel",
-          base: Gravel,
-          color: (
-            215,
-            215,
-            220,
-          ),
-          walkable: true,
-         move_speed_multiplier: 0.7,
-        ),
-        
-        (
-          name: "Stone",
-          base: Stone,
-          color: None,
+          decoration_color: None,
           walkable: true,
           move_speed_multiplier: None,
         ),
-        (
-          name: "SandStone",
+        TerrainConfig(
+          name: "Stone",
+          base: Stone,
+          color: None,
+          decoration_color: None,
+          walkable: true,
+          move_speed_multiplier: None,
+        ),
+        TerrainConfig(
+          name: "RedStone",
           base: Stone,
           color: (
             235,
             200,
             160,
           ),
+          decoration_color: None,
           walkable: true,
           move_speed_multiplier: None,
         ),
-         (
-          name: "RedStone",
-          base: Stone,
-          color: (
-            255,
-            170 ,
-            180,
-          ),
-          walkable: true,
-          move_speed_multiplier: None,
-        ),
-        (
+        TerrainConfig(
           name: "DarkStone",
           base: Stone,
           color: (
-            170,
-            170,
-            180,
+            215,
+            215,
+            215,
           ),
+          decoration_color: None,
           walkable: true,
           move_speed_multiplier: None,
         ),
-         (
-          name: "ThickYellowStone",
-          base: ThickStone,
-           color: (
+        TerrainConfig(
+          name: "SandStone",
+          base: Stone,
+          color: (
             255,
-            150,
-            50,
+            225,
+            175,
           ),
+          decoration_color: None,
           walkable: true,
-          move_speed_multiplier: 0.8,
+          move_speed_multiplier: None,
         ),
-         (
-          name: "ThickDarkStone",
-          base: ThickStone,
-           color: (
-            170,
-            170,
-            180,
+        TerrainConfig(
+          name: "Snow",
+          base: Snow,
+          color: None,
+          decoration_color: None,
+          walkable: true,
+          move_speed_multiplier: None,
+        ),
+        TerrainConfig(
+          name: "BlueSnow",
+          base: Snow,
+          color: (
+            230,
+            240,
+            255,
           ),
-          walkable: true,
-          move_speed_multiplier: 0.8,
+          decoration_color: None,
+          walkable: false,
+          move_speed_multiplier: None,
         ),
-        (
-          name: "ThickRedStone",
-          base: ThickStone,
-           color: (
-            170,
-            50,
-            50,
-          ),
-          walkable: true,
-          move_speed_multiplier: 0.8,
-        ),
-       
-       
       ],
-       biomes: [
-      
-      
-          (
-          name: "WetDesert",
-          range: (
-            start: 0.42,
-            end: 0.48,
+      biomes: [
+        BiomeConfig(
+          name: "RockDesert",
+          range: Range(
+            start: 0.0,
+            end: 0.2,
           ),
           terrains: [
-            ("Sand",(start:0.2,end:0.85)),
-            ("WetSand",(start:0.0,end:0.2)),
-            ("Clay",(start:0.9,end:0.95)),
-             ("SandStone",(start:0.95,end:1.0)),
-         
+            ("Sand", Range(start: 0.7, end: 1.0)),
+            ("SandStone", Range(start: 0.5, end: 0.7)),
+            ("RedStone", Range(start: 0.0, end: 0.5)),
           ],
           default_terrain: "Sand",
-          noise_terrain: (
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:20.0,y:20.0),
+            noise_scale_factor: XY(x: 5.0, y: 5.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
           decoration_eagerness: [
-            (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
-        (
-          name: "RiverBanks",
-          range: (
-            start: 0.528,
-            end: 0.53,
-          ),
-          terrains: [
-           
-     
-        ("DarkMud",(start:0.5,end:0.1)),
-           ("RedMud",(start:0.0,end:0.5)),   
-            
-          ],
-          default_terrain: "DarkMud",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.35),
-            (start:0.85,end:1.0),
-          ],
-        ),
-        
-         (
-          name: "SimpleDesert",
-          range: (
-            start: 0.52,
-            end: 0.528,
-          ),
-          terrains: [
-            ("Sand",(start:0.1,end:1.0)),
-          
-         
-          ],
-          default_terrain: "Sand",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:20.0,y:20.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
-          ],
-        ),  
-        
-       
-        (
-          name: "Oasis",
-          range: (
-            start: 0.48,
-            end: 0.52,
-          ),
-          terrains: [
-            ("Sand",(start:0.23,end:0.85)),
-           
-             ("WetSand",(start:0.2,end:0.23)),
-                ("Grass",(start:0.1,end:0.15)),
-                 ("DarkGrass",(start:0.0,end:0.1)),
-            ("SwampWater",(start:0.15,end:0.2)),
-         
-            ("Clay",(start:0.9,end:0.95)),
-             ("SandStone",(start:0.95,end:1.0)),
-         
-          ],
-          default_terrain: "Sand",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:40.0,y:40.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
-          ],
-        ),
-          (
-          name: "SimpleDesert",
-          range: (
-            start: 0.24,
-            end: 0.25,
-          ),
-          terrains: [
-            ("Sand",(start:0.1,end:1.0)),
-          
-         
-          ],
-          default_terrain: "Sand",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:20.0,y:20.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
-          ],
-        ),
-          (
-          name: "SimpleDesert",
-          range: (
+        BiomeConfig(
+          name: "Quarry",
+          range: Range(
             start: 0.3,
-            end: 0.32,
+            end: 0.35,
           ),
           terrains: [
-            ("Sand",(start:0.1,end:1.0)),
-          
-         
+            ("Sand", Range(start: 0.7, end: 1.0)),
+            ("DarkStone", Range(start: 0.5, end: 0.7)),
+            ("Stone", Range(start: 0.2, end: 0.5)),
+            ("RedStone", Range(start: 0.0, end: 0.2)),
           ],
-          default_terrain: "Sand",
-          noise_terrain: (
+          default_terrain: "Stone",
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:20.0,y:20.0),
+            noise_scale_factor: XY(x: 5.0, y: 5.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
           decoration_eagerness: [
-            (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
-          (
-          name: "DryDesert",
-          range: (
+        BiomeConfig(
+          name: "Desert",
+          range: Range(
+            start: 0.35,
+            end: 0.5,
+          ),
+          terrains: [
+            ("SandStone", Range(start: 0.0, end: 0.2)),
+            ("SandStone", Range(start: 0.85, end: 1.0)),
+            ("Sand", Range(start: 0.2, end: 0.85)),
+          ],
+          default_terrain: "Sand",
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
+            seed_offset: 0,
+            noise_scale_factor: XY(x: 20.0, y: 20.0),
+          ),
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
+            seed_offset: 0,
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
+          ),
+          decoration_eagerness: [
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
+          ],
+        ),
+        BiomeConfig(
+          name: "Oasis",
+          range: Range(
             start: 0.25,
             end: 0.3,
           ),
           terrains: [
-           
-            ("Sand",(start:0.25,end:0.7)), 
-           
-            ("DarkGravel",(start:0.2,end:0.25)),
-            
-             
-              ("Stone",(start:0.0,end:0.2)),
-            ("Clay",(start:0.7,end:0.75)),
-             ("SandStone",(start:0.75,end:1.0)),
-         
+            ("Sand", Range(start: 0.0, end: 0.25)),
+            ("WetSand", Range(start: 0.25, end: 0.3)),
+            ("WetSand", Range(start: 0.7, end: 0.8)),
+            ("Sand", Range(start: 0.8, end: 1.0)),
+            ("ShallowWater", Range(start: 0.3, end: 0.7)),
           ],
           default_terrain: "Sand",
-          noise_terrain: (
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:40.0,y:40.0),
+            noise_scale_factor: XY(x: 15.0, y: 15.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
           decoration_eagerness: [
-            (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
-          
-          (
-          name: "RockDesert",
-          range: (
-            start: 0.32,
-            end: 0.42,
-          ),
-          terrains: [
-            ("Sand",(start:0.7,end:1.0)),
-              ("Sand",(start:0.0,end:0.43)),
-
-            ("Clay",(start:0.43,end:0.5)),
-             ("SandStone",(start:0.5,end:0.7)),
-          
-          ],
-          default_terrain: "Sand",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:18.0,y:15.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.45),
-            (start:0.75,end:1.0),
-          ],
-        ),
-        (
-          name: "Quarry",
-          range: (
-            start: 0.19,
-            end: 0.24,
-          ),
-          terrains: [
-           ("Sand",(start:0.75,end:1.0)),
-               ("DarkGravel",(start:0.5,end:0.75)),
-            ("Stone",(start:0.15,end:0.5)),
-                
-                     ("ThickDarkStone",(start:0.0,end:0.15)),
-           
-          ],
-          default_terrain: "DarkGravel",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-          decoration_eagerness: [
-              (start:0.0,end:0.3),
-         (start:0.5,end:0.6),
-            (start:0.8,end:1.0),
-          ],
-        ),
-      
-           (
-          name: "Volcanic",
-          range: (
-            start: 0.0,
-            end: 0.19,
-          ),
-          terrains: [
-              ("VolcanicClay",(start:0.25,end:0.3)),
-               ("VolcanicClay",(start:0.77,end:0.8)),
-                ("VolcanicClay",(start:0.5,end:0.53)),
-               
-            ("Lava",(start:0.2,end:0.25)),
-              ("Lava",(start:0.53,end:0.77)),
-
-              
-            ("ThickYellowStone",(start:0.0,end:0.2)),
-            ("ThickRedStone",(start:0.3,end:0.5)),
-            
-            ("ThickYellowStone",(start:0.8,end:1.0)),
-          
-          
-          ],
-          default_terrain: "ThickRedStone",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:15.0,y:15.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-        
-          decoration_eagerness: [
-              (start:0.0,end:0.05),
-             (start:0.53,end:0.6),
-            (start:0.95,end:1.0),
-          ],
-        ),
-        (
-          name: "RiverBanks",
-          range: (
-            start: 0.723,
-            end: 0.725,
-          ),
-          terrains: [
-           
-      
-        ("DarkMud",(start:0.5,end:0.1)),
-          ("RedMud",(start:0.0,end:0.5)),   
-            
-          ],
-          default_terrain: "DarkMud",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:8.0,y:8.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.35),
-            (start:0.85,end:1.0),
-          ],
-        ),
-         (
-          name: "RiverBanks",
-          range: (
-            start: 0.729,
-            end: 0.731,
-          ),
-          terrains: [
-        
-        ("DarkMud",(start:0.5,end:0.1)),
-         ("RedMud",(start:0.0,end:0.5)),  
-            
-          ],
-          default_terrain: "DarkMud",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:20.0,y:20.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.35),
-            (start:0.85,end:1.0),
-          ],
-        ),
-         (
-          name: "River",
-          range: (
-            start: 0.725,
-            end: 0.729,
-          ),
-          terrains: [
-           
-      
-              ("ShallowWater",(start:0.2,end:1.0)),
-          ],
-          default_terrain: "ShallowWater",
-          noise_terrain: (
-            seed_offset: 0,
-            noise_scale_factor: (x:32.0,y:16.0),
-          ),
-          noise_decoration: (
-            seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
-          ),
-          decoration_eagerness: [
-            (start:0.0,end:0.35),
-            (start:0.85,end:1.0),
-          ],
-        ),
-      
-        (
+        BiomeConfig(
           name: "Plains",
-          range: (
+          range: Range(
             start: 0.6,
-            end: 0.723,
+            end: 0.78,
           ),
           terrains: [
-            ("ShallowWater",(start:0.0,end:0.1)),
-            ("RedMud",(start:0.1,end:0.24)),
-            ("Grass",(start:0.24,end:0.55)),
-            ("Grass",(start:0.8,end:1.0)),
-            ("PlainsGrass",(start:0.55,end:0.8)),
+            ("ShallowWater", Range(start: 0.0, end: 0.1)),
+            ("Clay", Range(start: 0.1, end: 0.24)),
+            ("Grass", Range(start: 0.24, end: 0.55)),
+            ("Grass", Range(start: 0.8, end: 1.0)),
+            ("PlainsGrass", Range(start: 0.55, end: 0.8)),
           ],
           default_terrain: "Grass",
-          noise_terrain: (
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:10.0,y:10.0),
+            noise_scale_factor: XY(x: 10.0, y: 10.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:5.0,y:5.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
           decoration_eagerness: [
-            (start:0.0,end:0.1),
-             (start:0.5,end:0.6),
-            (start:0.9,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
-        (
+        BiomeConfig(
           name: "Swamp",
-          range: (
-            start: 0.53,
+          range: Range(
+            start: 0.5,
             end: 0.6,
           ),
           terrains: [
-            ("DarkMud",(start:0.5,end:0.6)),
-            ("DarkGrass",(start:0.6,end:0.7)),
-            ("SwampGrass",(start:0.7,end:1.0)),
-            ("SwampWater",(start:0.25,end:0.6)),
+            ("DarkMud", Range(start: 0.5, end: 0.6)),
+            ("DarkGrass", Range(start: 0.6, end: 0.7)),
+            ("SwampGrass", Range(start: 0.7, end: 1.0)),
+            ("SwampWater", Range(start: 0.25, end: 0.6)),
           ],
           default_terrain: "DarkGrass",
-          noise_terrain: (
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:4.0,y:4.0),
+            noise_scale_factor: XY(x: 4.0, y: 4.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
           decoration_eagerness: [
-            (start:0.0,end:0.45),
-            (start:0.75,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
-        (
+        BiomeConfig(
           name: "Tundra",
-          range: (
-            start: 0.731,
-            end: 0.8,
+          range: Range(
+            start: 0.5,
+            end: 0.6,
           ),
           terrains: [
-            ("TundraGrass",(start:0.0,end:0.5)),
-            ("FrozenGrass",(start:0.5,end:1.0)),
+            ("TundraGrass", Range(start: 0.0, end: 0.5)),
+            ("FrozenGrass", Range(start: 0.5, end: 1.0)),
           ],
           default_terrain: "TundraGrass",
-          noise_terrain: (
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:9.0,y:9.0),
+            noise_scale_factor: XY(x: 9.0, y: 9.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:2.0,y:2.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
           decoration_eagerness: [
-            (start:0.0,end:0.35),
-            (start:0.85,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
-        
-       
-        (
+        BiomeConfig(
           name: "Snow",
-          range: (
-            start: 0.8,
+          range: Range(
+            start: 0.83,
             end: 1.0,
           ),
           terrains: [
-            ("FrozenWater",(start:0.0,end:0.35)),
-            ("BlueSnow",(start:0.9,end:1.0)),
-            ("BlueSnow",(start:0.35,end:0.45)),
-            ("Snow",(start:0.45,end:0.9)),
+            ("ShallowWater", Range(start: 0.0, end: 0.35)),
+            ("BlueSnow", Range(start: 0.9, end: 1.0)),
+            ("BlueSnow", Range(start: 0.35, end: 0.45)),
+            ("Snow", Range(start: 0.45, end: 0.9)),
           ],
           default_terrain: "Snow",
-          noise_terrain: (
+          noise_terrain: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:25.0,y:25.0),
+            noise_scale_factor: XY(x: 25.0, y: 25.0),
           ),
-          noise_decoration: (
+          noise_decoration: NoiseGeneratorSeedOffsetConfig(
             seed_offset: 0,
-            noise_scale_factor: (x:4.0,y:4.0),
+            noise_scale_factor: XY(x: 2.0, y: 2.0),
           ),
-         
           decoration_eagerness: [
-            (start:0.0,end:0.6),
-            (start:0.8,end:1.0),
+            Range(start: 0.0, end: 0.45),
+            Range(start: 0.75, end: 1.0),
           ],
         ),
       ],
-      biome_noise: (
+      biome_noise: NoiseGeneratorSeedOffsetConfig(
         seed_offset: 0,
-        noise_scale_factor: (
-          x: 1000.0,
-          y: 1000.0,
+        noise_scale_factor: XY(
+          x: 292.0,
+          y: 292.0,
         ),
       ),
     ),
-    tile_size: (
+    tile_size: Vec2(
       64.0,
       64.0,
     ),
     tile_scale: 1.0,
     debug_grid: false,
   ),
-  hero: (
-    move_speed: 2.0,
-    spawn_point: (
-      -318.2,
-      -2941.0,
+  hero: HeroConfig(
+    move_speed: 21.1,
+    spawn_point: Vec2(
+      0.0,
+      0.0,
     ),
   ),
 )

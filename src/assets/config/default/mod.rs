@@ -19,9 +19,10 @@ pub mod terrain;
 impl Default for CwConfig {
     fn default() -> Self {
         Self {
-            debug_flags: Some(CwDebugFlags {
+            debug_flags: CwDebugFlags {
                 print_player_position: true,
-            }),
+                debug_chunk: true,
+            },
             world: WorldBuilderConfig {
                 terrain_generation: TerrainGeneratorConfig {
                     terrains: generate_default_terrain_set(false),
@@ -35,7 +36,7 @@ impl Default for CwConfig {
             },
             hero: HeroConfig {
                 move_speed: 2.1,
-                spawn_point: Vec2::new(15614.0, 8297.0),
+                spawn_point: Vec2::new(0.0, 0.0),
             },
         }
     }
@@ -44,9 +45,10 @@ impl Default for CwConfig {
 impl CwConfig {
     pub fn debug_config() -> Self {
         Self {
-            debug_flags: Some(CwDebugFlags {
+            debug_flags: CwDebugFlags {
                 print_player_position: true,
-            }),
+                debug_chunk: true,
+            },
             world: WorldBuilderConfig {
                 terrain_generation: TerrainGeneratorConfig {
                     terrains: generate_default_terrain_set(true),

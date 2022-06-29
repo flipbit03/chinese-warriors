@@ -1,12 +1,14 @@
 use bevy::prelude::Component;
 
-use super::terrain::generator::{TerrainGenerator, WorldTerrain};
+use super::terrain::{generator::TerrainGenerator, Terrain};
 
-#[derive(Hash, PartialEq, Eq, Debug, Clone, Default, Component)]
+#[derive(Hash, PartialOrd, Ord, PartialEq, Eq, Debug, Clone, Default, Component)]
 pub struct TilePosition {
     pub x: i32,
     pub y: i32,
 }
+
+pub type ChunkPosition = TilePosition;
 
 impl TilePosition {
     pub fn from(pos: &TilePosition, x_off: i32, y_off: i32) -> Self {
@@ -26,7 +28,7 @@ impl Into<TilePosition> for (i32, i32) {
     }
 }
 
-type TilePosTerrainTuple = (WorldTerrain, TilePosition);
+type TilePosTerrainTuple = (Terrain, TilePosition);
 
 #[derive(Clone)]
 pub struct TilePositionNeighbors {
@@ -55,15 +57,15 @@ impl TilePositionNeighbors {
         let bottom_right = TilePosition::from(&you, 1, -1);
 
         Self {
-            top_left: (gen.get_world_terrain(&top_left), top_left),
-            top: (gen.get_world_terrain(&top), top),
-            top_right: (gen.get_world_terrain(&top_right), top_right),
-            left: (gen.get_world_terrain(&left), left),
-            right: (gen.get_world_terrain(&right), right),
-            bottom_left: (gen.get_world_terrain(&bottom_left), bottom_left),
-            bottom: (gen.get_world_terrain(&bottom), bottom),
-            bottom_right: (gen.get_world_terrain(&bottom_right), bottom_right),
-            center: (gen.get_world_terrain(&you), you),
+            top_left: (gen.get_terrain(&top_left), top_left),
+            top: (gen.get_terrain(&top), top),
+            top_right: (gen.get_terrain(&top_right), top_right),
+            left: (gen.get_terrain(&left), left),
+            right: (gen.get_terrain(&right), right),
+            bottom_left: (gen.get_terrain(&bottom_left), bottom_left),
+            bottom: (gen.get_terrain(&bottom), bottom),
+            bottom_right: (gen.get_terrain(&bottom_right), bottom_right),
+            center: (gen.get_terrain(&you), you),
         }
     }
 }
