@@ -3,7 +3,7 @@ use bevy::prelude::{Bundle, Component, Entity, Transform};
 use super::{position::ChunkPosition, WorldTileDrawInstrucion};
 
 // How many tiles per dimension inside a chunk (x * x)
-pub const CHUNK_SIDE_SIZE: i32 = 5;
+pub const CHUNK_SIDE_SIZE: i32 = 3;
 
 // Total amount of tile inside a Chunk
 pub const TILES_PER_CHUNK: usize = (CHUNK_SIDE_SIZE * CHUNK_SIDE_SIZE) as usize;

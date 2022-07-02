@@ -1,12 +1,10 @@
 use bevy::prelude::Component;
 
+use crate::utilities::xy::XY;
+
 use super::terrain::{generator::TerrainGenerator, Terrain};
 
-#[derive(Hash, PartialOrd, Ord, PartialEq, Eq, Debug, Clone, Default, Component)]
-pub struct TilePosition {
-    pub x: i32,
-    pub y: i32,
-}
+pub type TilePosition = XY<i32>;
 
 pub type ChunkPosition = TilePosition;
 

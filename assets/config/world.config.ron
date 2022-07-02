@@ -447,7 +447,7 @@ CwConfig(
     debug_grid: false,
   ),
   hero: HeroConfig(
-    move_speed: 21.1,
+    move_speed: 2.1,
     spawn_point: Vec2(
       0.0,
       0.0,

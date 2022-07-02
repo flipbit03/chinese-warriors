@@ -27,7 +27,7 @@ pub fn spawn_chunk_instruction(
     let screen_dimensions = get_screen_rect(
         camera_transform,
         camera_projection,
-        camera_projection.scale * 2.0,
+        camera_projection.scale * 1.3,
     );
 
     let existing_chunk_positions = existing_chunks_query

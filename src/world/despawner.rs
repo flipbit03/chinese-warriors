@@ -24,7 +24,7 @@ pub fn despawn_far_chunk_instruction(
     let screen_dimensions = get_screen_rect(
         camera_transform,
         camera_projection,
-        camera_projection.scale * 3.6,
+        camera_projection.scale * 2.0,
     );
 
     let visible_chunks = get_visible_chunks(
