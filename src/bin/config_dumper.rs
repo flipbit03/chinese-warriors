@@ -1,10 +1,9 @@
 use std::{fs::File, io::Write};
 
-use chinese_warriors::assets::config::structs::{
-    CwConfig, DEBUG_CONFIG_PATH, DEFAULT_CONFIG_PATH,
+use chinese_warriors::{
+    assets::config::structs::{CwConfig, DEBUG_CONFIG_PATH, DEFAULT_CONFIG_PATH},
+    utilities::config::dump_cwconfig_pretty,
 };
-
-use ron::{extensions::Extensions, ser::PrettyConfig};
 
 fn main() -> () {
     // Dump production and debug configs to their appropriate locations
@@ -21,17 +20,7 @@ fn main() -> () {
         .to_string();
         println!("Dumping {}CwConfig to {}", debug_str, &config_path);
 
-        let config_as_str = ron::ser::to_string_pretty(
-            cw_config,
-            PrettyConfig::new()
-                .decimal_floats(true)
-                .struct_names(true)
-                .depth_limit(6)
-                .indentor("  ".to_ascii_lowercase())
-                .extensions(Extensions::all())
-                .separate_tuple_members(true),
-        )
-        .unwrap();
+        let config_as_str = dump_cwconfig_pretty(cw_config);
 
         let mut file = File::create(config_path).unwrap();
         file.write_all(config_as_str.as_bytes()).unwrap();
