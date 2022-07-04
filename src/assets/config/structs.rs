@@ -36,7 +36,7 @@ pub struct CwCliConfig {
     pub config_file: String,
 }
 
-fn remove_assets_prefix(
+pub fn remove_assets_prefix(
     s: &str,
 ) -> Result<String, Box<dyn Error + Send + Sync + 'static>> {
     let path_components = Path::new(s).components().collect_vec();
