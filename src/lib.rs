@@ -7,6 +7,7 @@ pub mod helpers;
 pub mod hero;
 pub mod hud;
 pub mod input;
+pub mod mob;
 pub mod shadow;
 pub mod utilities;
 pub mod world;

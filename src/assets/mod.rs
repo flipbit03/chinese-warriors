@@ -5,11 +5,13 @@ use iyes_loopless::{
     state::NextState,
 };
 
-use crate::{app::GameState, world::tile::builder::WorldBuilder};
+use crate::{
+    app::GameState, mob::mosquito::MosquitoAssets, world::tile::builder::WorldBuilder,
+};
 
 use self::{
     aseprite::{
-        load_aseprite_assets, load_guri_animations,
+        load_aseprite_assets, load_guri_animations, load_mosquito_animations,
         wait_for_loaded_aseprites_to_be_processed, AllAsepritesLoaded, GuriAssets,
     },
     asset_reloader::activate_live_asset_reloading,
@@ -52,6 +54,7 @@ impl Plugin for AssetsPlugin {
                     .run_in_state(GameState::Loading)
                     .run_if_resource_exists::<AllAsepritesLoaded>()
                     .with_system(load_guri_animations)
+                    .with_system(load_mosquito_animations)
                     .into(),
             )
             .add_system_set(
@@ -68,6 +71,7 @@ impl Plugin for AssetsPlugin {
                     .run_if_resource_exists::<TerrainTextures>()
                     .run_if_resource_exists::<WorldBuilder>()
                     .run_if_resource_exists::<GuriAssets>()
+                    .run_if_resource_exists::<MosquitoAssets>()
                     .with_system(change_mode_to_ingame)
                     .into(),
             )

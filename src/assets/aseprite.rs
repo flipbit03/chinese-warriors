@@ -7,6 +7,8 @@ use bevy_ase::{
     loader::Loader,
 };
 
+use crate::mob::mosquito::{MosquitoAssets, MOSQUITO_ASEPRITE_PATH};
+
 static GURI_ASEPRITE_PATH: &str = "art/hero/guri/Guri.aseprite";
 
 pub struct GuriAssets {
@@ -19,8 +21,11 @@ pub fn load_aseprite_assets(
     mut aseloader: ResMut<Loader>,
 ) {
     info!("Loading Guri.aseprite...");
-    let h: Handle<AseAsset> = asset_server.load(GURI_ASEPRITE_PATH);
-    aseloader.add(h.clone());
+    let guri_asset: Handle<AseAsset> = asset_server.load(GURI_ASEPRITE_PATH);
+    aseloader.add(guri_asset.clone());
+    info!("Loading mosquito.aseprite...");
+    let mosquito_asset: Handle<AseAsset> = asset_server.load(MOSQUITO_ASEPRITE_PATH);
+    aseloader.add(mosquito_asset.clone());
 }
 
 pub struct AllAsepritesLoaded;
@@ -36,7 +41,7 @@ pub fn wait_for_loaded_aseprites_to_be_processed(
     }
 }
 
-// Wait until all sprites are loaded.
+// Wait until all aseprites are loaded.
 pub fn load_guri_animations(
     mut commands: Commands,
     ase_files: Res<AseFileMap>,
@@ -58,6 +63,25 @@ pub fn load_guri_animations(
 
     commands.insert_resource(GuriAssets {
         idle_anim: (idle_anim_handle, idle_anim_benimator_handle),
+        walk_cycle_anim: (walk_cycle_anim_handle, walk_cycle_benimator_handle),
+    });
+}
+
+pub fn load_mosquito_animations(
+    mut commands: Commands,
+    ase_files: Res<AseFileMap>,
+    raw_animations: Res<Assets<Animation>>,
+    mut benimations: ResMut<Assets<SpriteSheetAnimation>>,
+) {
+    let walk_cycle_anim_handle = ase_files
+        .animation(Path::new(MOSQUITO_ASEPRITE_PATH), "Move")
+        .unwrap();
+
+    let walk_cycle_anim = raw_animations.get(walk_cycle_anim_handle.clone()).unwrap();
+
+    let walk_cycle_benimator_handle = benimations.add(walk_cycle_anim.into());
+
+    commands.insert_resource(MosquitoAssets {
         walk_cycle_anim: (walk_cycle_anim_handle, walk_cycle_benimator_handle),
     });
 }
