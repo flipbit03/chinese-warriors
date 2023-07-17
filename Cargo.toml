@@ -8,23 +8,21 @@ default-run = "chinese-warriors"
 # benimator = { path = "../benimator", version = "0.0.0-dev" }
 # bevy_ase = { path = "../bevy_ase", features = ["benimator"] }
 
-clap = { version = "3.2.5", features = ["derive"] }
-bevy_ase = { git = "https://github.com/flipbit03/bevy_ase.git", rev = "3e6a236baf466f1f85908fbbd26e8d8705b36d1a", features = [
+clap = { version = "4.3.12", features = ["derive"] }
+bevy_ase = { git = "https://github.com/flipbit03/bevy_ase.git", rev = "f8120c175cdd4f5cea45e1fc474ad596e2e821bf", features = [
   "benimator",
 ] }
-benimator = "3.6.0"
-bevy = { version = "0.7.0" }
-noise = "0.7.0"
-strum = { version = "0.24", features = ["derive"] }
-itertools = "0.10.3"
-bevy_asset_ron = "0.4.0"
+benimator = "4.1.3"
+bevy = { version = "0.11.0" }
+noise = "0.8.2"
+strum = { version = "0.25", features = ["derive"] }
+itertools = "0.11.0"
+bevy_common_assets = "0.7"
 serde = "1"
-ron = "0.7"
-iyes_loopless = { git = "https://github.com/IyesGames/iyes_loopless.git", rev = "452c5737b123eea8aebb0e973293c9eb6ba65c8b" }
-bevy-web-resizer = "2.0.0"
+ron = "0.8.0"
+#iyes_loopless = { git = "https://github.com/IyesGames/iyes_loopless.git", rev = "452c5737b123eea8aebb0e973293c9eb6ba65c8b" }
+bevy-web-resizer = "4.0.1"
 
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-bevy = { version = "0.7.0", features = ["dynamic"] }
 # Use this when debugging with `gdb`
 #bevy = { version = "0.7.0" }
 
