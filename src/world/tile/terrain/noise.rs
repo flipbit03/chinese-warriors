@@ -58,15 +58,15 @@ impl NoiseGeneratorConfig {
 pub struct NoiseGenerator {
     pub config: NoiseGeneratorConfig,
     pub perlin: Perlin,
-    pub fbm: Fbm,
+    pub fbm: Fbm<Perlin>,
 }
 
 impl NoiseGenerator {
     pub fn new_from_config(config: &NoiseGeneratorConfig) -> Self {
         Self {
             config: config.clone(),
-            perlin: Perlin::new().set_seed(config.seed),
-            fbm: Fbm::new().set_seed(config.seed),
+            perlin: Perlin::new(config.seed),
+            fbm: Fbm::new(config.seed),
         }
     }
 
