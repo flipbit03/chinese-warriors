@@ -1,3 +1,5 @@
+.PHONY: run debug web serve publish dependencies
+
 #################
 # Local Development Stuff
 #################
