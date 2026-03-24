@@ -6,6 +6,7 @@ default-run = "chinese-warriors"
 
 [dependencies]
 bevy = "0.18.1"
+bevy_aseprite_ultra = "0.8"
 noise = "0.9"
 strum = { version = "0.26", features = ["derive"] }
 itertools = "0.13"

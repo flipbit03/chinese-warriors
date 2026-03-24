@@ -1,4 +1,5 @@
-use bevy::{math::Vec3, prelude::*, sprite::Sprite};
+use bevy::{math::Vec3, prelude::*};
+use bevy_aseprite_ultra::prelude::*;
 
 use crate::{
     assets::aseprite::GuriAssets,
@@ -16,14 +17,11 @@ pub fn spawn_hero(
     info!("Spawning hero...");
 
     commands.spawn((
-        Sprite {
-            image: guri_assets.texture.clone(),
-            texture_atlas: Some(TextureAtlas {
-                layout: guri_assets.layout.clone(),
-                index: guri_assets.idle_first,
-            }),
-            ..default()
+        AseAnimation {
+            aseprite: guri_assets.aseprite.clone(),
+            animation: Animation::tag("Idle").with_repeat(AnimationRepeat::Loop),
         },
+        Sprite::default(),
         Transform {
             translation: Vec3::new(
                 config.hero.spawn_point.x,
@@ -35,10 +33,5 @@ pub fn spawn_hero(
         Hero::default(),
         MoveSpeed(1.0),
         CastsShadow::default(),
-        AnimationTimer(Timer::from_seconds(0.15, TimerMode::Repeating)),
     ));
 }
-
-/// Simple sprite sheet animation timer
-#[derive(Component, Deref, DerefMut)]
-pub struct AnimationTimer(pub Timer);

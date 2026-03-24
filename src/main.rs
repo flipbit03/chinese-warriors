@@ -1,4 +1,5 @@
 use bevy::{prelude::*, window::PresentMode};
+use bevy_aseprite_ultra::prelude::AsepriteUltraPlugin;
 use chinese_warriors::assets::config::structs::CwCliConfig;
 
 pub fn main() {
@@ -36,6 +37,7 @@ pub fn main() {
             }),
     )
     .init_state::<chinese_warriors::app::GameState>()
+    .add_plugins(AsepriteUltraPlugin)
     .add_plugins((
         chinese_warriors::assets::AssetsPlugin,
         chinese_warriors::camera::CameraPlugin,

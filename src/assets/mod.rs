@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{app::GameState, world::tile::builder::WorldBuilder};
 
 use self::{
-    aseprite::{load_guri_spritesheet, GuriAssets},
+    aseprite::{load_guri_aseprite, GuriAssets},
     config::{
         live_updater::live_update_main_config, load_config_save_handle,
         structs::CwConfig, CwConfigLoader,
@@ -38,7 +38,7 @@ impl Plugin for AssetsPlugin {
                     load_fonts,
                     load_textures,
                     load_timers,
-                    load_guri_spritesheet,
+                    load_guri_aseprite,
                 ),
             )
             // Wait for config to be loaded, then create the world builder
