@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Chinese Warriors</title>
@@ -16,20 +17,21 @@
         );
         background-repeat: repeat;
         background-size: 20px 20px;
+        overflow: hidden;
       }
       canvas {
         background-color: rgb(232, 205, 205);
+        display: block;
+        width: 100vw;
+        height: 100vh;
       }
-
     </style>
   </head>
-  <script type="module">
-    import init from './target/chinese_warriors.js'
-    init()
-  </script>
   <body>
-    <div class="gamecontainer">
-      <canvas id="gamescreen"></canvas>
-    </div>
+    <canvas id="gamescreen"></canvas>
+    <script type="module">
+      import init from './target/chinese_warriors.js'
+      init()
+    </script>
   </body>
 </html>

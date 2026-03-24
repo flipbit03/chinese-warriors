@@ -5,10 +5,10 @@ use bevy::{
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
-use crate::world::tile::chunk::WorldChunkBundle;
+use bevy::prelude::Resource;
 
 use super::{
-    chunk::{WorldChunkInstruction, CHUNK_SIDE_SIZE},
+    chunk::{WorldChunkBundle, WorldChunkInstruction, CHUNK_SIDE_SIZE},
     position::ChunkPosition,
     terrain::generator::{TerrainGenerator, TerrainGeneratorConfig},
     TilePosition, WorldTileDrawInstrucion,
@@ -22,6 +22,7 @@ pub struct WorldBuilderConfig {
     pub debug_grid: bool,
 }
 
+#[derive(Resource)]
 pub struct WorldBuilder {
     pub tile_size: Vec2,
     pub tile_scale: f32,
@@ -43,8 +44,8 @@ impl WorldBuilder {
         &self,
         tile_position: &TilePosition,
     ) -> WorldTileDrawInstrucion {
-        let tile = self.generator.get_world_tile(&tile_position);
-        let terrain_z = tile.terrain.strength as f32 / 10000.0; // 0.0001
+        let tile = self.generator.get_world_tile(tile_position);
+        let terrain_z = tile.terrain.strength as f32 / 10000.0;
         WorldTileDrawInstrucion {
             tile,
             transform: Transform {
@@ -70,14 +71,14 @@ impl WorldBuilder {
 
         WorldChunkBundle {
             transform: Transform::from_xyz(
-                (position.x as f32
+                position.x as f32
                     * CHUNK_SIDE_SIZE as f32
                     * self.tile_size.x
-                    * self.tile_scale) as f32,
-                (position.y as f32
+                    * self.tile_scale,
+                position.y as f32
                     * CHUNK_SIDE_SIZE as f32
                     * self.tile_size.y
-                    * self.tile_scale) as f32,
+                    * self.tile_scale,
                 0.0,
             ),
             instruction: WorldChunkInstruction {

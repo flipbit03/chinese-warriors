@@ -1,26 +1,24 @@
 #################
 # Local Development Stuff
 #################
-run: dependencies
+run:
 	cargo run --release
 
-debug: dependencies
+debug:
 	cargo run --release -- ./assets/config/debug_world.config.ron
-
-live-reload-local: dependencies
-	cargo watch -x run
 
 #################
 # Build for Web
 #################
-web: dependencies
+web:
 	rm -rf ./web/target/
 	cargo build --target-dir target.wasm --release --target wasm32-unknown-unknown
 	wasm-bindgen --out-name chinese_warriors --out-dir ./web/target --target web target.wasm/wasm32-unknown-unknown/release/chinese-warriors.wasm
 
-# Run locally
+# Run locally (python3 http server)
 serve: web
-	basic-http-server web/
+	@echo "Serving at http://localhost:8080"
+	cd web && python3 -m http.server 8080
 
 # Publish to Cadu's Test Server
 publish: web
@@ -32,4 +30,4 @@ publish: web
 
 dependencies:
 	rustup target add wasm32-unknown-unknown
-	cargo install basic-http-server cargo-watch
+	cargo install wasm-bindgen-cli

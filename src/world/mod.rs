@@ -2,8 +2,7 @@ pub mod despawner;
 pub mod spawner;
 pub mod tile;
 
-use bevy::prelude::{App, Plugin};
-use iyes_loopless::prelude::ConditionSet;
+use bevy::prelude::*;
 
 use crate::app::GameState;
 
@@ -19,23 +18,21 @@ pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {
-        app
-            // List of Currently Loaded Chunks
-            .insert_resource(LoadedChunks::default())
-            .add_system_set(
-                ConditionSet::new()
-                    .run_in_state(GameState::InGame)
-                    .with_system(spawn_chunk_instruction)
-                    .with_system(draw_chunks_from_instruction)
-                    .with_system(despawn_far_chunk_instruction)
-                    .into(),
+        app.insert_resource(LoadedChunks::default())
+            .add_systems(
+                Update,
+                (
+                    spawn_chunk_instruction,
+                    draw_chunks_from_instruction,
+                    despawn_far_chunk_instruction,
+                )
+                    .run_if(in_state(GameState::InGame)),
             )
-            .add_system_set(
-                ConditionSet::new()
-                    .run_in_state(GameState::InGame)
-                    .run_if_resource_exists::<DespawnAllTerrain>()
-                    .with_system(despawn_all_terrain)
-                    .into(),
+            .add_systems(
+                Update,
+                despawn_all_terrain
+                    .run_if(in_state(GameState::InGame))
+                    .run_if(resource_exists::<DespawnAllTerrain>),
             );
     }
 }

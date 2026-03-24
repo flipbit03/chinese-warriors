@@ -1,5 +1,4 @@
-use bevy::prelude::{App, Plugin};
-use iyes_loopless::prelude::{AppLooplessStateExt, ConditionSet};
+use bevy::prelude::*;
 
 use crate::{app::GameState, input::mouse_input::HeroMoveToInstruction};
 
@@ -18,20 +17,17 @@ pub struct HeroPlugin;
 
 impl Plugin for HeroPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(GameState::InGame, spawn_hero)
-            .add_system_set(
-                ConditionSet::new()
-                    .run_in_state(GameState::InGame)
-                    .with_system(animate_hero)
-                    .with_system(hero_current_tile_and_movespeed)
-                    .into(),
+        app.add_systems(OnEnter(GameState::InGame), spawn_hero)
+            .add_systems(
+                Update,
+                (animate_hero, hero_current_tile_and_movespeed)
+                    .run_if(in_state(GameState::InGame)),
             )
-            .add_system_set(
-                ConditionSet::new()
-                    .run_in_state(GameState::InGame)
-                    .run_if_resource_exists::<HeroMoveToInstruction>()
-                    .with_system(hero_movement_from_instruction)
-                    .into(),
+            .add_systems(
+                Update,
+                hero_movement_from_instruction
+                    .run_if(in_state(GameState::InGame))
+                    .run_if(resource_exists::<HeroMoveToInstruction>),
             );
     }
 }

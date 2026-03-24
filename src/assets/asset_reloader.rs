@@ -1,5 +1,2 @@
-use bevy::prelude::*;
-
-pub fn activate_live_asset_reloading(asset_server: Res<AssetServer>) {
-    asset_server.watch_for_changes().unwrap();
-}
+// In modern Bevy, file watching is built-in when the `file_watcher` feature is enabled.
+// No manual activation needed. This module is kept as a stub for compatibility.

@@ -6,33 +6,32 @@ use crate::world::tile::terrain::{
     Terrain, TerrainConfig,
 };
 
-pub fn build_initial_terrain_list(
-    terrain_config_list: &Vec<TerrainConfig>,
-) -> Vec<Terrain> {
+pub fn build_initial_terrain_list(terrain_config_list: &[TerrainConfig]) -> Vec<Terrain> {
     terrain_config_list
-        .into_iter()
+        .iter()
         .map(|config| Terrain::new_from_config(config, 0))
         .collect()
 }
 
 pub fn build_biome_list(
-    initial_terrain_list: &Vec<Terrain>,
+    initial_terrain_list: &[Terrain],
     seed: u32,
-    biome_config: &Vec<BiomeConfig>,
+    biome_config: &[BiomeConfig],
 ) -> Vec<Biome> {
     biome_config
-        .into_iter()
+        .iter()
         .enumerate()
         .map(|(biome_order, biome_config)| {
-            let customized_terrain_list = (&biome_config.terrains)
-                .into_iter()
+            let customized_terrain_list = biome_config
+                .terrains
+                .iter()
                 .enumerate()
                 .map(|(biome_terrain_order, (terrain_name, terrain_range))| {
                     (
                         Terrain {
                             strength: biome_order * 10 + biome_terrain_order,
                             ..initial_terrain_list
-                                .into_iter()
+                                .iter()
                                 .find(|t| t.name == *terrain_name)
                                 .unwrap()
                                 .clone()

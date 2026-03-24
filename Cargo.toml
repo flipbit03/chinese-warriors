@@ -5,28 +5,17 @@ edition = "2021"
 default-run = "chinese-warriors"
 
 [dependencies]
-# benimator = { path = "../benimator", version = "0.0.0-dev" }
-# bevy_ase = { path = "../bevy_ase", features = ["benimator"] }
-
-clap = { version = "3.2.5", features = ["derive"] }
-bevy_ase = { git = "https://github.com/flipbit03/bevy_ase.git", rev = "3e6a236baf466f1f85908fbbd26e8d8705b36d1a", features = [
-  "benimator",
-] }
-benimator = "3.6.0"
-bevy = { version = "0.7.0" }
-noise = "0.7.0"
-strum = { version = "0.24", features = ["derive"] }
-itertools = "0.10.3"
-bevy_asset_ron = "0.4.0"
-serde = "1"
-ron = "0.7"
-iyes_loopless = { git = "https://github.com/IyesGames/iyes_loopless.git", rev = "452c5737b123eea8aebb0e973293c9eb6ba65c8b" }
-bevy-web-resizer = "2.0.0"
+bevy = "0.18.1"
+noise = "0.9"
+strum = { version = "0.26", features = ["derive"] }
+itertools = "0.13"
+serde = { version = "1", features = ["derive"] }
+ron = "0.8"
+clap = { version = "4", features = ["derive"] }
+thiserror = "2"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-bevy = { version = "0.7.0", features = ["dynamic"] }
-# Use this when debugging with `gdb`
-#bevy = { version = "0.7.0" }
+bevy = { version = "0.18.1", features = ["dynamic_linking"] }
 
 # Enable only a small amount of optimizations in debug mode
 [profile.dev]
@@ -35,3 +24,9 @@ opt-level = 1
 # Enable high optimizations for dependencies (incl. Bevy), but not for our code:
 [profile.dev.package."*"]
 opt-level = 3
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1

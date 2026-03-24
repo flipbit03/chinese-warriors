@@ -1,17 +1,14 @@
 pub mod biomes;
 pub mod generator;
 pub mod noise;
-use bevy::{
-    prelude::{error, Color},
-    sprite::Sprite,
-};
+use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
-use strum::{Display, EnumCount, EnumIter, EnumVariantNames};
+use strum::{Display, EnumCount, EnumIter, VariantNames};
 
 #[derive(
     EnumCount,
     EnumIter,
-    EnumVariantNames,
+    VariantNames,
     Display,
     Clone,
     Debug,
@@ -122,29 +119,17 @@ pub struct Terrain {
 }
 
 impl Terrain {
-    pub fn terrain_sprite_color(&self) -> Sprite {
+    pub fn terrain_sprite_color(&self) -> Color {
         match self.color {
-            None => Sprite::default(),
-            Some(c) => Sprite {
-                color: {
-                    let (r, g, b) = c;
-                    Color::rgb_u8(r, g, b)
-                },
-                ..Default::default()
-            },
+            None => Color::WHITE,
+            Some((r, g, b)) => Color::srgb_u8(r, g, b),
         }
     }
 
-    pub fn decoration_sprite_color(&self) -> Sprite {
+    pub fn decoration_sprite_color(&self) -> Color {
         match self.decoration_color {
-            None => Sprite::default(),
-            Some(c) => Sprite {
-                color: {
-                    let (r, g, b) = c;
-                    Color::rgb_u8(r, g, b)
-                },
-                ..Default::default()
-            },
+            None => Color::WHITE,
+            Some((r, g, b)) => Color::srgb_u8(r, g, b),
         }
     }
 
@@ -153,7 +138,7 @@ impl Terrain {
             name: c.name.clone(),
             strength,
             base: c.base.clone(),
-            color: c.color.clone(),
+            color: c.color,
             decoration_color: c.decoration_color,
             walkable: c.walkable,
             move_speed_multiplier: c.move_speed_multiplier.unwrap_or(1.0),

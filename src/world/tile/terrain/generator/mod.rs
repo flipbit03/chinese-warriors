@@ -34,20 +34,16 @@ pub struct TerrainGenerator {
 
 impl TerrainGenerator {
     pub fn new_from_config(config: &TerrainGeneratorConfig) -> Self {
-        // Generate all initial Terrains from TerrainConfigs
         let initial_terrain_list = build_initial_terrain_list(&config.terrains);
-
-        // Generate all Biomes, using the terrains above as templates.
         let biomes = build_biome_list(&initial_terrain_list, config.seed, &config.biomes);
 
-        // Generate a global list of Terrains (and updated strengths) from the Biomes.
         let mut terrains = Vec::new();
         biomes.iter().for_each(|b| {
             b.terrains
                 .iter()
                 .for_each(|(t, _)| terrains.push(t.clone()));
         });
-        let terrain_count = (&terrains).iter().count();
+        let terrain_count = terrains.len();
 
         Self {
             terrains,
@@ -67,7 +63,7 @@ impl TerrainGenerator {
     }
 
     pub fn get_terrain(&self, tp: &TilePosition) -> Terrain {
-        let biome = self.get_biome(&tp);
+        let biome = self.get_biome(tp);
         biome
             .terrains
             .iter()
@@ -80,7 +76,7 @@ impl TerrainGenerator {
     pub const DECORATION_COUNT: usize = 20;
 
     fn get_decoration(&self, tp: &TilePosition) -> Option<usize> {
-        let biome = self.get_biome(&tp);
+        let biome = self.get_biome(tp);
         let decoration_noise = biome.noise_decoration.get_noise(tp);
 
         match (biome.decoration_eagerness.as_ref())
@@ -89,12 +85,9 @@ impl TerrainGenerator {
             .find(|dr| dr.contains(&decoration_noise))
         {
             Some(found_range) => {
-                // Normalize everyone from 0.0
                 let max = found_range.end - found_range.start;
                 let num = decoration_noise - found_range.start;
-
                 let decoration = (TerrainGenerator::DECORATION_COUNT as f64 * num) / max;
-
                 Some(decoration as usize)
             }
             None => None,
@@ -103,18 +96,15 @@ impl TerrainGenerator {
 
     pub fn get_world_tile(&self, tp: &TilePosition) -> WorldTile {
         let biome = self.get_biome(tp);
-
-        let matrix = TilePositionNeighbors::new(&self, tp.clone());
-
+        let matrix = TilePositionNeighbors::new(self, tp.clone());
         let borders = TileBorder::from(&matrix, &self.terrains, self.terrain_count);
 
-        let t = WorldTile {
+        WorldTile {
             borders,
             position: matrix.center.1,
             biome_name: biome.name.clone(),
-            terrain: self.get_terrain(&tp),
-            decoration: self.get_decoration(&tp),
-        };
-        t
+            terrain: self.get_terrain(tp),
+            decoration: self.get_decoration(tp),
+        }
     }
 }

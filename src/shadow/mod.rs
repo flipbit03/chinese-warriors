@@ -1,5 +1,4 @@
-use bevy::prelude::{App, Plugin};
-use iyes_loopless::prelude::ConditionSet;
+use bevy::prelude::*;
 
 use crate::app::GameState;
 
@@ -12,11 +11,9 @@ pub struct ShadowsPlugin;
 
 impl Plugin for ShadowsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(
-            ConditionSet::new()
-                .run_in_state(GameState::InGame)
-                .with_system(add_shadow_to_character)
-                .into(),
+        app.add_systems(
+            Update,
+            add_shadow_to_character.run_if(in_state(GameState::InGame)),
         );
     }
 }

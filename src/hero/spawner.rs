@@ -1,9 +1,7 @@
-use benimator::{Play, PlaySpeedMultiplier};
-use bevy::{math::Vec3, prelude::*, sprite::SpriteSheetBundle};
-use bevy_ase::asset::Animation;
+use bevy::{math::Vec3, prelude::*, sprite::Sprite};
 
 use crate::{
-    assets::{aseprite::GuriAssets, config::structs::CwConfig},
+    assets::aseprite::GuriAssets,
     hero::current_tile::MoveSpeed,
     shadow::structs::CastsShadow,
 };
@@ -12,31 +10,35 @@ use super::structs::Hero;
 
 pub fn spawn_hero(
     mut commands: Commands,
-    config: Res<CwConfig>,
+    config: Res<crate::assets::config::structs::CwConfig>,
     guri_assets: Res<GuriAssets>,
-    animations: Res<Assets<Animation>>,
 ) {
     info!("Spawning hero...");
 
-    let animation = animations.get(guri_assets.idle_anim.0.clone()).unwrap();
-
-    commands
-        .spawn_bundle(SpriteSheetBundle {
-            texture_atlas: animation.atlas(),
-            transform: Transform {
-                translation: Vec3::new(
-                    config.hero.spawn_point.x,
-                    config.hero.spawn_point.y,
-                    1.0,
-                ),
-                ..Transform::from_scale(Vec3::splat(1.0))
-            },
-            ..Default::default()
-        })
-        .insert(guri_assets.idle_anim.1.clone())
-        .insert(Play)
-        .insert(PlaySpeedMultiplier::new(2.0))
-        .insert(Hero::default())
-        .insert(MoveSpeed(1.0))
-        .insert(CastsShadow::default());
+    commands.spawn((
+        Sprite {
+            image: guri_assets.texture.clone(),
+            texture_atlas: Some(TextureAtlas {
+                layout: guri_assets.layout.clone(),
+                index: guri_assets.idle_first,
+            }),
+            ..default()
+        },
+        Transform {
+            translation: Vec3::new(
+                config.hero.spawn_point.x,
+                config.hero.spawn_point.y,
+                1.0,
+            ),
+            ..Transform::from_scale(Vec3::splat(1.0))
+        },
+        Hero::default(),
+        MoveSpeed(1.0),
+        CastsShadow::default(),
+        AnimationTimer(Timer::from_seconds(0.15, TimerMode::Repeating)),
+    ));
 }
+
+/// Simple sprite sheet animation timer
+#[derive(Component, Deref, DerefMut)]
+pub struct AnimationTimer(pub Timer);
