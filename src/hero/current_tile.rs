@@ -1,4 +1,4 @@
-use bevy::prelude::{Commands, Component, Entity, Query, Res, Transform, With};
+use bevy::prelude::*;
 
 use crate::{
     assets::config::structs::CwConfig,
@@ -16,7 +16,9 @@ pub fn hero_current_tile_and_movespeed(
     hero_query: Query<(Entity, &Transform), With<Hero>>,
     world_builder: Res<WorldBuilder>,
 ) {
-    let (hero_entity, hero_transform) = hero_query.single();
+    let Ok((hero_entity, hero_transform)) = hero_query.single() else {
+        return;
+    };
 
     let hero_x_tilepos_float =
         hero_transform.translation.x / config.world.tile_size.x * config.world.tile_scale;
@@ -29,7 +31,7 @@ pub fn hero_current_tile_and_movespeed(
         y: hero_y_tilepos_float.round() as i32,
     };
 
-    let instruction = world_builder.create_tile_draw_instruction(&hero_pos_tile.clone());
+    let instruction = world_builder.create_tile_draw_instruction(&hero_pos_tile);
 
     let hero_movespeed = MoveSpeed(
         (config.hero.move_speed * instruction.tile.terrain.move_speed_multiplier)

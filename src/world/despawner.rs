@@ -1,5 +1,6 @@
 use crate::assets::config::structs::CwConfig;
 
+#[derive(bevy::prelude::Resource)]
 pub struct DespawnAllTerrain;
 
 use super::tile::{
@@ -7,24 +8,31 @@ use super::tile::{
     visibility::{get_screen_rect, get_visible_chunks},
 };
 
-use bevy::{prelude::*, render::camera::Camera2d};
+use bevy::prelude::*;
 use itertools::Itertools;
 
 pub fn despawn_far_chunk_instruction(
     mut commands: Commands,
-    camera_query: Query<(&Transform, &OrthographicProjection), With<Camera2d>>,
+    camera_query: Query<(&Transform, &Projection), With<Camera2d>>,
+    window_query: Query<&Window>,
     config: Res<CwConfig>,
-    existing_chunks_query: Query<
-        (Entity, &WorldChunk, &TilesInChunk),
-        With<TilesInChunk>,
-    >,
+    existing_chunks_query: Query<(Entity, &WorldChunk, &TilesInChunk), With<TilesInChunk>>,
 ) {
-    let (camera_transform, camera_projection) = camera_query.single();
+    let Ok((camera_transform, projection)) = camera_query.single() else {
+        return;
+    };
+    let Projection::Orthographic(camera_projection) = projection else {
+        return;
+    };
+    let Ok(window) = window_query.single() else {
+        return;
+    };
 
     let screen_dimensions = get_screen_rect(
         camera_transform,
         camera_projection,
-        camera_projection.scale * 2.0,
+        window,
+        2.0,
     );
 
     let visible_chunks = get_visible_chunks(
@@ -44,7 +52,7 @@ pub fn despawn_far_chunk_instruction(
             }
 
             for tile_entity in tin.tile_entities {
-                commands.entity(tile_entity).despawn_recursive();
+                commands.entity(tile_entity).despawn();
             }
         });
 }
@@ -60,7 +68,7 @@ pub fn despawn_all_terrain(
         }
 
         for tile_entity in tin.tile_entities {
-            commands.entity(tile_entity).despawn_recursive();
+            commands.entity(tile_entity).despawn();
         }
     }
 

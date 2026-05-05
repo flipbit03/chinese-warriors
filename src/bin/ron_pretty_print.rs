@@ -4,10 +4,10 @@ use chinese_warriors::{
     assets::config::structs::CwConfig, utilities::config::dump_cwconfig_pretty,
 };
 use clap::Parser;
-use ron::{from_str, to_string};
+use ron::from_str;
 
 #[derive(Parser)]
-#[clap(author, version, about, long_about = None)]
+#[command(author, version, about, long_about = None)]
 pub struct RonPrettyPrintCLIConfig {
     pub input_ron_path: String,
     pub output_ron_path: String,

@@ -18,25 +18,20 @@ pub fn load_terrain_assets(
     let base_folder_name: String =
         format!("art/terrain/{}", base_terrain.to_string().to_lowercase());
 
-    // Base Tile
     let base: Handle<Image> =
-        asset_server.load(format!("{}/tile.png", base_folder_name).as_str());
+        asset_server.load(format!("{}/tile.png", base_folder_name));
 
-    // Decorations
-    let decorations = (0..(TERRAIN_DECORATION_COUNT))
+    let decorations = (0..TERRAIN_DECORATION_COUNT)
         .map(|n| {
-            asset_server.load::<Image, &str>(
-                &format!("{}/decoration/decoration{}.png", base_folder_name, n).as_str(),
-            )
+            asset_server
+                .load::<Image>(format!("{}/decoration/decoration{}.png", base_folder_name, n))
         })
         .collect::<Vec<Handle<Image>>>();
 
-    // Borders
-    let borders = (0..(BORDER_ASSET_COUNT))
+    let borders = (0..BORDER_ASSET_COUNT)
         .map(|n| {
-            asset_server.load::<Image, &str>(
-                &format!("{}/border/border{}.png", base_folder_name, n).as_str(),
-            )
+            asset_server
+                .load::<Image>(format!("{}/border/border{}.png", base_folder_name, n))
         })
         .collect::<Vec<Handle<Image>>>();
 

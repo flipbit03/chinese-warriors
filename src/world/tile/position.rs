@@ -1,5 +1,3 @@
-use bevy::prelude::Component;
-
 use crate::utilities::xy::XY;
 
 use super::terrain::{generator::TerrainGenerator, Terrain};
@@ -10,18 +8,18 @@ pub type ChunkPosition = TilePosition;
 
 impl TilePosition {
     pub fn from(pos: &TilePosition, x_off: i32, y_off: i32) -> Self {
-        return Self {
+        Self {
             x: pos.x + x_off,
             y: pos.y + y_off,
-        };
+        }
     }
 }
 
-impl Into<TilePosition> for (i32, i32) {
-    fn into(self) -> TilePosition {
+impl From<(i32, i32)> for TilePosition {
+    fn from(tuple: (i32, i32)) -> TilePosition {
         TilePosition {
-            x: self.0,
-            y: self.1,
+            x: tuple.0,
+            y: tuple.1,
         }
     }
 }

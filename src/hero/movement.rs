@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::{Commands, Query, Res, Transform, With, Without},
-    render::camera::Camera2d,
-};
+use bevy::prelude::*;
 
 use crate::{
     hero::structs::{Hero, HeroFacing},
@@ -13,13 +10,16 @@ use super::{current_tile::MoveSpeed, structs::HeroAction};
 pub fn hero_movement_from_instruction(
     mut commands: Commands,
     hmi: Res<HeroMoveToInstruction>,
-    camera_query: Query<&mut Transform, With<Camera2d>>,
+    camera_query: Query<&Transform, With<Camera2d>>,
     mut hero_query: Query<(&mut Hero, &mut Transform, &MoveSpeed), Without<Camera2d>>,
 ) {
-    let (mut hero, mut hero_transform, hero_movespeed) = hero_query.single_mut();
-    let camera_transform = camera_query.single();
+    let Ok((mut hero, mut hero_transform, hero_movespeed)) = hero_query.single_mut() else {
+        return;
+    };
+    let Ok(camera_transform) = camera_query.single() else {
+        return;
+    };
 
-    // We have an instruction to walk somewhere...
     hero.action = HeroAction::Walking;
 
     let hero_move_speed = hero_movespeed.0 * camera_transform.scale.x;

@@ -1,61 +1,45 @@
-use benimator::{PlaySpeedMultiplier, SpriteSheetAnimation};
-use bevy::{
-    prelude::{Assets, Commands, Entity, Handle, Query, Res},
-    sprite::{TextureAtlas, TextureAtlasSprite},
-};
-use bevy_ase::asset::Animation;
-
-use crate::assets::aseprite::GuriAssets;
+use bevy::prelude::*;
+use bevy_aseprite_ultra::prelude::*;
 
 use super::{
     current_tile::MoveSpeed,
     structs::{Hero, HeroAction, HeroFacing},
 };
 
-// TODO: Animation speed has to respect "MoveSpeed"
-// TODO: Walk Cycle does not happen on move instruction.
 pub fn animate_hero(
-    mut commands: Commands,
-    guri_assets: Res<GuriAssets>,
-    animations: Res<Assets<Animation>>,
     mut hero_query: Query<(
-        Entity,
         &Hero,
-        &mut Handle<TextureAtlas>,
-        &mut Handle<SpriteSheetAnimation>,
-        &mut TextureAtlasSprite,
+        &mut AseAnimation,
+        &mut Sprite,
         &MoveSpeed,
     )>,
 ) {
-    let (hero_entity, hero, mut hero_ta, mut hero_sa, mut hero_tap, hero_movespeed) =
-        hero_query.single_mut();
-
-    let (hero_current_animation, hero_sprite_animation_sheet) = match hero.action {
-        HeroAction::Idling => {
-            commands.entity(hero_entity).remove::<PlaySpeedMultiplier>();
-            (
-                animations.get(guri_assets.idle_anim.0.clone()).unwrap(),
-                guri_assets.idle_anim.1.clone(),
-            )
-        }
-        HeroAction::Walking => {
-            commands
-                .entity(hero_entity)
-                .insert(PlaySpeedMultiplier::new(hero_movespeed.0 as f64 * 0.95));
-            (
-                animations
-                    .get(guri_assets.walk_cycle_anim.0.clone())
-                    .unwrap(),
-                guri_assets.walk_cycle_anim.1.clone(),
-            )
-        }
+    let Ok((hero, mut ase, mut sprite, hero_movespeed)) = hero_query.single_mut() else {
+        return;
     };
 
-    hero_tap.flip_x = match hero.facing {
+    // Switch animation tag based on action
+    let target_tag = match hero.action {
+        HeroAction::Idling => "Idle",
+        HeroAction::Walking => "Walk",
+    };
+
+    // Only update if the tag actually changed
+    let current_tag = ase.animation.tag.as_deref().unwrap_or("");
+    if current_tag != target_tag {
+        ase.animation = Animation::tag(target_tag).with_repeat(AnimationRepeat::Loop);
+    }
+
+    // Adjust animation speed based on move speed when walking
+    let speed = match hero.action {
+        HeroAction::Idling => 1.0,
+        HeroAction::Walking => (hero_movespeed.0 * 0.95).max(0.3),
+    };
+    ase.animation.speed = speed;
+
+    // Flip sprite based on facing
+    sprite.flip_x = match hero.facing {
         HeroFacing::Left => false,
         HeroFacing::Right => true,
     };
-
-    *hero_ta = hero_current_animation.atlas();
-    *hero_sa = hero_sprite_animation_sheet;
 }

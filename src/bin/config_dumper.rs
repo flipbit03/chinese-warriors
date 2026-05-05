@@ -5,8 +5,7 @@ use chinese_warriors::{
     utilities::config::dump_cwconfig_pretty,
 };
 
-fn main() -> () {
-    // Dump production and debug configs to their appropriate locations
+fn main() {
     [
         (DEFAULT_CONFIG_PATH, false, CwConfig::default()),
         (DEBUG_CONFIG_PATH, true, CwConfig::debug_config()),

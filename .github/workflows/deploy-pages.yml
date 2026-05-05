@@ -1,0 +1,66 @@
+name: Deploy to GitHub Pages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo registry and build
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: wasm-release
+          workspaces: ". -> target.wasm"
+
+      - name: Install wasm-bindgen-cli
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen-cli@0.2.114
+
+      - name: Build WASM
+        run: cargo build --target-dir target.wasm --release --target wasm32-unknown-unknown
+
+      - name: Run wasm-bindgen
+        run: wasm-bindgen --out-name chinese_warriors --out-dir ./web/target --target web target.wasm/wasm32-unknown-unknown/release/chinese-warriors.wasm
+
+      - name: Stage site (resolve assets symlink)
+        run: |
+          mkdir -p _site
+          cp -r web/target _site/target
+          cp web/index.html web/favicon.ico _site/
+          cp -rL assets _site/assets
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

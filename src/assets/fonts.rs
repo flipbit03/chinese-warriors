@@ -1,8 +1,6 @@
-use bevy::{
-    prelude::{AssetServer, Commands, Handle, Res},
-    text::Font,
-};
+use bevy::prelude::*;
 
+#[derive(Resource)]
 pub struct MainFont {
     pub handle: Handle<Font>,
 }

@@ -1,37 +1,34 @@
-use bevy::{prelude::*, render::camera::Camera2d};
+use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Resource)]
 pub struct HeroMoveToInstruction(pub Vec2);
 
+#[derive(Resource)]
 pub struct MouseGlobalTranslation(pub Vec2);
 
-// This system prints messages when you press or release the left mouse button:
 pub fn global_mouse_position(
     mut commands: Commands,
-    windows: Res<Windows>,
+    window_query: Query<&Window>,
     camera_query: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
 ) {
-    let (camera, camera_transform) = camera_query.single();
-    let window = windows.get_primary().unwrap();
+    let Ok((camera, camera_transform)) = camera_query.single() else {
+        return;
+    };
+    let Ok(window) = window_query.single() else {
+        return;
+    };
 
-    if let Some(mouse_position) = window.cursor_position() {
-        let window_size = Vec2::new(window.width(), window.height());
-
-        // noooo idea how this works
-        let ndc = (mouse_position / window_size) * 2.0 - Vec2::ONE;
-        let ndc_to_world =
-            camera_transform.compute_matrix() * camera.projection_matrix.inverse();
-        let global_mouse_position =
-            ndc_to_world.project_point3(ndc.extend(-1.0)).truncate();
-        commands.insert_resource(MouseGlobalTranslation(global_mouse_position));
+    if let Some(cursor_position) = window.cursor_position() {
+        if let Ok(world_pos) = camera.viewport_to_world_2d(camera_transform, cursor_position) {
+            commands.insert_resource(MouseGlobalTranslation(world_pos));
+        }
     }
 }
 
-// This system prints messages when you press or release the left mouse button:
 pub fn mouse_left_click_to_hero_move_instruction(
     mut commands: Commands,
     mouse_global: Option<Res<MouseGlobalTranslation>>,
-    mouse_button_input: Res<Input<MouseButton>>,
+    mouse_button_input: Res<ButtonInput<MouseButton>>,
 ) {
     if let Some(p) = mouse_global {
         if mouse_button_input.just_pressed(MouseButton::Left) {

@@ -1,46 +1,52 @@
-use bevy::{
-    prelude::{App, Msaa},
-    window::{PresentMode, WindowDescriptor},
-    DefaultPlugins,
-};
-use bevy_ase::loader::AseLoaderDefaultPlugin;
-use chinese_warriors::{app::GameState, assets::config::structs::CwCliConfig};
-use clap::Parser;
-use iyes_loopless::prelude::AppLooplessStateExt;
+use bevy::{prelude::*, window::PresentMode};
+use bevy_aseprite_ultra::prelude::AsepriteUltraPlugin;
+use chinese_warriors::assets::config::structs::CwCliConfig;
 
 pub fn main() {
-    let app = &mut App::new();
+    let mut app = App::new();
 
-    // CwCliConfig::;
-    let args = CwCliConfig::parse();
+    // Parse CLI args (skip on WASM)
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        use clap::Parser;
+        let args = CwCliConfig::parse();
+        app.insert_resource(args);
+    }
 
     #[cfg(target_arch = "wasm32")]
     {
-        app.add_plugin(bevy_web_resizer::Plugin);
+        app.insert_resource(CwCliConfig {
+            config_file: "config/world.config.ron".to_string(),
+        });
     }
 
-    app.insert_resource(Msaa { samples: 1 })
-        .insert_resource(WindowDescriptor {
-            title: "Chinese Warriors".to_string(),
-            scale_factor_override: Some(1.0),
-            present_mode: PresentMode::Fifo,
-            #[cfg(target_arch = "wasm32")]
-            canvas: Some("#gamescreen".to_string()),
-            ..Default::default()
-        })
-        .add_plugins(DefaultPlugins)
-        .insert_resource(args)
-        .add_system(chinese_warriors::helpers::set_texture_filters_to_nearest)
-        .add_plugin(AseLoaderDefaultPlugin)
-        .add_plugin(benimator::AnimationPlugin::default())
-        .add_loopless_state(GameState::Loading)
-        .add_plugin(chinese_warriors::assets::AssetsPlugin)
-        .add_plugin(chinese_warriors::camera::CameraPlugin)
-        .add_plugin(chinese_warriors::hero::HeroPlugin)
-        .add_plugin(chinese_warriors::hud::HudPlugin)
-        .add_plugin(chinese_warriors::console::ConsolePlugin)
-        .add_plugin(chinese_warriors::world::WorldPlugin)
-        .add_plugin(chinese_warriors::input::InputPlugin)
-        .add_plugin(chinese_warriors::shadow::ShadowsPlugin)
-        .run();
+    app.add_plugins(
+        DefaultPlugins
+            .set(ImagePlugin::default_nearest())
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "Chinese Warriors".to_string(),
+                    present_mode: PresentMode::AutoVsync,
+                    #[cfg(target_arch = "wasm32")]
+                    canvas: Some("#gamescreen".to_string()),
+                    #[cfg(target_arch = "wasm32")]
+                    fit_canvas_to_parent: true,
+                    ..default()
+                }),
+                ..default()
+            }),
+    )
+    .init_state::<chinese_warriors::app::GameState>()
+    .add_plugins(AsepriteUltraPlugin)
+    .add_plugins((
+        chinese_warriors::assets::AssetsPlugin,
+        chinese_warriors::camera::CameraPlugin,
+        chinese_warriors::hero::HeroPlugin,
+        chinese_warriors::hud::HudPlugin,
+        chinese_warriors::console::ConsolePlugin,
+        chinese_warriors::world::WorldPlugin,
+        chinese_warriors::input::InputPlugin,
+        chinese_warriors::shadow::ShadowsPlugin,
+    ))
+    .run();
 }

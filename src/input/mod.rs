@@ -1,5 +1,4 @@
-use bevy::prelude::{App, Plugin};
-use iyes_loopless::prelude::ConditionSet;
+use bevy::prelude::*;
 
 use crate::app::GameState;
 
@@ -17,25 +16,30 @@ pub struct InputPlugin;
 
 impl Plugin for InputPlugin {
     fn build(&self, app: &mut App) {
-        let ingame_input_systems = ConditionSet::new()
-            .run_in_state(GameState::InGame)
-            .with_system(input_camera_scale)
-            .with_system(hero_input)
-            .with_system(global_mouse_position)
-            .with_system(mouse_left_click_to_hero_move_instruction);
+        app.add_systems(
+            Update,
+            (
+                input_camera_scale,
+                hero_input,
+                global_mouse_position,
+                mouse_left_click_to_hero_move_instruction,
+            )
+                .run_if(in_state(GameState::InGame)),
+        );
 
-        // Disable "exit on esc" for the wasm target
         #[cfg(not(target_arch = "wasm32"))]
         {
-            let debug_input_systems =
-                ConditionSet::new().with_system(bevy::input::system::exit_on_esc_system);
-            app.add_system_set(debug_input_systems.into());
+            app.add_systems(Update, exit_on_esc);
         }
-
-        app.add_system_set(ingame_input_systems.into());
     }
+}
 
-    fn name(&self) -> &str {
-        std::any::type_name::<Self>()
+#[cfg(not(target_arch = "wasm32"))]
+fn exit_on_esc(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut exit: MessageWriter<bevy::app::AppExit>,
+) {
+    if keyboard_input.just_pressed(KeyCode::Escape) {
+        exit.write(bevy::app::AppExit::Success);
     }
 }
