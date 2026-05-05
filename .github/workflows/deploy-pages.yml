@@ -38,7 +38,7 @@ jobs:
       - name: Install wasm-bindgen-cli
         uses: taiki-e/install-action@v2
         with:
-          tool: wasm-bindgen-cli
+          tool: wasm-bindgen-cli@0.2.114
 
       - name: Build WASM
         run: cargo build --target-dir target.wasm --release --target wasm32-unknown-unknown
